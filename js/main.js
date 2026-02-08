@@ -76,9 +76,10 @@ function initNavbar() {
 
     if (hamburger) {
         hamburger.addEventListener('click', function () {
-            navLinks?.classList.toggle('active');
+            const isOpen = navLinks?.classList.toggle('active');
             navButtons?.classList.toggle('active');
             hamburger.classList.toggle('active');
+            document.body.style.overflow = isOpen ? 'hidden' : '';
         });
     }
 
@@ -87,6 +88,7 @@ function initNavbar() {
             navLinks?.classList.remove('active');
             navButtons?.classList.remove('active');
             hamburger?.classList.remove('active');
+            document.body.style.overflow = '';
         });
     });
 
