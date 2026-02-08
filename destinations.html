@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinations - TravelGo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-compact">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane-departure"></i>
+                TravelGo
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="bookings.html">Booking</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle active">Destination <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="destinations.html?type=domestic"><i class="fas fa-flag"></i> Domestic</a></li>
+                        <li><a href="destinations.html?type=international"><i class="fas fa-globe"></i> International</a></li>
+                    </ul>
+                </li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+                <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 id="pageTitle">All Destinations</h1>
+            <p id="pageSubtitle">Explore our handpicked destinations</p>
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="domestic">Domestic</button>
+                <button class="filter-btn" data-filter="international">International</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Destinations Grid -->
+    <section class="destinations-page">
+        <div class="container">
+            <div class="destinations-grid" id="destinationsGrid">
+                <!-- DOMESTIC DESTINATIONS (25) -->
+                <div class="destination-card" data-name="Manali" data-price="5999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&h=300&fit=crop" alt="Manali">
+                        <div class="destination-badge">Popular</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
+                        <h3>Manali</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Himachal Pradesh</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹8,999</span>
+                                <span class="price">₹5,999</span>
+                                <span class="offer-tag">33% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Goa" data-price="7499" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop" alt="Goa">
+                        <div class="destination-badge hot">Hot Deal</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Goa</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> West Coast</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹9,999</span>
+                                <span class="price">₹7,499</span>
+                                <span class="offer-tag">25% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Agra" data-price="3999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop" alt="Agra">
+                        <div class="destination-badge">Heritage</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
+                        <h3>Agra</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Uttar Pradesh</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹5,999</span>
+                                <span class="price">₹3,999</span>
+                                <span class="offer-tag">33% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Jaipur" data-price="5499" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=300&fit=crop" alt="Jaipur">
+                        <div class="destination-badge">Royal</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
+                        <h3>Jaipur</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Rajasthan</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹7,999</span>
+                                <span class="price">₹5,499</span>
+                                <span class="offer-tag">31% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Kerala" data-price="9999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=300&fit=crop" alt="Kerala">
+                        <div class="destination-badge">Nature</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Kerala Backwaters</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Kerala</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹12,999</span>
+                                <span class="price">₹9,999</span>
+                                <span class="offer-tag">23% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Shimla" data-price="4999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&h=300&fit=crop" alt="Shimla">
+                        <div class="destination-badge">Hill Station</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.6</span></div>
+                        <h3>Shimla</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Himachal Pradesh</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹6,999</span>
+                                <span class="price">₹4,999</span>
+                                <span class="offer-tag">29% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Varanasi" data-price="3499" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1585136917228-7535d1f6a74e?w=400&h=300&fit=crop" alt="Varanasi">
+                        <div class="destination-badge">Spiritual</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
+                        <h3>Varanasi</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Uttar Pradesh</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹4,999</span>
+                                <span class="price">₹3,499</span>
+                                <span class="offer-tag">30% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Udaipur" data-price="6299" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=400&h=300&fit=crop" alt="Udaipur">
+                        <div class="destination-badge">Romantic</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
+                        <h3>Udaipur</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Rajasthan</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹8,499</span>
+                                <span class="price">₹6,299</span>
+                                <span class="offer-tag">26% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Leh Ladakh" data-price="14999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=300&fit=crop" alt="Leh Ladakh">
+                        <div class="destination-badge hot">Trending</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Leh Ladakh</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Ladakh</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹18,999</span>
+                                <span class="price">₹14,999</span>
+                                <span class="offer-tag">21% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Rishikesh" data-price="4299" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=300&fit=crop" alt="Rishikesh">
+                        <div class="destination-badge">Adventure</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
+                        <h3>Rishikesh</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Uttarakhand</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹5,999</span>
+                                <span class="price">₹4,299</span>
+                                <span class="offer-tag">28% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Andaman" data-price="19999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=400&h=300&fit=crop" alt="Andaman">
+                        <div class="destination-badge">Beach</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
+                        <h3>Andaman Islands</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Bay of Bengal</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹24,999</span>
+                                <span class="price">₹19,999</span>
+                                <span class="offer-tag">20% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Darjeeling" data-price="5299" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1506461883276-594a12b11cf3?w=400&h=300&fit=crop" alt="Darjeeling">
+                        <div class="destination-badge">Tea Gardens</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.5</span></div>
+                        <h3>Darjeeling</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> West Bengal</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹7,499</span>
+                                <span class="price">₹5,299</span>
+                                <span class="offer-tag">29% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Ooty" data-price="4999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1580581096469-8afb50e83c68?w=400&h=300&fit=crop" alt="Ooty">
+                        <div class="destination-badge">Hill Station</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.6</span></div>
+                        <h3>Ooty</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Tamil Nadu</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹6,999</span>
+                                <span class="price">₹4,999</span>
+                                <span class="offer-tag">29% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Munnar" data-price="6999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1623874228601-f4193c7b1818?w=400&h=300&fit=crop" alt="Munnar">
+                        <div class="destination-badge">Tea</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
+                        <h3>Munnar</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Kerala</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹8,999</span>
+                                <span class="price">₹6,999</span>
+                                <span class="offer-tag">22% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Coorg" data-price="5999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1623238913973-21ce570c31ff?w=400&h=300&fit=crop" alt="Coorg">
+                        <div class="destination-badge">Coffee</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
+                        <h3>Coorg</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Karnataka</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹7,999</span>
+                                <span class="price">₹5,999</span>
+                                <span class="offer-tag">25% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INTERNATIONAL DESTINATIONS (25) -->
+                <div class="destination-card featured" data-name="Maldives" data-price="45999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&h=300&fit=crop" alt="Maldives">
+                        <div class="destination-badge featured">Featured</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>5.0</span></div>
+                        <h3>Maldives</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Indian Ocean</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹65,999</span>
+                                <span class="price">₹45,999</span>
+                                <span class="offer-tag">30% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Paris" data-price="69999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&h=300&fit=crop" alt="Paris">
+                        <div class="destination-badge">Romantic</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Paris</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> France</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹89,999</span>
+                                <span class="price">₹69,999</span>
+                                <span class="offer-tag">22% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Dubai" data-price="39999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop" alt="Dubai">
+                        <div class="destination-badge hot">Hot Deal</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
+                        <h3>Dubai</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> UAE</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹55,999</span>
+                                <span class="price">₹39,999</span>
+                                <span class="offer-tag">29% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Bali" data-price="35999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&h=300&fit=crop" alt="Bali">
+                        <div class="destination-badge">Paradise</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Bali</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Indonesia</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹49,999</span>
+                                <span class="price">₹35,999</span>
+                                <span class="offer-tag">28% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Singapore" data-price="34999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=400&h=300&fit=crop" alt="Singapore">
+                        <div class="destination-badge">City</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
+                        <h3>Singapore</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Southeast Asia</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹45,999</span>
+                                <span class="price">₹34,999</span>
+                                <span class="offer-tag">24% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Thailand" data-price="25999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1555992336-fb0d29498b13?w=400&h=300&fit=crop" alt="Thailand">
+                        <div class="destination-badge">Beach</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
+                        <h3>Phuket</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Thailand</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹35,999</span>
+                                <span class="price">₹25,999</span>
+                                <span class="offer-tag">28% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Tokyo" data-price="65999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop" alt="Tokyo">
+                        <div class="destination-badge">Culture</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Tokyo</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Japan</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹85,999</span>
+                                <span class="price">₹65,999</span>
+                                <span class="offer-tag">23% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Switzerland" data-price="99999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=400&h=300&fit=crop" alt="Switzerland">
+                        <div class="destination-badge">Alps</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Switzerland</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Europe</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹1,25,999</span>
+                                <span class="price">₹99,999</span>
+                                <span class="offer-tag">21% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Mauritius" data-price="55999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?w=400&h=300&fit=crop" alt="Mauritius">
+                        <div class="destination-badge">Honeymoon</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Mauritius</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Indian Ocean</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹75,999</span>
+                                <span class="price">₹55,999</span>
+                                <span class="offer-tag">26% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-name="Sri Lanka" data-price="26999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=300&fit=crop" alt="Sri Lanka">
+                        <div class="destination-badge">Nature</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
+                        <h3>Sri Lanka</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> South Asia</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹35,999</span>
+                                <span class="price">₹26,999</span>
+                                <span class="offer-tag">25% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-plane-departure"></i>
+                        TravelGo
+                    </a>
+                    <p>Your trusted partner for smart travel booking.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="bookings.html">Booking</a></li>
+                        <li><a href="destinations.html">Destinations</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TravelGo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Wizard Modal (same as index.html) -->
+    <div class="modal" id="bookingWizard">
+        <div class="modal-content wizard-content">
+            <span class="modal-close" onclick="closeWizard()">&times;</span>
+            <div class="wizard-progress">
+                <div class="progress-step active" data-step="1"><span>1</span> Transport</div>
+                <div class="progress-step" data-step="2"><span>2</span> Select</div>
+                <div class="progress-step" data-step="3"><span>3</span> Travelers</div>
+                <div class="progress-step" data-step="4"><span>4</span> ID Proof</div>
+                <div class="progress-step" data-step="5"><span>5</span> Preview</div>
+            </div>
+            <div class="wizard-step active" id="step1">
+                <div class="step-header">
+                    <h2>Book Trip to <span id="wizardDestination">Destination</span></h2>
+                    <p>Choose your preferred mode of transport</p>
+                </div>
+                <div class="transport-options">
+                    <div class="transport-card" onclick="selectTransport('flight')">
+                        <i class="fas fa-plane"></i>
+                        <h3>Flight</h3>
+                        <p>Fast & Comfortable</p>
+                    </div>
+                    <div class="transport-card" onclick="selectTransport('bus')">
+                        <i class="fas fa-bus"></i>
+                        <h3>Bus</h3>
+                        <p>Affordable & Scenic</p>
+                    </div>
+                    <div class="transport-card" onclick="selectTransport('train')">
+                        <i class="fas fa-train"></i>
+                        <h3>Train</h3>
+                        <p>Relaxed Journey</p>
+                    </div>
+                </div>
+                <div class="step-footer">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>From City</label>
+                            <select id="fromCity" class="form-control">
+                                <option value="">Select Departure City</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Travel Date</label>
+                            <input type="date" id="travelDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Travelers</label>
+                            <select id="numTravelers" class="form-control">
+                                <option value="1">1 Person</option>
+                                <option value="2">2 Persons</option>
+                                <option value="3">3 Persons</option>
+                                <option value="4">4 Persons</option>
+                                <option value="5">5 Persons</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(2)" id="step1Next" disabled>
+                        Next: View Available Options <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="wizard-step" id="step2">
+                <div class="step-header">
+                    <h2>Available <span id="transportTypeTitle">Flights</span></h2>
+                    <p id="routeInfo">Delhi → Destination</p>
+                </div>
+                <div class="available-options" id="availableOptions"></div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(3)" id="step2Next" disabled>
+                        Next: Enter Traveler Details <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="wizard-step" id="step3">
+                <div class="step-header">
+                    <h2>Traveler Details</h2>
+                    <p>Enter details for each traveler one by one</p>
+                </div>
+                <div class="traveler-tabs" id="travelerTabs"></div>
+                <div class="traveler-form-container" id="travelerFormContainer"></div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(4)" id="step3Next">
+                        Next: Upload ID Proof <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="wizard-step" id="step4">
+                <div class="step-header">
+                    <h2>Upload ID Proof</h2>
+                    <p>Upload valid government ID for verification</p>
+                </div>
+                <div class="id-upload-section" id="idUploadSection"></div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(3)"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(5)">
+                        Next: Preview Booking <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="wizard-step" id="step5">
+                <div class="step-header">
+                    <h2>Booking Preview</h2>
+                    <p>Review your booking details before confirming</p>
+                </div>
+                <div class="preview-content" id="previewContent"></div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(4)"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-success btn-large" onclick="confirmBooking()">
+                        <i class="fas fa-check"></i> Confirm & Pay ₹<span id="finalTotal">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cancel Button Footer -->
+            <div class="wizard-cancel-footer">
+                <button class="btn btn-danger btn-cancel-booking" onclick="closeWizard()">
+                    <i class="fas fa-times"></i> Cancel Booking
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content invoice-content">
+            <div class="invoice-header">
+                <div class="invoice-logo">
+                    <i class="fas fa-plane-departure"></i>
+                    <span>TravelGo</span>
+                </div>
+                <div class="invoice-title">
+                    <h2>Booking Confirmed!</h2>
+                    <p>Invoice #<span id="invoiceNumber">TG000000</span></p>
+                </div>
+            </div>
+            <div class="invoice-body" id="invoiceBody"></div>
+            <div class="invoice-actions">
+                <button class="btn btn-outline" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                <button class="btn btn-outline" onclick="downloadInvoice()"><i class="fas fa-download"></i> Download</button>
+                <button class="btn btn-primary" onclick="closeInvoiceModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type');
+            
+            if (type === 'domestic') {
+                document.getElementById('pageTitle').textContent = 'Domestic Destinations';
+                document.getElementById('pageSubtitle').textContent = 'Explore beautiful places across India';
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.filter-btn[data-filter="domestic"]').classList.add('active');
+                filterDestinations('domestic');
+            } else if (type === 'international') {
+                document.getElementById('pageTitle').textContent = 'International Destinations';
+                document.getElementById('pageSubtitle').textContent = 'Discover amazing places around the world';
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.filter-btn[data-filter="international"]').classList.add('active');
+                filterDestinations('international');
+            }
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterDestinations(this.dataset.filter);
+                });
+            });
+        });
+
+        function filterDestinations(filter) {
+            const cards = document.querySelectorAll('.destination-card');
+            cards.forEach(card => {
+                if (filter === 'all' || card.dataset.type === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

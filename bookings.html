@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings - TravelGo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-compact">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane-departure"></i>
+                TravelGo
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="bookings.html" class="active">Booking</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">Destination <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="destinations.html?type=domestic"><i class="fas fa-flag"></i> Domestic</a></li>
+                        <li><a href="destinations.html?type=international"><i class="fas fa-globe"></i> International</a></li>
+                    </ul>
+                </li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+                <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Booking Header -->
+    <section class="booking-header">
+        <div class="container">
+            <h1>Book Your <span>Journey</span></h1>
+            <p>Choose from our wide range of travel options</p>
+        </div>
+    </section>
+
+    <!-- Booking Tabs -->
+    <section class="booking-section">
+        <div class="container">
+            <div class="booking-tabs">
+                <button class="tab-btn active" data-tab="flight">
+                    <i class="fas fa-plane"></i>
+                    <span>Flights</span>
+                </button>
+                <button class="tab-btn" data-tab="train">
+                    <i class="fas fa-train"></i>
+                    <span>Train</span>
+                </button>
+                <button class="tab-btn" data-tab="bus">
+                    <i class="fas fa-bus"></i>
+                    <span>Bus</span>
+                </button>
+                <button class="tab-btn" data-tab="hotel">
+                    <i class="fas fa-hotel"></i>
+                    <span>Hotels</span>
+                </button>
+                <button class="tab-btn" data-tab="resort">
+                    <i class="fas fa-umbrella-beach"></i>
+                    <span>Resorts</span>
+                </button>
+            </div>
+
+            <!-- Flight Booking Form -->
+            <div class="booking-form-container tab-content active" id="flight">
+                <div class="booking-form-header">
+                    <h2><i class="fas fa-plane"></i> Flight Booking</h2>
+                    <p>Find the best flights at competitive prices</p>
+                </div>
+                <form class="booking-form" id="flightForm">
+                    <div class="trip-type">
+                        <label class="radio-container">
+                            <input type="radio" name="tripType" value="oneway" checked>
+                            <span class="radio-checkmark"></span>
+                            One Way
+                        </label>
+                        <label class="radio-container">
+                            <input type="radio" name="tripType" value="roundtrip">
+                            <span class="radio-checkmark"></span>
+                            Round Trip
+                        </label>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="flightFrom">From</label>
+                            <div class="input-icon">
+                                <i class="fas fa-plane-departure"></i>
+                                <input type="text" id="flightFrom" placeholder="Departure City" required>
+                            </div>
+                        </div>
+                        <div class="swap-btn" onclick="swapLocations('flight')">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="form-group">
+                            <label for="flightTo">To</label>
+                            <div class="input-icon">
+                                <i class="fas fa-plane-arrival"></i>
+                                <input type="text" id="flightTo" placeholder="Arrival City" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="flightDate">Departure Date</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="flightDate" required>
+                            </div>
+                        </div>
+                        <div class="form-group return-date" style="display: none;">
+                            <label for="flightReturnDate">Return Date</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="flightReturnDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="flightPassengers">Passengers</label>
+                            <div class="input-icon">
+                                <i class="fas fa-users"></i>
+                                <select id="flightPassengers">
+                                    <option value="1">1 Passenger</option>
+                                    <option value="2">2 Passengers</option>
+                                    <option value="3">3 Passengers</option>
+                                    <option value="4">4 Passengers</option>
+                                    <option value="5">5+ Passengers</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="flightClass">Class</label>
+                            <div class="input-icon">
+                                <i class="fas fa-crown"></i>
+                                <select id="flightClass">
+                                    <option value="economy">Economy</option>
+                                    <option value="business">Business</option>
+                                    <option value="first">First Class</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="flightAirline">Preferred Airline</label>
+                            <div class="input-icon">
+                                <i class="fas fa-filter"></i>
+                                <select id="flightAirline">
+                                    <option value="all">All Airlines</option>
+                                    <option value="indigo">IndiGo</option>
+                                    <option value="airindia">Air India</option>
+                                    <option value="spicejet">SpiceJet</option>
+                                    <option value="vistara">Vistara</option>
+                                    <option value="goair">Go First</option>
+                                    <option value="akasa">Akasa Air</option>
+                                    <option value="emirates">Emirates</option>
+                                    <option value="singapore">Singapore Airlines</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large btn-full">
+                        <i class="fas fa-search"></i> Search Flights
+                    </button>
+                </form>
+            </div>
+
+            <!-- Train Booking Form -->
+            <div class="booking-form-container tab-content" id="train">
+                <div class="booking-form-header">
+                    <h2><i class="fas fa-train"></i> Train Booking</h2>
+                    <p>Book train tickets across India</p>
+                </div>
+                <form class="booking-form" id="trainForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="trainFrom">From</label>
+                            <div class="input-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="trainFrom" placeholder="Departure Station" required>
+                            </div>
+                        </div>
+                        <div class="swap-btn" onclick="swapLocations('train')">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="form-group">
+                            <label for="trainTo">To</label>
+                            <div class="input-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="trainTo" placeholder="Arrival Station" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="trainDate">Travel Date</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="trainDate" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="trainClass">Class</label>
+                            <div class="input-icon">
+                                <i class="fas fa-ticket-alt"></i>
+                                <select id="trainClass">
+                                    <option value="all">All Classes</option>
+                                    <option value="1A">First AC (1A)</option>
+                                    <option value="2A">Second AC (2A)</option>
+                                    <option value="3A">Third AC (3A)</option>
+                                    <option value="SL">Sleeper (SL)</option>
+                                    <option value="CC">Chair Car (CC)</option>
+                                    <option value="2S">Second Sitting (2S)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="trainQuota">Quota</label>
+                            <div class="input-icon">
+                                <i class="fas fa-users"></i>
+                                <select id="trainQuota">
+                                    <option value="general">General</option>
+                                    <option value="ladies">Ladies</option>
+                                    <option value="tatkal">Tatkal</option>
+                                    <option value="senior">Senior Citizen</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large btn-full">
+                        <i class="fas fa-search"></i> Search Trains
+                    </button>
+                </form>
+            </div>
+
+            <!-- Bus Booking Form -->
+            <div class="booking-form-container tab-content" id="bus">
+                <div class="booking-form-header">
+                    <h2><i class="fas fa-bus"></i> Bus Booking</h2>
+                    <p>Comfortable bus journeys across cities</p>
+                </div>
+                <form class="booking-form" id="busForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="busFrom">From</label>
+                            <div class="input-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="busFrom" placeholder="Departure City" required>
+                            </div>
+                        </div>
+                        <div class="swap-btn" onclick="swapLocations('bus')">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="form-group">
+                            <label for="busTo">To</label>
+                            <div class="input-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="busTo" placeholder="Arrival City" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="busDate">Travel Date</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="busDate" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="busType">Bus Type</label>
+                            <div class="input-icon">
+                                <i class="fas fa-bus"></i>
+                                <select id="busType">
+                                    <option value="all">All Types</option>
+                                    <option value="ac">AC Sleeper</option>
+                                    <option value="nonac">Non-AC Sleeper</option>
+                                    <option value="seater">AC Seater</option>
+                                    <option value="volvo">Volvo Multi-Axle</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="busOperator">Bus Operator</label>
+                            <div class="input-icon">
+                                <i class="fas fa-filter"></i>
+                                <select id="busOperator">
+                                    <option value="all">All Operators</option>
+                                    <option value="vrl">VRL Travels</option>
+                                    <option value="srs">SRS Travels</option>
+                                    <option value="ksrtc">KSRTC</option>
+                                    <option value="redbus">RedBus</option>
+                                    <option value="orangetravels">Orange Travels</option>
+                                    <option value="neeta">Neeta Travels</option>
+                                    <option value="shrinath">Shrinath Travels</option>
+                                    <option value="paulo">Paulo Travels</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large btn-full">
+                        <i class="fas fa-search"></i> Search Buses
+                    </button>
+                </form>
+            </div>
+
+            <!-- Hotel Booking Form -->
+            <div class="booking-form-container tab-content" id="hotel">
+                <div class="booking-form-header">
+                    <h2><i class="fas fa-hotel"></i> Hotel Booking</h2>
+                    <p>Find perfect accommodation for your stay</p>
+                </div>
+                <form class="booking-form" id="hotelForm">
+                    <div class="form-grid hotel-grid">
+                        <div class="form-group full-width">
+                            <label for="hotelLocation">Location</label>
+                            <div class="input-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="hotelLocation" placeholder="City, Area or Hotel Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hotelCheckIn">Check-in Date</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="hotelCheckIn" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hotelCheckOut">Check-out Date</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="hotelCheckOut" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hotelRooms">Rooms</label>
+                            <div class="input-icon">
+                                <i class="fas fa-door-open"></i>
+                                <select id="hotelRooms">
+                                    <option value="1">1 Room</option>
+                                    <option value="2">2 Rooms</option>
+                                    <option value="3">3 Rooms</option>
+                                    <option value="4">4 Rooms</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hotelGuests">Guests</label>
+                            <div class="input-icon">
+                                <i class="fas fa-users"></i>
+                                <select id="hotelGuests">
+                                    <option value="1">1 Guest</option>
+                                    <option value="2">2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hotelType">Hotel Type</label>
+                            <div class="input-icon">
+                                <i class="fas fa-star"></i>
+                                <select id="hotelType">
+                                    <option value="all">All Types</option>
+                                    <option value="3star">3 Star</option>
+                                    <option value="4star">4 Star</option>
+                                    <option value="5star">5 Star</option>
+                                    <option value="budget">Budget</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large btn-full">
+                        <i class="fas fa-search"></i> Search Hotels
+                    </button>
+                </form>
+            </div>
+
+            <!-- Resort Booking Form -->
+            <div class="booking-form-container tab-content" id="resort">
+                <div class="booking-form-header">
+                    <h2><i class="fas fa-umbrella-beach"></i> Resort Booking</h2>
+                    <p>Luxury resorts for a perfect getaway</p>
+                </div>
+                <form class="booking-form" id="resortForm">
+                    <div class="form-grid hotel-grid">
+                        <div class="form-group full-width">
+                            <label for="resortLocation">Destination</label>
+                            <div class="input-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="resortLocation" placeholder="Beach, Hill Station or Resort Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="resortCheckIn">Check-in Date</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="resortCheckIn" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="resortCheckOut">Check-out Date</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="resortCheckOut" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="resortRooms">Rooms/Villas</label>
+                            <div class="input-icon">
+                                <i class="fas fa-door-open"></i>
+                                <select id="resortRooms">
+                                    <option value="1">1 Room</option>
+                                    <option value="2">2 Rooms</option>
+                                    <option value="3">3 Rooms</option>
+                                    <option value="villa">Private Villa</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="resortGuests">Guests</label>
+                            <div class="input-icon">
+                                <i class="fas fa-users"></i>
+                                <select id="resortGuests">
+                                    <option value="1">1 Guest</option>
+                                    <option value="2">2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="resortType">Resort Type</label>
+                            <div class="input-icon">
+                                <i class="fas fa-star"></i>
+                                <select id="resortType">
+                                    <option value="all">All Resorts</option>
+                                    <option value="beach">Beach Resort</option>
+                                    <option value="mountain">Mountain Resort</option>
+                                    <option value="spa">Spa & Wellness</option>
+                                    <option value="luxury">Luxury Resort</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="resortMeal">Meal Plan</label>
+                            <div class="input-icon">
+                                <i class="fas fa-utensils"></i>
+                                <select id="resortMeal">
+                                    <option value="roomonly">Room Only</option>
+                                    <option value="breakfast">Breakfast Included</option>
+                                    <option value="halfboard">Half Board</option>
+                                    <option value="fullboard">Full Board</option>
+                                    <option value="allinclusive">All Inclusive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large btn-full">
+                        <i class="fas fa-search"></i> Search Resorts
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Offers -->
+    <section class="offers">
+        <div class="container">
+            <div class="section-header">
+                <h2>Special <span>Offers</span></h2>
+                <p>Grab these exclusive deals before they're gone!</p>
+            </div>
+            <div class="offers-grid">
+                <div class="offer-card">
+                    <div class="offer-badge">20% OFF</div>
+                    <div class="offer-icon">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <h3>Flight Deals</h3>
+                    <p>Get 20% off on domestic flights. Use code: FLY20</p>
+                    <a href="#" class="btn btn-outline btn-small">Book Now</a>
+                </div>
+                <div class="offer-card">
+                    <div class="offer-badge">₹500 OFF</div>
+                    <div class="offer-icon">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <h3>Bus Booking</h3>
+                    <p>Flat ₹500 off on first bus booking. Code: FIRSTBUS</p>
+                    <a href="#" class="btn btn-outline btn-small">Book Now</a>
+                </div>
+                <div class="offer-card">
+                    <div class="offer-badge">Free Night</div>
+                    <div class="offer-icon">
+                        <i class="fas fa-hotel"></i>
+                    </div>
+                    <h3>Hotel Stay</h3>
+                    <p>Book 3 nights, get 1 night free at select hotels</p>
+                    <a href="#" class="btn btn-outline btn-small">Book Now</a>
+                </div>
+                <div class="offer-card">
+                    <div class="offer-badge">30% OFF</div>
+                    <div class="offer-icon">
+                        <i class="fas fa-umbrella-beach"></i>
+                    </div>
+                    <h3>Resort Package</h3>
+                    <p>Summer special: 30% off on luxury resorts</p>
+                    <a href="#" class="btn btn-outline btn-small">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-plane-departure"></i>
+                        TravelGo
+                    </a>
+                    <p>Your trusted partner for smart travel booking.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="destinations.html?type=domestic">Domestic</a></li>
+                        <li><a href="destinations.html?type=international">International</a></li>
+                        <li><a href="bookings.html">Bookings</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="bookings.html?tab=flight">Flight Booking</a></li>
+                        <li><a href="bookings.html?tab=train">Train Booking</a></li>
+                        <li><a href="bookings.html?tab=bus">Bus Booking</a></li>
+                        <li><a href="bookings.html?tab=hotel">Hotel Booking</a></li>
+                        <li><a href="bookings.html?tab=resort">Resort Booking</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe for travel deals</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TravelGo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

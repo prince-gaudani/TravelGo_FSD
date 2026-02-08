@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelGo - Smart Travel Booking</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-compact">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane-departure"></i>
+                TravelGo
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="bookings.html">Booking</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">Destination <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="destinations.html?type=domestic"><i class="fas fa-flag"></i> Domestic</a></li>
+                        <li><a href="destinations.html?type=international"><i class="fas fa-globe"></i>
+                                International</a></li>
+                    </ul>
+                </li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+                <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero hero-compact">
+        <div class="hero-slider">
+            <div class="slide active">
+                <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&h=800&fit=crop"
+                    alt="Luxury Hotel">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1920&h=800&fit=crop"
+                    alt="Premium Resort">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&h=800&fit=crop"
+                    alt="Exotic Destination">
+            </div>
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1>Experience Premium <span>Travel</span></h1>
+            <p>Discover luxury destinations, 5-star hotels, and exclusive resorts.</p>
+            <div class="hero-buttons">
+                <a href="bookings.html" class="btn btn-primary btn-large">Book Now</a>
+                <a href="#destinations" class="btn btn-outline-white btn-large">Explore</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Destinations -->
+    <section id="destinations" class="destinations">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured <span>Destinations</span></h2>
+                <p>Handpicked destinations for your next adventure</p>
+                <div class="destination-tabs">
+                    <a href="destinations.html?type=domestic" class="dest-tab-btn">View All Domestic</a>
+                    <a href="destinations.html?type=international" class="dest-tab-btn">View All International</a>
+                </div>
+            </div>
+            <div class="destinations-grid">
+                <div class="destination-card" data-name="Manali" data-price="5999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&h=300&fit=crop"
+                            alt="Manali">
+                        <div class="destination-badge">Popular</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
+                        <h3>Manali</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Himachal Pradesh</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹8,999</span>
+                                <span class="price">₹5,999</span>
+                                <span class="offer-tag">33% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-card" data-name="Goa" data-price="7499" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop"
+                            alt="Goa">
+                        <div class="destination-badge hot">Hot Deal</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Goa</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> West Coast</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹9,999</span>
+                                <span class="price">₹7,499</span>
+                                <span class="offer-tag">25% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-card featured" data-name="Maldives" data-price="45999"
+                    data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&h=300&fit=crop"
+                            alt="Maldives">
+                        <div class="destination-badge featured">Featured</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>5.0</span></div>
+                        <h3>Maldives</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Indian Ocean</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹65,999</span>
+                                <span class="price">₹45,999</span>
+                                <span class="offer-tag">30% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-card" data-name="Paris" data-price="69999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&h=300&fit=crop"
+                            alt="Paris">
+                        <div class="destination-badge">Romantic</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Paris</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> France</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹89,999</span>
+                                <span class="price">₹69,999</span>
+                                <span class="offer-tag">22% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-card" data-name="Bali" data-price="35999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&h=300&fit=crop"
+                            alt="Bali">
+                        <div class="destination-badge">Popular</div>
+                        <div class="destination-type intl">International</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
+                        <h3>Bali</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Indonesia</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹45,999</span>
+                                <span class="price">₹35,999</span>
+                                <span class="offer-tag">22% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-card" data-name="Kerala" data-price="12999" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=300&fit=crop"
+                            alt="Kerala">
+                        <div class="destination-badge">Nature</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
+                        <h3>Kerala</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> South India</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹18,999</span>
+                                <span class="price">₹12,999</span>
+                                <span class="offer-tag">31% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hotels & Resorts Section -->
+    <section class="hotels-resorts">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured <span>Hotels & Resorts</span></h2>
+                <p>Premium stays for your perfect getaway</p>
+            </div>
+            <div class="hotels-grid">
+                <div class="hotel-card">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=250&fit=crop"
+                            alt="Taj Hotel">
+                        <div class="hotel-badge">5 Star</div>
+                    </div>
+                    <div class="hotel-info">
+                        <h3>Taj Palace Hotel</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Mumbai, Maharashtra</p>
+                        <div class="hotel-amenities">
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-swimming-pool"></i></span>
+                            <span><i class="fas fa-spa"></i></span>
+                            <span><i class="fas fa-utensils"></i></span>
+                        </div>
+                        <div class="hotel-price">
+                            <span class="price">₹12,500/night</span>
+                            <a href="bookings.html?tab=hotel" class="btn btn-small">Book</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hotel-card">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=250&fit=crop"
+                            alt="Beach Resort">
+                        <div class="hotel-badge resort">Resort</div>
+                    </div>
+                    <div class="hotel-info">
+                        <h3>Palm Beach Resort</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Goa</p>
+                        <div class="hotel-amenities">
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-umbrella-beach"></i></span>
+                            <span><i class="fas fa-cocktail"></i></span>
+                            <span><i class="fas fa-utensils"></i></span>
+                        </div>
+                        <div class="hotel-price">
+                            <span class="price">₹8,999/night</span>
+                            <a href="bookings.html?tab=resort" class="btn btn-small">Book</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hotel-card">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=250&fit=crop"
+                            alt="Mountain Resort">
+                        <div class="hotel-badge resort">Resort</div>
+                    </div>
+                    <div class="hotel-info">
+                        <h3>Himalayan Heights</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Manali</p>
+                        <div class="hotel-amenities">
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-fire"></i></span>
+                            <span><i class="fas fa-mountain"></i></span>
+                            <span><i class="fas fa-utensils"></i></span>
+                        </div>
+                        <div class="hotel-price">
+                            <span class="price">₹6,500/night</span>
+                            <a href="bookings.html?tab=resort" class="btn btn-small">Book</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hotel-card">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=250&fit=crop"
+                            alt="Luxury Hotel">
+                        <div class="hotel-badge">4 Star</div>
+                    </div>
+                    <div class="hotel-info">
+                        <h3>Royal Orchid</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Bangalore</p>
+                        <div class="hotel-amenities">
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-dumbbell"></i></span>
+                            <span><i class="fas fa-concierge-bell"></i></span>
+                            <span><i class="fas fa-utensils"></i></span>
+                        </div>
+                        <div class="hotel-price">
+                            <span class="price">₹5,200/night</span>
+                            <a href="bookings.html?tab=hotel" class="btn btn-small">Book</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hotel-card">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&h=250&fit=crop"
+                            alt="City Hotel">
+                        <div class="hotel-badge">5 Star</div>
+                    </div>
+                    <div class="hotel-info">
+                        <h3>Grand Central</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Delhi</p>
+                        <div class="hotel-amenities">
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-spa"></i></span>
+                            <span><i class="fas fa-cocktail"></i></span>
+                            <span><i class="fas fa-car"></i></span>
+                        </div>
+                        <div class="hotel-price">
+                            <span class="price">₹9,500/night</span>
+                            <a href="bookings.html?tab=hotel" class="btn btn-small">Book</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our <span>Services</span></h2>
+                <p>Complete travel solutions for every need</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-plane"></i></div>
+                    <h3>Flight Booking</h3>
+                    <p>Book domestic and international flights at best prices</p>
+                    <a href="bookings.html" class="service-link">Book Flight <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-bus"></i></div>
+                    <h3>Bus Booking</h3>
+                    <p>Comfortable bus journeys across cities</p>
+                    <a href="bookings.html" class="service-link">Book Bus <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-hotel"></i></div>
+                    <h3>Hotel Booking</h3>
+                    <p>From budget to luxury hotels worldwide</p>
+                    <a href="bookings.html" class="service-link">Book Hotel <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-umbrella-beach"></i></div>
+                    <h3>Resort Booking</h3>
+                    <p>Luxury resorts for perfect getaways</p>
+                    <a href="bookings.html" class="service-link">Book Resort <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3>Tour Booking</h3>
+                    <p>Guided tours to amazing places</p>
+                    <a href="bookings.html" class="service-link">Book Tour <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-ticket-alt"></i></div>
+                    <h3>Ticket Booking</h3>
+                    <p>Events, shows and attraction tickets</p>
+                    <a href="bookings.html" class="service-link">Book Tickets <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Contact <span>Us</span></h2>
+                <p>Have questions? We're here to help!</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="contact-text">
+                            <h4>Address</h4>
+                            <p>123 Travel Street, Mumbai, India 400001</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                        <div class="contact-text">
+                            <h4>Phone</h4>
+                            <p>+91 98765 43210</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-text">
+                            <h4>Email</h4>
+                            <p>support@travelgo.com</p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Your Message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-plane-departure"></i>
+                        TravelGo
+                    </a>
+                    <p>Your trusted partner for smart travel booking.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="bookings.html">Booking</a></li>
+                        <li><a href="destinations.html">Destinations</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="bookings.html?tab=flight">Flight Booking</a></li>
+                        <li><a href="bookings.html?tab=train">Train Booking</a></li>
+                        <li><a href="bookings.html?tab=bus">Bus Booking</a></li>
+                        <li><a href="bookings.html?tab=hotel">Hotel Booking</a></li>
+                        <li><a href="bookings.html?tab=resort">Resort Booking</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe for travel deals</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TravelGo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Wizard Modal -->
+    <div class="modal" id="bookingWizard">
+        <div class="modal-content wizard-content">
+            <span class="modal-close" onclick="closeWizard()">&times;</span>
+
+            <!-- Progress Bar -->
+            <div class="wizard-progress">
+                <div class="progress-step active" data-step="1"><span>1</span> Transport</div>
+                <div class="progress-step" data-step="2"><span>2</span> Select</div>
+                <div class="progress-step" data-step="3"><span>3</span> Travelers</div>
+                <div class="progress-step" data-step="4"><span>4</span> ID Proof</div>
+                <div class="progress-step" data-step="5"><span>5</span> Preview</div>
+            </div>
+
+            <!-- Step 1: Choose Transport -->
+            <div class="wizard-step active" id="step1">
+                <div class="step-header">
+                    <h2>Book Trip to <span id="wizardDestination">Destination</span></h2>
+                    <p>Choose your preferred mode of transport</p>
+                </div>
+                <div class="transport-options">
+                    <div class="transport-card" onclick="selectTransport('flight')">
+                        <i class="fas fa-plane"></i>
+                        <h3>Flight</h3>
+                        <p>Fast & Comfortable</p>
+                    </div>
+                    <div class="transport-card" onclick="selectTransport('bus')">
+                        <i class="fas fa-bus"></i>
+                        <h3>Bus</h3>
+                        <p>Affordable & Scenic</p>
+                    </div>
+                    <div class="transport-card" onclick="selectTransport('train')">
+                        <i class="fas fa-train"></i>
+                        <h3>Train</h3>
+                        <p>Relaxed Journey</p>
+                    </div>
+                </div>
+                <div class="step-footer">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>From City</label>
+                            <select id="fromCity" class="form-control">
+                                <option value="">Select Departure City</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Ahmedabad">Ahmedabad</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Travel Date</label>
+                            <input type="date" id="travelDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Travelers</label>
+                            <select id="numTravelers" class="form-control">
+                                <option value="1">1 Person</option>
+                                <option value="2">2 Persons</option>
+                                <option value="3">3 Persons</option>
+                                <option value="4">4 Persons</option>
+                                <option value="5">5 Persons</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(2)" id="step1Next" disabled>
+                        Next: View Available Options <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Select Flight/Bus -->
+            <div class="wizard-step" id="step2">
+                <div class="step-header">
+                    <h2>Available <span id="transportTypeTitle">Flights</span></h2>
+                    <p id="routeInfo">Delhi → Manali | 15 Feb 2026</p>
+                </div>
+                <div class="available-options" id="availableOptions">
+                    <!-- Options will be populated by JavaScript -->
+                </div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(1)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(3)" id="step2Next" disabled>
+                        Next: Enter Traveler Details <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Traveler Details -->
+            <div class="wizard-step" id="step3">
+                <div class="step-header">
+                    <h2>Traveler Details</h2>
+                    <p>Enter details for each traveler one by one</p>
+                </div>
+                <div class="traveler-tabs" id="travelerTabs">
+                    <!-- Tabs will be populated by JavaScript -->
+                </div>
+                <div class="traveler-form-container" id="travelerFormContainer">
+                    <!-- Form will be populated by JavaScript -->
+                </div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(2)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(4)" id="step3Next">
+                        Next: Upload ID Proof <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: ID Proof Upload -->
+            <div class="wizard-step" id="step4">
+                <div class="step-header">
+                    <h2>Upload ID Proof</h2>
+                    <p>Upload valid government ID for verification</p>
+                </div>
+                <div class="id-upload-section" id="idUploadSection">
+                    <!-- Upload forms will be populated by JavaScript -->
+                </div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(3)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(5)">
+                        Next: Preview Booking <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 5: Preview & Confirm -->
+            <div class="wizard-step" id="step5">
+                <div class="step-header">
+                    <h2>Booking Preview</h2>
+                    <p>Review your booking details before confirming</p>
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <!-- Preview will be populated by JavaScript -->
+                </div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(4)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-success btn-large" onclick="confirmBooking()">
+                        <i class="fas fa-check"></i> Confirm & Pay ₹<span id="finalTotal">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cancel Button Footer -->
+            <div class="wizard-cancel-footer">
+                <button class="btn btn-danger btn-cancel-booking" onclick="closeWizard()">
+                    <i class="fas fa-times"></i> Cancel Booking
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content invoice-content">
+            <div class="invoice-header">
+                <div class="invoice-logo">
+                    <i class="fas fa-plane-departure"></i>
+                    <span>TravelGo</span>
+                </div>
+                <div class="invoice-title">
+                    <h2>Booking Confirmed!</h2>
+                    <p>Invoice #<span id="invoiceNumber">TG000000</span></p>
+                </div>
+            </div>
+            <div class="invoice-body" id="invoiceBody"></div>
+            <div class="invoice-actions">
+                <button class="btn btn-outline" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                <button class="btn btn-outline" onclick="downloadInvoice()"><i class="fas fa-download"></i>
+                    Download</button>
+                <button class="btn btn-primary" onclick="closeInvoiceModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
