@@ -2716,7 +2716,7 @@ section {
 }
 
 .profile-dropdown:hover .profile-menu,
-.profile-menu.active {
+.profile-dropdown.active .profile-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);

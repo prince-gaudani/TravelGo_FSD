@@ -3,6 +3,7 @@
 // ========================================
 
 document.addEventListener('DOMContentLoaded', function () {
+    initAuth();
     initNavbar();
     initBookingTabs();
     initForms();
@@ -10,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
     initTripTypeToggle();
     setMinDates();
     initHeroSlider();
-    initAuth();
 });
 
 
@@ -20,6 +20,22 @@ document.addEventListener('DOMContentLoaded', function () {
 // ========================================
 
 function initAuth() {
+    // Mandatory login gate - redirect to login if not on auth pages
+    const currentPage = window.location.href.toLowerCase();
+    const isAuthPage = currentPage.includes('login.html') || currentPage.includes('signup.html');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isAuthPage && !isLoggedIn) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // If logged in and on auth page, redirect to index
+    if (isAuthPage && isLoggedIn) {
+        window.location.href = 'index.html';
+        return;
+    }
+
     checkLoginState();
 
     // Login Form Handling
@@ -27,18 +43,25 @@ function initAuth() {
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            // distinct simulation for demo
-            if (email) {
-                // Simulate Login
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userEmail', email);
-                localStorage.setItem('userName', email.split('@')[0]); // Simple name
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
 
-                showNotification('Login Successful!', 'success');
+            // Get stored users
+            const users = JSON.parse(localStorage.getItem('travelgo_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', user.email);
+                localStorage.setItem('userName', user.firstName);
+                localStorage.setItem('userFullName', user.firstName + ' ' + user.lastName);
+
+                showNotification('Login Successful! Welcome back, ' + user.firstName + '!', 'success');
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 1000);
+            } else {
+                showNotification('Invalid email or password!', 'error');
             }
         });
     }
@@ -62,7 +85,6 @@ function initAuth() {
             profileDropdown.classList.toggle('active');
         });
 
-        // Close on click outside
         document.addEventListener('click', function (e) {
             if (!profileDropdown.contains(e.target)) {
                 profileDropdown.classList.remove('active');
@@ -88,17 +110,11 @@ function updateAuthUI(isLoggedIn) {
             navProfile.style.display = 'block';
             const userName = localStorage.getItem('userName') || 'User';
             if (profileName) profileName.textContent = userName;
-            if (profileImg) profileImg.src = `https://ui-avatars.com/api/?name=${userName}&background=4f46e5&color=fff`;
+            if (profileImg) profileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=4f46e5&color=fff`;
         }
     } else {
-        if (authButtons) authButtons.style.display = 'flex'; // Restore 'flex'
+        if (authButtons) authButtons.style.display = 'flex';
         if (navProfile) navProfile.style.display = 'none';
-
-        // Mobile menu handling if needed
-        const navLinks = document.querySelector('.nav-links');
-        if (navLinks && navLinks.classList.contains('active')) {
-            // Re-evaluate if needed
-        }
     }
 }
 
@@ -106,16 +122,12 @@ function handleLogout() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userFullName');
 
-    showNotification('Logged out successfully', 'success');
-
-    // updates UI immediately
-    updateAuthUI(false);
-
-    // If on a protected page, redirect (optional)
-    if (window.location.pathname.includes('bookings.html')) {
-        window.location.href = 'index.html';
-    }
+    showNotification('Logged out successfully!', 'success');
+    setTimeout(() => {
+        window.location.href = 'login.html';
+    }, 1000);
 }
 
 // ========================================
@@ -1198,6 +1210,10 @@ function handleBookingSubmit(type, form) {
 }
 
 function handleSignup(form) {
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const btn = form.querySelector('button[type="submit"]');
@@ -1207,13 +1223,29 @@ function handleSignup(form) {
         return;
     }
 
+    if (password.length < 6) {
+        showNotification('Password must be at least 6 characters!', 'error');
+        return;
+    }
+
+    // Check if email already exists
+    const users = JSON.parse(localStorage.getItem('travelgo_users') || '[]');
+    if (users.find(u => u.email === email)) {
+        showNotification('An account with this email already exists!', 'error');
+        return;
+    }
+
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
     btn.disabled = true;
 
     setTimeout(() => {
+        // Save user to localStorage
+        users.push({ firstName, lastName, email, phone, password });
+        localStorage.setItem('travelgo_users', JSON.stringify(users));
+
         btn.innerHTML = 'Create Account';
         btn.disabled = false;
-        showNotification('Account created successfully!', 'success');
+        showNotification('Account created successfully! Please login.', 'success');
         setTimeout(() => { window.location.href = 'login.html'; }, 1500);
     }, 1500);
 }
