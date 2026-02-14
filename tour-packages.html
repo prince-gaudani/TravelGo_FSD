@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Packages - TravelGo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-compact">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane-departure"></i>
+                TravelGo
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">Destination <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="destinations.html?type=domestic"><i class="fas fa-flag"></i> Domestic</a></li>
+                        <li><a href="destinations.html?type=international"><i class="fas fa-globe"></i> International</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle active">Tours <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="tour-packages.html"><i class="fas fa-mountain"></i> Golden Triangle</a></li>
+                        <li><a href="tour-packages.html"><i class="fas fa-water"></i> Kerala Backwaters</a></li>
+                        <li><a href="tour-packages.html"><i class="fas fa-motorcycle"></i> Ladakh Adventure</a></li>
+                        <li><a href="tour-packages.html"><i class="fas fa-chess-rook"></i> Rajasthan Heritage</a></li>
+                    </ul>
+                </li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="nav-buttons" id="authButtons">
+                <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+                <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+            </div>
+            <div class="nav-profile" id="navProfile" style="display: none;">
+                <div class="profile-dropdown">
+                    <div class="profile-trigger" id="profileTrigger">
+                        <img src="https://ui-avatars.com/api/?name=User&background=4f46e5&color=fff" alt="Profile"
+                            class="profile-img">
+                        <span class="profile-name">My Info</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="profile-menu">
+                        <li><a href="my-bookings.html"><i class="fas fa-ticket-alt"></i> My Bookings</a></li>
+                        <li><a href="#" onclick="showFavourites()"><i class="fas fa-heart"></i> Favourites</a></li>
+                        <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Our <span>Tour Packages</span></h1>
+            <p>Curated holiday experiences for every traveler</p>
+            <div class="filter-wrapper" style="max-width: 800px; margin: 25px auto 0; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                <div class="input-icon" style="flex: 1; min-width: 280px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="tourSearch" placeholder="Search tours by destination or name..." class="form-control" style="height: 50px; border-radius: 25px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                </div>
+                <div class="sort-select" style="min-width: 220px;">
+                    <select id="tourSort" class="form-control" style="height: 50px; border-radius: 25px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding-left: 20px; cursor: pointer;">
+                        <option value="default">Sort By: Recommended</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="duration-short">Duration: Shortest First</option>
+                        <option value="duration-long">Duration: Longest First</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tours Grid -->
+    <section class="tours-section">
+        <div class="container">
+            <div class="tours-grid">
+                <!-- Card 1: Golden Triangle -->
+                <div class="tour-card" data-name="Golden Triangle Tour" data-price="15999" data-duration="5 Days / 4 Nights" data-type="tour">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop" alt="Golden Triangle Tour">
+                        <div class="tour-badge">Best Seller</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 5 Days / 4 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(2.3k reviews)</small></div>
+                        <h3>Golden Triangle Tour</h3>
+                        <p><i class="fas fa-route"></i> Delhi → Agra → Jaipur → Delhi</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-hotel"></i> 4★ Hotels</span>
+                            <span><i class="fas fa-utensils"></i> Meals</span>
+                            <span><i class="fas fa-car"></i> Transport</span>
+                            <span><i class="fas fa-user-tie"></i> Guide</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹22,999</span>
+                                <span class="price">₹15,999</span>
+                                <span class="offer-tag">30% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 2: Kerala -->
+                <div class="tour-card" data-name="Kerala Backwater Cruise" data-price="24999" data-duration="6 Days / 5 Nights" data-type="tour">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=300&fit=crop" alt="Kerala Backwater Cruise">
+                        <div class="tour-badge hot">Trending</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 6 Days / 5 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.8</span> <small>(1.8k reviews)</small></div>
+                        <h3>Kerala Backwater Cruise</h3>
+                        <p><i class="fas fa-route"></i> Kochi → Munnar → Alleppey → Kovalam</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-hotel"></i> 5★ Resorts</span>
+                            <span><i class="fas fa-utensils"></i> All Meals</span>
+                            <span><i class="fas fa-ship"></i> Houseboat</span>
+                            <span><i class="fas fa-spa"></i> Ayurveda</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹35,999</span>
+                                <span class="price">₹24,999</span>
+                                <span class="offer-tag">31% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 3: Ladakh -->
+                <div class="tour-card" data-name="Ladakh Adventure" data-price="29999" data-duration="7 Days / 6 Nights" data-type="tour">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=300&fit=crop" alt="Ladakh Adventure">
+                        <div class="tour-badge">Adventure</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 7 Days / 6 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(1.5k reviews)</small></div>
+                        <h3>Ladakh Adventure</h3>
+                        <p><i class="fas fa-route"></i> Leh → Nubra → Pangong → Leh</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-campground"></i> Camping</span>
+                            <span><i class="fas fa-utensils"></i> Meals</span>
+                            <span><i class="fas fa-motorcycle"></i> Bike Ride</span>
+                            <span><i class="fas fa-mountain"></i> Trekking</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹42,999</span>
+                                <span class="price">₹29,999</span>
+                                <span class="offer-tag">30% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 4: Rajasthan -->
+                <div class="tour-card" data-name="Rajasthan Royal Heritage" data-price="32999" data-duration="8 Days / 7 Nights" data-type="tour">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=300&fit=crop" alt="Rajasthan Heritage">
+                        <div class="tour-badge featured">Premium</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 8 Days / 7 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>5.0</span> <small>(980 reviews)</small></div>
+                        <h3>Rajasthan Royal Heritage</h3>
+                        <p><i class="fas fa-route"></i> Jaipur → Jodhpur → Udaipur → Jaisalmer</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-chess-rook"></i> Palace Stay</span>
+                            <span><i class="fas fa-utensils"></i> Royal Dining</span>
+                            <span><i class="fas fa-horse"></i> Camel Safari</span>
+                            <span><i class="fas fa-music"></i> Folk Show</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹45,999</span>
+                                <span class="price">₹32,999</span>
+                                <span class="offer-tag">28% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 5: Goa -->
+                <div class="tour-card" data-name="Goa Beach Party" data-price="11999" data-duration="4 Days / 3 Nights" data-type="tour">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop" alt="Goa Beach Party">
+                        <div class="tour-badge">Party</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 4 Days / 3 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.7</span> <small>(1.5k reviews)</small></div>
+                        <h3>Goa Beach Party</h3>
+                        <p><i class="fas fa-route"></i> North Goa → South Goa → Old Goa</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-hotel"></i> Beach Resort</span>
+                            <span><i class="fas fa-umbrella-beach"></i> Water Sports</span>
+                            <span><i class="fas fa-cocktail"></i> Nightlife</span>
+                            <span><i class="fas fa-ship"></i> Cruise</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹16,999</span>
+                                <span class="price">₹11,999</span>
+                                <span class="offer-tag">29% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 6: Kashmir -->
+                <div class="tour-card" data-name="Kashmir Paradise" data-price="28999" data-duration="6 Days / 5 Nights" data-type="tour">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1566837945700-30057527ade0?w=400&h=300&fit=crop" alt="Kashmir Paradise">
+                        <div class="tour-badge">Honeymoon</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 6 Days / 5 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(900 reviews)</small></div>
+                        <h3>Kashmir Paradise</h3>
+                        <p><i class="fas fa-route"></i> Srinagar → Gulmarg → Pahalgam</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-snowflake"></i> Snow</span>
+                            <span><i class="fas fa-ship"></i> Shikara Ride</span>
+                            <span><i class="fas fa-hotel"></i> Houseboat</span>
+                            <span><i class="fas fa-utensils"></i> Meals</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹38,999</span>
+                                <span class="price">₹28,999</span>
+                                <span class="offer-tag">25% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-plane-departure"></i>
+                        TravelGo
+                    </a>
+                    <p>Your trusted partner for smart travel booking.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="destinations.html">Destinations</a></li>
+                        <li><a href="tour-packages.html">Tours</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TravelGo. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Wizard Modal -->
+    <div class="modal" id="bookingWizard">
+        <div class="modal-content wizard-content">
+            <span class="modal-close" onclick="closeWizard()">&times;</span>
+            <div class="wizard-progress">
+                <div class="progress-step active" data-step="1"><span>1</span> Transport</div>
+                <div class="progress-step" data-step="2"><span>2</span> Select</div>
+                <div class="progress-step" data-step="3"><span>3</span> Travelers</div>
+                <div class="progress-step" data-step="4"><span>4</span> ID Proof</div>
+                <div class="progress-step" data-step="5"><span>5</span> Preview</div>
+            </div>
+            <div class="wizard-step active" id="step1">
+                <div class="step-header">
+                    <h2>Book Trip to <span id="wizardDestination">Destination</span></h2>
+                    <p>Choose your preferred mode of transport</p>
+                </div>
+                <div class="transport-options">
+                    <div class="transport-card" onclick="selectTransport('flight')">
+                        <i class="fas fa-plane"></i>
+                        <h3>Flight</h3>
+                        <p>Fast & Comfortable</p>
+                    </div>
+                    <div class="transport-card" onclick="selectTransport('bus')">
+                        <i class="fas fa-bus"></i>
+                        <h3>Bus</h3>
+                        <p>Affordable & Scenic</p>
+                    </div>
+                    <div class="transport-card" onclick="selectTransport('train')">
+                        <i class="fas fa-train"></i>
+                        <h3>Train</h3>
+                        <p>Relaxed Journey</p>
+                    </div>
+                </div>
+                <div class="step-footer">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>From City</label>
+                            <select id="fromCity" class="form-control">
+                                <option value="">Select Departure City</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Travel Date</label>
+                            <input type="date" id="travelDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Travelers</label>
+                            <select id="numTravelers" class="form-control">
+                                <option value="1">1 Person</option>
+                                <option value="2">2 Persons</option>
+                                <option value="3">3 Persons</option>
+                                <option value="4">4 Persons</option>
+                                <option value="5">5 Persons</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(2)" id="step1Next" disabled>
+                        Next: View Available Options <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="wizard-step" id="step2">
+                <div class="step-header">
+                    <h2>Available <span id="transportTypeTitle">Flights</span></h2>
+                    <p id="routeInfo">Delhi → Destination</p>
+                </div>
+                <div class="available-options" id="availableOptions"></div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(3)" id="step2Next" disabled>
+                        Next: Enter Traveler Details <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="wizard-step" id="step3">
+                <div class="step-header">
+                    <h2>Traveler Details</h2>
+                    <p>Enter details for each traveler one by one</p>
+                </div>
+                <div class="traveler-tabs" id="travelerTabs"></div>
+                <div class="traveler-form-container" id="travelerFormContainer"></div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(4)" id="step3Next">
+                        Next: Upload ID Proof <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="wizard-step" id="step4">
+                <div class="step-header">
+                    <h2>Upload ID Proof</h2>
+                    <p>Upload valid government ID for verification</p>
+                </div>
+                <div class="id-upload-section" id="idUploadSection"></div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(3)"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(5)">
+                        Next: Preview Booking <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="wizard-step" id="step5">
+                <div class="step-header">
+                    <h2>Booking Preview</h2>
+                    <p>Review your booking details before confirming</p>
+                </div>
+                <div class="preview-content" id="previewContent"></div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(4)"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button class="btn btn-success btn-large" onclick="confirmBooking()">
+                        <i class="fas fa-check"></i> Confirm & Pay ₹<span id="finalTotal">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cancel Button Footer -->
+            <div class="wizard-cancel-footer">
+                <button class="btn btn-danger btn-cancel-booking" onclick="closeWizard()">
+                    <i class="fas fa-times"></i> Cancel Booking
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content invoice-content">
+            <div class="invoice-header">
+                <div class="invoice-logo">
+                    <i class="fas fa-plane-departure"></i>
+                    <span>TravelGo</span>
+                </div>
+                <div class="invoice-title">
+                    <h2>Booking Confirmed!</h2>
+                    <p>Invoice #<span id="invoiceNumber">TG000000</span></p>
+                </div>
+            </div>
+            <div class="invoice-body" id="invoiceBody"></div>
+            <div class="invoice-actions">
+                <button class="btn btn-outline" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                <button class="btn btn-outline" onclick="downloadInvoice()"><i class="fas fa-download"></i> Download</button>
+                <button class="btn btn-primary" onclick="closeInvoiceModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('tourSearch');
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase().trim();
+                    const tourCards = document.querySelectorAll('.tour-card');
+
+                    tourCards.forEach(card => {
+                        const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+                        const route = card.querySelector('p')?.textContent.toLowerCase() || '';
+                        const highlights = card.querySelector('.tour-highlights')?.textContent.toLowerCase() || '';
+                        
+                        if (title.includes(searchTerm) || route.includes(searchTerm) || highlights.includes(searchTerm)) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -222,10 +222,10 @@ function initNavbar() {
 // ========================================
 
 function startBooking(button) {
-    const card = button.closest('.destination-card');
+    const card = button.closest('.destination-card') || button.closest('.tour-card');
     bookingData.destination = card.dataset.name;
     bookingData.basePrice = parseInt(card.dataset.price);
-    bookingData.destinationType = card.dataset.type;
+    bookingData.destinationType = card.dataset.type || 'tour';
 
     document.getElementById('wizardDestination').textContent = bookingData.destination;
     document.getElementById('bookingWizard').classList.add('active');
