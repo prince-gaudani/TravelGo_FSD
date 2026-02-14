@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - TravelGo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-compact">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane-departure"></i>
+                TravelGo
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">Destination <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="destinations.html?type=domestic"><i class="fas fa-flag"></i> Domestic</a></li>
+                        <li><a href="destinations.html?type=international"><i class="fas fa-globe"></i> International</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">Tours <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="tour-packages.html"><i class="fas fa-mountain"></i> Golden Triangle</a></li>
+                        <li><a href="tour-packages.html"><i class="fas fa-water"></i> Kerala Backwaters</a></li>
+                        <li><a href="tour-packages.html"><i class="fas fa-motorcycle"></i> Ladakh Adventure</a></li>
+                        <li><a href="tour-packages.html"><i class="fas fa-chess-rook"></i> Rajasthan Heritage</a></li>
+                    </ul>
+                </li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="nav-buttons" id="authButtons">
+                <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+                <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+            </div>
+            <div class="nav-profile" id="navProfile" style="display: none;">
+                <div class="profile-dropdown">
+                    <div class="profile-trigger" id="profileTrigger">
+                        <img src="https://ui-avatars.com/api/?name=User&background=4f46e5&color=fff" alt="Profile"
+                            class="profile-img">
+                        <span class="profile-name">My Info</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="profile-menu">
+                        <li><a href="my-bookings.html"><i class="fas fa-ticket-alt"></i> My Bookings</a></li>
+                        <li><a href="#" onclick="showFavourites()"><i class="fas fa-heart"></i> Favourites</a></li>
+                        <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>My <span>Bookings</span></h1>
+            <p>View and manage your travel history</p>
+        </div>
+    </section>
+
+    <!-- Bookings List -->
+    <section class="my-bookings-section">
+        <div class="container">
+            <div class="bookings-list" id="myBookingsContainer">
+                <!-- Bookings will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Invoice Modal -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content invoice-content">
+            <div class="invoice-header">
+                <div class="invoice-logo">
+                    <i class="fas fa-plane-departure"></i>
+                    <span>TravelGo</span>
+                </div>
+                <div class="invoice-title">
+                    <h2>Booking Invoice</h2>
+                    <p>Invoice #<span id="invoiceNumber">TG000000</span></p>
+                </div>
+            </div>
+            <div class="invoice-body" id="invoiceBody"></div>
+            <div class="invoice-actions">
+                <button class="btn btn-outline" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                <button class="btn btn-outline" onclick="downloadInvoice()"><i class="fas fa-download"></i> Download</button>
+                <button class="btn btn-primary" onclick="closeInvoiceModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
