@@ -8,11 +8,115 @@ document.addEventListener('DOMContentLoaded', function () {
     initForms();
     initPasswordToggle();
     initTripTypeToggle();
-    initTripTypeToggle();
-    initTripTypeToggle();
     setMinDates();
     initHeroSlider();
+    initAuth();
 });
+
+
+
+// ========================================
+// Authentication Functions
+// ========================================
+
+function initAuth() {
+    checkLoginState();
+
+    // Login Form Handling
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            // distinct simulation for demo
+            if (email) {
+                // Simulate Login
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userName', email.split('@')[0]); // Simple name
+
+                showNotification('Login Successful!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            }
+        });
+    }
+
+    // Logout Handling
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            handleLogout();
+        });
+    }
+
+    // Profile Dropdown Toggle
+    const profileTrigger = document.getElementById('profileTrigger');
+    const profileDropdown = document.querySelector('.profile-dropdown');
+
+    if (profileTrigger && profileDropdown) {
+        profileTrigger.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('active');
+        });
+
+        // Close on click outside
+        document.addEventListener('click', function (e) {
+            if (!profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('active');
+            }
+        });
+    }
+}
+
+function checkLoginState() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    updateAuthUI(isLoggedIn);
+}
+
+function updateAuthUI(isLoggedIn) {
+    const authButtons = document.getElementById('authButtons');
+    const navProfile = document.getElementById('navProfile');
+    const profileName = document.querySelector('.profile-name');
+    const profileImg = document.querySelector('.profile-img');
+
+    if (isLoggedIn) {
+        if (authButtons) authButtons.style.display = 'none';
+        if (navProfile) {
+            navProfile.style.display = 'block';
+            const userName = localStorage.getItem('userName') || 'User';
+            if (profileName) profileName.textContent = userName;
+            if (profileImg) profileImg.src = `https://ui-avatars.com/api/?name=${userName}&background=4f46e5&color=fff`;
+        }
+    } else {
+        if (authButtons) authButtons.style.display = 'flex'; // Restore 'flex'
+        if (navProfile) navProfile.style.display = 'none';
+
+        // Mobile menu handling if needed
+        const navLinks = document.querySelector('.nav-links');
+        if (navLinks && navLinks.classList.contains('active')) {
+            // Re-evaluate if needed
+        }
+    }
+}
+
+function handleLogout() {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userName');
+
+    showNotification('Logged out successfully', 'success');
+
+    // updates UI immediately
+    updateAuthUI(false);
+
+    // If on a protected page, redirect (optional)
+    if (window.location.pathname.includes('bookings.html')) {
+        window.location.href = 'index.html';
+    }
+}
 
 // ========================================
 // Booking Wizard Data
@@ -141,8 +245,11 @@ function closeWizard() {
 function selectTransport(type) {
     bookingData.transportType = type;
 
-    document.querySelectorAll('.transport-card').forEach(c => c.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
+    const cards = document.querySelectorAll('.transport-card');
+    cards.forEach(c => c.classList.remove('selected'));
+    const types = ['flight', 'bus', 'train'];
+    const index = types.indexOf(type);
+    if (index !== -1 && cards[index]) cards[index].classList.add('selected');
 
     const fromCity = document.getElementById('fromCity').value;
     const travelDate = document.getElementById('travelDate').value;
@@ -439,14 +546,14 @@ function validateFieldOnBlur(fieldType, num) {
     const field = document.getElementById(`${fieldType}_${num}`);
     const errorDiv = document.getElementById(`${fieldType}Error_${num}`);
     const group = document.getElementById(`${fieldType}Group_${num}`);
-    
+
     if (!field || !errorDiv) return;
-    
+
     const value = field.value.trim();
     let isValid = true;
     let errorMessage = '';
-    
-    switch(fieldType) {
+
+    switch (fieldType) {
         case 'name':
             if (value && !validateName(value)) {
                 isValid = false;
@@ -472,7 +579,7 @@ function validateFieldOnBlur(fieldType, num) {
             }
             break;
     }
-    
+
     if (!isValid) {
         field.classList.add('error');
         errorDiv.querySelector('span').textContent = errorMessage;
@@ -576,14 +683,14 @@ function validateTravelerForms() {
     for (let i = 0; i < bookingData.numTravelers; i++) {
         const t = bookingData.travelers[i];
         const travelerNum = i + 1;
-        
+
         // Validate required fields
         if (!t.name || !t.age || !t.gender) {
             showNotification(`Please complete details for Traveler ${travelerNum}`, 'error');
             showTravelerForm(travelerNum);
             return false;
         }
-        
+
         // Validate name (only letters and spaces, min 2 chars)
         if (!validateName(t.name)) {
             showNotification(`Please enter a valid name for Traveler ${travelerNum} (letters only, min 2 characters)`, 'error');
@@ -591,7 +698,7 @@ function validateTravelerForms() {
             highlightError(`name_${travelerNum}`);
             return false;
         }
-        
+
         // Validate age (1-120)
         if (!validateAge(t.age)) {
             showNotification(`Please enter a valid age for Traveler ${travelerNum} (1-120)`, 'error');
@@ -599,7 +706,7 @@ function validateTravelerForms() {
             highlightError(`age_${travelerNum}`);
             return false;
         }
-        
+
         // Primary traveler must have email and phone
         if (i === 0) {
             if (!t.email || !validateEmail(t.email)) {
@@ -629,7 +736,7 @@ function validateTravelerForms() {
                 return false;
             }
         }
-        
+
         if (bookingData.destinationType === 'international' && !t.passport) {
             showNotification(`Please provide passport number for Traveler ${travelerNum}`, 'error');
             showTravelerForm(travelerNum);
@@ -665,7 +772,7 @@ function highlightError(fieldId) {
     if (field) {
         field.classList.add('error');
         field.focus();
-        
+
         // Remove error class on input
         field.addEventListener('input', function removeError() {
             field.classList.remove('error');
@@ -1060,19 +1167,11 @@ function initForms() {
         }
     });
 
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            handleLogin();
-        });
-    }
-
     const signupForm = document.getElementById('signupForm');
     if (signupForm) {
         signupForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            handleSignup();
+            handleSignup(this);
         });
     }
 
@@ -1080,7 +1179,7 @@ function initForms() {
     if (contactForm) {
         contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            handleContact();
+            handleContact(this);
         });
     }
 }
@@ -1098,23 +1197,10 @@ function handleBookingSubmit(type, form) {
     }, 2000);
 }
 
-function handleLogin() {
-    const btn = event.target.querySelector('button[type="submit"]');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
-    btn.disabled = true;
-
-    setTimeout(() => {
-        btn.innerHTML = 'Login';
-        btn.disabled = false;
-        showNotification('Login successful! Redirecting...', 'success');
-        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-    }, 1500);
-}
-
-function handleSignup() {
+function handleSignup(form) {
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
-    const btn = event.target.querySelector('button[type="submit"]');
+    const btn = form.querySelector('button[type="submit"]');
 
     if (password !== confirmPassword) {
         showNotification('Passwords do not match!', 'error');
@@ -1132,8 +1218,8 @@ function handleSignup() {
     }, 1500);
 }
 
-function handleContact() {
-    const btn = event.target.querySelector('button[type="submit"]');
+function handleContact(form) {
+    const btn = form.querySelector('button[type="submit"]');
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
     btn.disabled = true;
 
@@ -1141,7 +1227,7 @@ function handleContact() {
         btn.innerHTML = 'Send Message';
         btn.disabled = false;
         showNotification('Message sent successfully!', 'success');
-        event.target.reset();
+        form.reset();
     }, 1500);
 }
 

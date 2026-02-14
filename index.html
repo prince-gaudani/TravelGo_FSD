@@ -32,9 +32,24 @@
                 </li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <div class="nav-buttons">
+            <div class="nav-buttons" id="authButtons">
                 <a href="login.html" class="btn btn-outline btn-sm">Login</a>
                 <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+            </div>
+            <div class="nav-profile" id="navProfile" style="display: none;">
+                <div class="profile-dropdown">
+                    <div class="profile-trigger" id="profileTrigger">
+                        <img src="https://ui-avatars.com/api/?name=User&background=4f46e5&color=fff" alt="Profile"
+                            class="profile-img">
+                        <span class="profile-name">My Info</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="profile-menu">
+                        <li><a href="bookings.html"><i class="fas fa-ticket-alt"></i> My Bookings</a></li>
+                        <li><a href="#"><i class="fas fa-heart"></i> Wishlist</a></li>
+                        <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="hamburger">
                 <span></span>
