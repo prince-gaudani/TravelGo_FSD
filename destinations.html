@@ -18,7 +18,6 @@
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="bookings.html">Booking</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle active">Destination <i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
@@ -26,6 +25,7 @@
                         <li><a href="destinations.html?type=international"><i class="fas fa-globe"></i> International</a></li>
                     </ul>
                 </li>
+                <li><a href="tour-packages.html">Tours</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
             <div class="nav-buttons" id="authButtons">
@@ -42,7 +42,7 @@
                     </div>
                     <ul class="profile-menu">
                         <li><a href="bookings.html"><i class="fas fa-ticket-alt"></i> My Bookings</a></li>
-                        <li><a href="#"><i class="fas fa-heart"></i> Wishlist</a></li>
+                        <li><a href="#" onclick="showFavourites()"><i class="fas fa-heart"></i> Favourites</a></li>
                         <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                     </ul>
                 </div>
@@ -78,6 +78,7 @@
                         <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&h=300&fit=crop" alt="Manali">
                         <div class="destination-badge">Popular</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
@@ -99,6 +100,7 @@
                         <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop" alt="Goa">
                         <div class="destination-badge hot">Hot Deal</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -120,6 +122,7 @@
                         <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop" alt="Agra">
                         <div class="destination-badge">Heritage</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
@@ -141,6 +144,7 @@
                         <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=300&fit=crop" alt="Jaipur">
                         <div class="destination-badge">Royal</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
@@ -162,6 +166,7 @@
                         <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=300&fit=crop" alt="Kerala">
                         <div class="destination-badge">Nature</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -183,6 +188,7 @@
                         <img src="https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=400&h=300&fit=crop" alt="Shimla">
                         <div class="destination-badge">Hill Station</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.6</span></div>
@@ -204,6 +210,7 @@
                         <img src="https://images.unsplash.com/photo-1585136917228-7535d1f6a74e?w=400&h=300&fit=crop" alt="Varanasi">
                         <div class="destination-badge">Spiritual</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
@@ -225,6 +232,7 @@
                         <img src="https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=400&h=300&fit=crop" alt="Udaipur">
                         <div class="destination-badge">Romantic</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
@@ -246,6 +254,7 @@
                         <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=300&fit=crop" alt="Leh Ladakh">
                         <div class="destination-badge hot">Trending</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -267,6 +276,7 @@
                         <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=300&fit=crop" alt="Rishikesh">
                         <div class="destination-badge">Adventure</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
@@ -288,6 +298,7 @@
                         <img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=400&h=300&fit=crop" alt="Andaman">
                         <div class="destination-badge">Beach</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
@@ -309,6 +320,7 @@
                         <img src="https://images.unsplash.com/photo-1506461883276-594a12b11cf3?w=400&h=300&fit=crop" alt="Darjeeling">
                         <div class="destination-badge">Tea Gardens</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.5</span></div>
@@ -330,6 +342,7 @@
                         <img src="https://images.unsplash.com/photo-1580581096469-8afb50e83c68?w=400&h=300&fit=crop" alt="Ooty">
                         <div class="destination-badge">Hill Station</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.6</span></div>
@@ -351,6 +364,7 @@
                         <img src="https://images.unsplash.com/photo-1623874228601-f4193c7b1818?w=400&h=300&fit=crop" alt="Munnar">
                         <div class="destination-badge">Tea</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
@@ -372,6 +386,7 @@
                         <img src="https://images.unsplash.com/photo-1623238913973-21ce570c31ff?w=400&h=300&fit=crop" alt="Coorg">
                         <div class="destination-badge">Coffee</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
@@ -394,6 +409,7 @@
                         <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&h=300&fit=crop" alt="Maldives">
                         <div class="destination-badge featured">Featured</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>5.0</span></div>
@@ -415,6 +431,7 @@
                         <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&h=300&fit=crop" alt="Paris">
                         <div class="destination-badge">Romantic</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -436,6 +453,7 @@
                         <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop" alt="Dubai">
                         <div class="destination-badge hot">Hot Deal</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
@@ -457,6 +475,7 @@
                         <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&h=300&fit=crop" alt="Bali">
                         <div class="destination-badge">Paradise</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -478,6 +497,7 @@
                         <img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=400&h=300&fit=crop" alt="Singapore">
                         <div class="destination-badge">City</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
@@ -499,6 +519,7 @@
                         <img src="https://images.unsplash.com/photo-1555992336-fb0d29498b13?w=400&h=300&fit=crop" alt="Thailand">
                         <div class="destination-badge">Beach</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
@@ -520,6 +541,7 @@
                         <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop" alt="Tokyo">
                         <div class="destination-badge">Culture</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -541,6 +563,7 @@
                         <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=400&h=300&fit=crop" alt="Switzerland">
                         <div class="destination-badge">Alps</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -562,6 +585,7 @@
                         <img src="https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?w=400&h=300&fit=crop" alt="Mauritius">
                         <div class="destination-badge">Honeymoon</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -583,6 +607,7 @@
                         <img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=300&fit=crop" alt="Sri Lanka">
                         <div class="destination-badge">Nature</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
@@ -617,8 +642,8 @@
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="bookings.html">Booking</a></li>
                         <li><a href="destinations.html">Destinations</a></li>
+                        <li><a href="tour-packages.html">Tours</a></li>
                     </ul>
                 </div>
             </div>

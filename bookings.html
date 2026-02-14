@@ -18,7 +18,6 @@
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="bookings.html" class="active">Booking</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle">Destination <i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
@@ -26,6 +25,7 @@
                         <li><a href="destinations.html?type=international"><i class="fas fa-globe"></i> International</a></li>
                     </ul>
                 </li>
+                <li><a href="tour-packages.html">Tours</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
             <div class="nav-buttons" id="authButtons">
@@ -42,7 +42,7 @@
                     </div>
                     <ul class="profile-menu">
                         <li><a href="bookings.html"><i class="fas fa-ticket-alt"></i> My Bookings</a></li>
-                        <li><a href="#"><i class="fas fa-heart"></i> Wishlist</a></li>
+                        <li><a href="#" onclick="showFavourites()"><i class="fas fa-heart"></i> Favourites</a></li>
                         <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                     </ul>
                 </div>
@@ -532,6 +532,33 @@
         </div>
     </section>
 
+    <!-- My Bookings Section -->
+    <section class="my-bookings-section" id="myBookingsSection" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2>My <span>Bookings</span></h2>
+                <p>View and manage your previous bookings</p>
+            </div>
+            <div class="bookings-list" id="bookingsList">
+                <!-- Bookings will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Edit Booking Modal -->
+    <div class="modal" id="editBookingModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeEditBookingModal()">&times;</span>
+            <div class="edit-booking-header">
+                <h2><i class="fas fa-edit"></i> Edit Booking</h2>
+                <p>Modify your booking details</p>
+            </div>
+            <div class="edit-booking-body" id="editBookingBody">
+                <!-- Edit form will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -554,7 +581,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="destinations.html?type=domestic">Domestic</a></li>
                         <li><a href="destinations.html?type=international">International</a></li>
-                        <li><a href="bookings.html">Bookings</a></li>
+                        <li><a href="tour-packages.html">Tours</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">

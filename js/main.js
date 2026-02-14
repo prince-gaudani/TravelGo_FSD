@@ -995,6 +995,21 @@ function confirmBooking() {
     const invoiceNumber = 'TG' + Date.now().toString().slice(-8);
     const optionData = getSelectedOptionData();
 
+    saveBookingToHistory({
+        invoiceNumber,
+        destination: bookingData.destination,
+        destinationType: bookingData.destinationType,
+        fromCity: bookingData.fromCity,
+        travelDate: bookingData.travelDate,
+        transportType: bookingData.transportType,
+        transportDetails: optionData,
+        travelers: bookingData.travelers,
+        packagePrice,
+        transportPrice: totalTransport,
+        taxes,
+        grandTotal
+    });
+
     // Close wizard and show invoice
     closeWizard();
     generateInvoice({
@@ -1088,8 +1103,30 @@ function closeInvoiceModal() {
 }
 
 function downloadInvoice() {
-    showNotification('Invoice download started!', 'success');
-    window.print();
+    const invoiceNumber = document.getElementById('invoiceNumber')?.textContent || 'TG000000';
+    const invoiceContent = document.getElementById('invoiceBody')?.innerHTML || '';
+    
+    const invoiceHTML = `<!DOCTYPE html><html><head><title>Invoice - ${invoiceNumber}</title>
+    <style>* { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: 'Segoe UI', sans-serif; padding: 40px; color: #334155; }
+    .invoice-container { max-width: 800px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+    .inv-header { background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; padding: 30px; display: flex; justify-content: space-between; align-items: center; }
+    .inv-logo { font-size: 28px; font-weight: 700; } .inv-title { text-align: right; }
+    .inv-body { padding: 30px; } table { width: 100%; border-collapse: collapse; } th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+    th { background: #f8fafc; font-weight: 600; } .invoice-total { text-align: right; font-size: 20px; font-weight: 700; color: #10b981; padding: 15px; background: #f0fdf4; border-radius: 8px; }
+    .invoice-section { margin-bottom: 20px; } .invoice-section h4 { margin-bottom: 10px; } @media print { body { padding: 0; } }</style></head>
+    <body><div class="invoice-container"><div class="inv-header"><div class="inv-logo">✈ TravelGo</div><div class="inv-title"><h2>Booking Invoice</h2><p>#${invoiceNumber}</p></div></div>
+    <div class="inv-body">${invoiceContent}</div></div></body></html>`;
+    
+    const blob = new Blob([invoiceHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'TravelGo_Invoice_' + invoiceNumber + '.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showNotification('Invoice downloaded successfully!', 'success');
 }
 
 // ========================================
@@ -1370,3 +1407,431 @@ function initHeroSlider() {
         slides[currentSlide].classList.add('active');
     }, 5000); // Change slide every 5 seconds
 }
+
+// ========================================
+// Favourites Functionality
+// ========================================
+
+function toggleFavourite(btn) {
+    btn.classList.toggle('active');
+    const icon = btn.querySelector('i');
+
+    const card = btn.closest('.destination-card') || btn.closest('.tour-card');
+    const name = card?.dataset.name || card?.querySelector('h3')?.textContent || 'Item';
+
+    let favourites = JSON.parse(localStorage.getItem('travelgo_favourites') || '[]');
+
+    if (btn.classList.contains('active')) {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        if (!favourites.find(f => f.name === name)) {
+            const type = card?.classList.contains('tour-card') ? 'Tour' : (card?.dataset.type || 'destination');
+            favourites.push({ name, type });
+        }
+        showNotification(`${name} added to favourites!`, 'success');
+    } else {
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+        favourites = favourites.filter(f => f.name !== name);
+        showNotification(`${name} removed from favourites`, 'info');
+    }
+
+    localStorage.setItem('travelgo_favourites', JSON.stringify(favourites));
+}
+
+function initFavourites() {
+    const favourites = JSON.parse(localStorage.getItem('travelgo_favourites') || '[]');
+    document.querySelectorAll('.btn-favourite').forEach(btn => {
+        const card = btn.closest('.destination-card') || btn.closest('.tour-card');
+        const name = card?.dataset.name || card?.querySelector('h3')?.textContent;
+        if (name && favourites.find(f => f.name === name)) {
+            btn.classList.add('active');
+            const icon = btn.querySelector('i');
+            icon.classList.remove('far');
+            icon.classList.add('fas');
+        }
+    });
+}
+
+function showFavourites() {
+    const favourites = JSON.parse(localStorage.getItem('travelgo_favourites') || '[]');
+
+    let modal = document.getElementById('favouritesModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.id = 'favouritesModal';
+        modal.innerHTML = `
+            <div class="modal-content favourites-modal-content">
+                <span class="modal-close" onclick="closeFavouritesModal()">&times;</span>
+                <div class="favourites-header">
+                    <h2><i class="fas fa-heart"></i> My Favourites</h2>
+                </div>
+                <div class="favourites-body" id="favouritesBody"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    const body = document.getElementById('favouritesBody');
+    if (favourites.length === 0) {
+        body.innerHTML = `
+            <div class="no-favourites">
+                <i class="far fa-heart"></i>
+                <h3>No favourites yet</h3>
+                <p>Start adding destinations and tours to your favourites!</p>
+            </div>
+        `;
+    } else {
+        body.innerHTML = favourites.map((f, i) => `
+            <div class="favourite-item">
+                <div class="favourite-item-info">
+                    <i class="fas fa-heart"></i>
+                    <div>
+                        <div class="favourite-item-name">${f.name}</div>
+                        <div class="favourite-item-type">${f.type}</div>
+                    </div>
+                </div>
+                <button class="favourite-remove" onclick="removeFavourite(${i})" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `).join('');
+    }
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeFavouritesModal() {
+    document.getElementById('favouritesModal')?.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function removeFavourite(index) {
+    let favourites = JSON.parse(localStorage.getItem('travelgo_favourites') || '[]');
+    const removed = favourites[index];
+    favourites.splice(index, 1);
+    localStorage.setItem('travelgo_favourites', JSON.stringify(favourites));
+
+    // Update UI buttons
+    document.querySelectorAll('.btn-favourite').forEach(btn => {
+        const card = btn.closest('.destination-card') || btn.closest('.tour-card');
+        const name = card?.dataset.name || card?.querySelector('h3')?.textContent;
+        if (name === removed?.name) {
+            btn.classList.remove('active');
+            const icon = btn.querySelector('i');
+            icon.classList.remove('fas');
+            icon.classList.add('far');
+        }
+    });
+
+    showFavourites();
+    showNotification(`${removed?.name} removed from favourites`, 'info');
+}
+
+// ========================================
+// My Bookings Functionality
+// ========================================
+
+function saveBookingToHistory(data) {
+    let bookings = JSON.parse(localStorage.getItem('travelgo_bookings') || '[]');
+    bookings.unshift({
+        id: data.invoiceNumber,
+        destination: data.destination,
+        destinationType: data.destinationType,
+        fromCity: data.fromCity,
+        travelDate: data.travelDate,
+        transportType: data.transportType,
+        transportDetails: data.transportDetails ? {
+            airline: data.transportDetails.airline,
+            operator: data.transportDetails.operator,
+            name: data.transportDetails.name,
+            number: data.transportDetails.number,
+            departure: data.transportDetails.departure,
+            arrival: data.transportDetails.arrival
+        } : null,
+        travelers: data.travelers,
+        packagePrice: data.packagePrice,
+        transportPrice: data.transportPrice,
+        taxes: data.taxes,
+        grandTotal: data.grandTotal,
+        bookingDate: new Date().toISOString(),
+        status: 'Confirmed'
+    });
+    localStorage.setItem('travelgo_bookings', JSON.stringify(bookings));
+}
+
+function loadMyBookings() {
+    const section = document.getElementById('myBookingsSection');
+    const list = document.getElementById('bookingsList');
+    if (!section || !list) return;
+
+    const bookings = JSON.parse(localStorage.getItem('travelgo_bookings') || '[]');
+
+    if (bookings.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    section.style.display = 'block';
+
+    list.innerHTML = bookings.map((b, index) => {
+        let transportInfo = '';
+        if (b.transportDetails) {
+            if (b.transportType === 'flight') transportInfo = b.transportDetails.airline || '';
+            else if (b.transportType === 'bus') transportInfo = b.transportDetails.operator || '';
+            else transportInfo = b.transportDetails.name || '';
+        }
+
+        const travelersNames = b.travelers ? b.travelers.map(t => t.name).join(', ') : 'N/A';
+
+        return `
+            <div class="booking-card">
+                <div class="booking-card-header">
+                    <span class="booking-id"><i class="fas fa-ticket-alt"></i> ${b.id}</span>
+                    <span class="booking-status ${b.status === 'Confirmed' ? 'confirmed' : 'pending'}">${b.status}</span>
+                </div>
+                <div class="booking-card-body">
+                    <div class="booking-details-grid">
+                        <div class="booking-detail-item">
+                            <label>Destination</label>
+                            <span>${b.destination}</span>
+                        </div>
+                        <div class="booking-detail-item">
+                            <label>From</label>
+                            <span>${b.fromCity}</span>
+                        </div>
+                        <div class="booking-detail-item">
+                            <label>Travel Date</label>
+                            <span>${new Date(b.travelDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                        </div>
+                        <div class="booking-detail-item">
+                            <label>Transport</label>
+                            <span>${b.transportType ? b.transportType.charAt(0).toUpperCase() + b.transportType.slice(1) : 'N/A'}${transportInfo ? ' - ' + transportInfo : ''}</span>
+                        </div>
+                    </div>
+                    <div class="booking-travelers">
+                        <h4><i class="fas fa-users"></i> Travelers: ${travelersNames}</h4>
+                    </div>
+                    <div class="booking-detail-item" style="margin-bottom: 15px;">
+                        <label>Total Amount</label>
+                        <span style="color: var(--success-color); font-size: 18px;">₹${b.grandTotal ? b.grandTotal.toLocaleString('en-IN') : '0'}</span>
+                    </div>
+                    <div class="booking-card-actions">
+                        <button class="btn btn-warning" onclick="editBooking(${index})"><i class="fas fa-edit"></i> Edit Booking</button>
+                        <button class="btn btn-info" onclick="downloadBookingInvoice(${index})"><i class="fas fa-download"></i> Download Invoice</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function editBooking(index) {
+    const bookings = JSON.parse(localStorage.getItem('travelgo_bookings') || '[]');
+    const booking = bookings[index];
+    if (!booking) return;
+
+    const modal = document.getElementById('editBookingModal');
+    const body = document.getElementById('editBookingBody');
+    if (!modal || !body) return;
+
+    body.innerHTML = `
+        <form id="editBookingForm" onsubmit="saveEditedBooking(event, ${index})">
+            <div class="form-group">
+                <label>Booking ID</label>
+                <input type="text" value="${booking.id}" disabled class="form-control" style="background: var(--light-color);">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Travel Date</label>
+                    <input type="date" id="editTravelDate" value="${booking.travelDate}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>From City</label>
+                    <select id="editFromCity" class="form-control">
+                        <option value="Delhi" ${booking.fromCity === 'Delhi' ? 'selected' : ''}>Delhi</option>
+                        <option value="Mumbai" ${booking.fromCity === 'Mumbai' ? 'selected' : ''}>Mumbai</option>
+                        <option value="Bangalore" ${booking.fromCity === 'Bangalore' ? 'selected' : ''}>Bangalore</option>
+                        <option value="Chennai" ${booking.fromCity === 'Chennai' ? 'selected' : ''}>Chennai</option>
+                        <option value="Kolkata" ${booking.fromCity === 'Kolkata' ? 'selected' : ''}>Kolkata</option>
+                        <option value="Hyderabad" ${booking.fromCity === 'Hyderabad' ? 'selected' : ''}>Hyderabad</option>
+                        <option value="Pune" ${booking.fromCity === 'Pune' ? 'selected' : ''}>Pune</option>
+                        <option value="Ahmedabad" ${booking.fromCity === 'Ahmedabad' ? 'selected' : ''}>Ahmedabad</option>
+                    </select>
+                </div>
+            </div>
+            ${booking.travelers ? booking.travelers.map((t, i) => `
+                <div style="background: var(--light-color); padding: 15px; border-radius: var(--radius); margin-bottom: 15px;">
+                    <h4 style="font-size: 14px; margin-bottom: 10px;"><i class="fas fa-user"></i> Traveler ${i + 1}</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="editName_${i}" value="${t.name}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" id="editAge_${i}" value="${t.age}" class="form-control" min="1" max="120" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="editEmail_${i}" value="${t.email || ''}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="editPhone_${i}" value="${t.phone || ''}" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            `).join('') : ''}
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" onclick="closeEditBookingModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+            </div>
+        </form>
+    `;
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function saveEditedBooking(event, index) {
+    event.preventDefault();
+
+    const bookings = JSON.parse(localStorage.getItem('travelgo_bookings') || '[]');
+    const booking = bookings[index];
+    if (!booking) return;
+
+    booking.travelDate = document.getElementById('editTravelDate').value;
+    booking.fromCity = document.getElementById('editFromCity').value;
+
+    if (booking.travelers) {
+        booking.travelers.forEach((t, i) => {
+            t.name = document.getElementById(`editName_${i}`)?.value || t.name;
+            t.age = document.getElementById(`editAge_${i}`)?.value || t.age;
+            t.email = document.getElementById(`editEmail_${i}`)?.value || t.email;
+            t.phone = document.getElementById(`editPhone_${i}`)?.value || t.phone;
+        });
+    }
+
+    bookings[index] = booking;
+    localStorage.setItem('travelgo_bookings', JSON.stringify(bookings));
+
+    closeEditBookingModal();
+    loadMyBookings();
+    showNotification('Booking updated successfully!', 'success');
+}
+
+function closeEditBookingModal() {
+    document.getElementById('editBookingModal')?.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function downloadBookingInvoice(index) {
+    const bookings = JSON.parse(localStorage.getItem('travelgo_bookings') || '[]');
+    const b = bookings[index];
+    if (!b) return;
+
+    let transportInfo = '';
+    if (b.transportDetails) {
+        if (b.transportType === 'flight') transportInfo = `${b.transportDetails.airline || ''} | ${b.transportDetails.departure || ''} - ${b.transportDetails.arrival || ''}`;
+        else if (b.transportType === 'bus') transportInfo = `${b.transportDetails.operator || ''} | ${b.transportDetails.departure || ''} - ${b.transportDetails.arrival || ''}`;
+        else transportInfo = `${b.transportDetails.name || ''} #${b.transportDetails.number || ''} | ${b.transportDetails.departure || ''} - ${b.transportDetails.arrival || ''}`;
+    }
+
+    const travelersRows = b.travelers ? b.travelers.map((t, i) =>
+        `<tr><td>${i + 1}</td><td>${t.name}</td><td>${t.age}</td><td>${t.gender}</td><td>${b.destinationType === 'international' ? (t.passport || 'N/A') : 'N/A'}</td></tr>`
+    ).join('') : '';
+
+    const invoiceHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Invoice - ${b.id}</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Segoe UI', sans-serif; padding: 40px; color: #334155; }
+            .invoice-container { max-width: 800px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+            .inv-header { background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; padding: 30px; display: flex; justify-content: space-between; align-items: center; }
+            .inv-logo { font-size: 28px; font-weight: 700; }
+            .inv-title { text-align: right; }
+            .inv-title h2 { font-size: 20px; margin-bottom: 5px; }
+            .inv-title p { font-size: 13px; opacity: 0.9; }
+            .inv-body { padding: 30px; }
+            .inv-section { margin-bottom: 25px; }
+            .inv-section h4 { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #1e293b; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+            th { background: #f8fafc; font-weight: 600; }
+            .total-row { font-size: 20px; font-weight: 700; color: #10b981; text-align: right; padding: 15px; background: #f0fdf4; border-radius: 8px; margin-top: 10px; }
+            .inv-footer { text-align: center; padding: 20px; color: #64748b; font-size: 12px; border-top: 1px solid #e2e8f0; }
+            .confirmed-badge { display: inline-block; background: #10b981; color: white; padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+            @media print { body { padding: 0; } .invoice-container { border: none; } }
+        </style>
+    </head>
+    <body>
+        <div class="invoice-container">
+            <div class="inv-header">
+                <div class="inv-logo">✈ TravelGo</div>
+                <div class="inv-title">
+                    <h2>Booking Invoice</h2>
+                    <p>${b.id} | ${new Date(b.bookingDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                </div>
+            </div>
+            <div class="inv-body">
+                <div class="inv-section">
+                    <h4>Journey Details</h4>
+                    <table>
+                        <tr><td><strong>Destination</strong></td><td>${b.destination} (${b.destinationType})</td></tr>
+                        <tr><td><strong>From</strong></td><td>${b.fromCity}</td></tr>
+                        <tr><td><strong>Travel Date</strong></td><td>${new Date(b.travelDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td></tr>
+                        <tr><td><strong>Transport</strong></td><td>${b.transportType ? b.transportType.charAt(0).toUpperCase() + b.transportType.slice(1) : 'N/A'}</td></tr>
+                        <tr><td><strong>Details</strong></td><td>${transportInfo}</td></tr>
+                        <tr><td><strong>Status</strong></td><td><span class="confirmed-badge">${b.status}</span></td></tr>
+                    </table>
+                </div>
+                <div class="inv-section">
+                    <h4>Traveler Details</h4>
+                    <table>
+                        <thead><tr><th>#</th><th>Name</th><th>Age</th><th>Gender</th><th>Passport</th></tr></thead>
+                        <tbody>${travelersRows}</tbody>
+                    </table>
+                </div>
+                <div class="inv-section">
+                    <h4>Payment Summary</h4>
+                    <table>
+                        <tr><td>Package Price</td><td>₹${b.packagePrice ? b.packagePrice.toLocaleString('en-IN') : '0'}</td></tr>
+                        <tr><td>Transport Fare</td><td>₹${b.transportPrice ? b.transportPrice.toLocaleString('en-IN') : '0'}</td></tr>
+                        <tr><td>Taxes & GST (18%)</td><td>₹${b.taxes ? b.taxes.toLocaleString('en-IN') : '0'}</td></tr>
+                    </table>
+                    <div class="total-row">Total Paid: ₹${b.grandTotal ? b.grandTotal.toLocaleString('en-IN') : '0'}</div>
+                </div>
+            </div>
+            <div class="inv-footer">
+                <p>Thank you for booking with TravelGo! | support@travelgo.com | +91 98765 43210</p>
+            </div>
+        </div>
+    </body>
+    </html>`;
+
+    const blob = new Blob([invoiceHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `TravelGo_Invoice_${b.id}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showNotification('Invoice downloaded successfully!', 'success');
+}
+
+// Initialize favourites on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initFavourites();
+    loadMyBookings();
+});

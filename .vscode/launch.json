@@ -7,8 +7,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open index.html",
-            "file": "d:\\.vscode\\templates\\TravelGo - Copy - Copy - Copy\\index.html"
+            "name": "Open Travel Go Login",
+            "url": "https://travelgoforu.vercel.app/login.html"
         }
     ]
 }

@@ -21,13 +21,22 @@
             </a>
             <ul class="nav-links">
                 <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="bookings.html">Booking</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle">Destination <i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="destinations.html?type=domestic"><i class="fas fa-flag"></i> Domestic</a></li>
                         <li><a href="destinations.html?type=international"><i class="fas fa-globe"></i>
                                 International</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">Tours <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="bookings.html"><i class="fas fa-mountain"></i> Adventure Tours</a></li>
+                        <li><a href="bookings.html"><i class="fas fa-leaf"></i> Nature Tours</a></li>
+                        <li><a href="bookings.html"><i class="fas fa-chess-rook"></i> Heritage Tours</a></li>
+                        <li><a href="bookings.html"><i class="fas fa-om"></i> Spiritual Tours</a></li>
+                        <li><a href="bookings.html"><i class="fas fa-umbrella-beach"></i> Beach Tours</a></li>
                     </ul>
                 </li>
                 <li><a href="#contact">Contact</a></li>
@@ -46,7 +55,7 @@
                     </div>
                     <ul class="profile-menu">
                         <li><a href="bookings.html"><i class="fas fa-ticket-alt"></i> My Bookings</a></li>
-                        <li><a href="#"><i class="fas fa-heart"></i> Wishlist</a></li>
+                        <li><a href="#" onclick="showFavourites()"><i class="fas fa-heart"></i> Favourites</a></li>
                         <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                     </ul>
                 </div>
@@ -104,6 +113,7 @@
                             alt="Manali">
                         <div class="destination-badge">Popular</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
@@ -126,6 +136,7 @@
                             alt="Goa">
                         <div class="destination-badge hot">Hot Deal</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -149,6 +160,7 @@
                             alt="Maldives">
                         <div class="destination-badge featured">Featured</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>5.0</span></div>
@@ -171,6 +183,7 @@
                             alt="Paris">
                         <div class="destination-badge">Romantic</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
@@ -193,6 +206,7 @@
                             alt="Bali">
                         <div class="destination-badge">Popular</div>
                         <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
@@ -215,6 +229,7 @@
                             alt="Kerala">
                         <div class="destination-badge">Nature</div>
                         <div class="destination-type">Domestic</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
                     </div>
                     <div class="destination-info">
                         <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
@@ -352,6 +367,296 @@
         </div>
     </section>
 
+    <!-- Featured Tours -->
+    <section id="tours" class="tours-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Popular <span>Tours</span></h2>
+                <p>Curated tour packages for unforgettable experiences</p>
+            </div>
+            <div class="tours-grid">
+                <div class="tour-card" data-name="Golden Triangle Tour" data-price="15999" data-duration="5 Days / 4 Nights">
+Perfect! Let me also view the tours section to confirm it has all the tour cards:
+Action: file_editor view /app/index.html
+Observation: /app/index.html:
+363|    <section id="tours" class="tours-section">
+364|        <div class="container">
+365|            <div class="section-header">
+366|                <h2>Popular <span>Tours</span></h2>
+367|                <p>Curated tour packages for unforgettable experiences</p>
+368|            </div>
+369|            <div class="tours-grid">
+                <div class="tour-card" data-name="Goa Beach Party" data-price="12999" data-duration="4 Days / 3 Nights">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop" alt="Golden Triangle Tour">
+                        <div class="tour-badge">Best Seller</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 5 Days / 4 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(2.3k reviews)</small></div>
+                        <h3>Golden Triangle Tour</h3>
+                        <p><i class="fas fa-route"></i> Delhi → Agra → Jaipur → Delhi</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-hotel"></i> 4★ Hotels</span>
+                            <span><i class="fas fa-utensils"></i> Meals</span>
+                            <span><i class="fas fa-car"></i> Transport</span>
+                            <span><i class="fas fa-user-tie"></i> Guide</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹22,999</span>
+                                <span class="price">₹15,999</span>
+                                <span class="offer-tag">30% OFF</span>
+                            </div>
+                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tour-card" data-name="Kerala Backwater Cruise" data-price="24999" data-duration="6 Days / 5 Nights">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=300&fit=crop" alt="Kerala Backwater Cruise">
+                        <div class="tour-badge hot">Trending</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 6 Days / 5 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.8</span> <small>(1.8k reviews)</small></div>
+                        <h3>Kerala Backwater Cruise</h3>
+                        <p><i class="fas fa-route"></i> Kochi → Munnar → Alleppey → Kovalam</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-hotel"></i> 5★ Resorts</span>
+                            <span><i class="fas fa-utensils"></i> All Meals</span>
+                            <span><i class="fas fa-ship"></i> Houseboat</span>
+                            <span><i class="fas fa-spa"></i> Ayurveda</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹35,999</span>
+                                <span class="price">₹24,999</span>
+                                <span class="offer-tag">31% OFF</span>
+                            </div>
+                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tour-card" data-name="Ladakh Adventure" data-price="29999" data-duration="7 Days / 6 Nights">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=300&fit=crop" alt="Ladakh Adventure">
+                        <div class="tour-badge">Adventure</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 7 Days / 6 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(1.5k reviews)</small></div>
+                        <h3>Ladakh Adventure</h3>
+                        <p><i class="fas fa-route"></i> Leh → Nubra → Pangong → Leh</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-campground"></i> Camping</span>
+                            <span><i class="fas fa-utensils"></i> Meals</span>
+                            <span><i class="fas fa-motorcycle"></i> Bike Ride</span>
+                            <span><i class="fas fa-mountain"></i> Trekking</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹42,999</span>
+                                <span class="price">₹29,999</span>
+                                <span class="offer-tag">30% OFF</span>
+                            </div>
+                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tour-card" data-name="Rajasthan Royal Heritage" data-price="32999" data-duration="8 Days / 7 Nights">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=300&fit=crop" alt="Rajasthan Heritage">
+                        <div class="tour-badge featured">Premium</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 8 Days / 7 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>5.0</span> <small>(980 reviews)</small></div>
+                        <h3>Rajasthan Royal Heritage</h3>
+                        <p><i class="fas fa-route"></i> Jaipur → Jodhpur → Udaipur → Jaisalmer</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-chess-rook"></i> Palace Stay</span>
+                            <span><i class="fas fa-utensils"></i> Royal Dining</span>
+                            <span><i class="fas fa-horse"></i> Camel Safari</span>
+                            <span><i class="fas fa-music"></i> Folk Show</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹45,999</span>
+                                <span class="price">₹32,999</span>
+                                <span class="offer-tag">28% OFF</span>
+                            </div>
+                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tour-card" data-name="Goa Beach Party" data-price="11999" data-duration="4 Days / 3 Nights">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop" alt="Goa Beach">
+                        <div class="tour-badge hot">Hot Deal</div>
+                        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop" alt="Goa Beach Party">
+                        <div class="tour-badge">Party</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 4 Days / 3 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.7</span> <small>(3.1k reviews)</small></div>
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.7</span> <small>(1.5k reviews)</small></div>
+                        <h3>Goa Beach Party</h3>
+                        <p><i class="fas fa-route"></i> North Goa → South Goa → Old Goa</p>
+                        <p><i class="fas fa-route"></i> North Goa → South Goa</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-hotel"></i> Beach Resort</span>
+                            <span><i class="fas fa-umbrella-beach"></i> Water Sports</span>
+                            <span><i class="fas fa-cocktail"></i> Nightlife</span>
+                            <span><i class="fas fa-ship"></i> Cruise</span>
+                            <span><i class="fas fa-glass-cheers"></i> Nightlife</span>
+                            <span><i class="fas fa-umbrella-beach"></i> Beaches</span>
+                            <span><i class="fas fa-hotel"></i> 4★ Hotel</span>
+                            <span><i class="fas fa-car"></i> Transfers</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹16,999</span>
+                                <span class="price">₹11,999</span>
+                                <span class="offer-tag">29% OFF</span>
+                                <span class="original-price">₹18,999</span>
+                                <span class="price">₹12,999</span>
+                                <span class="offer-tag">32% OFF</span>
+                            </div>
+                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tour-card" data-name="Himalayan Spiritual Journey" data-price="18999" data-duration="6 Days / 5 Nights">
+
+                <div class="tour-card" data-name="Kashmir Paradise" data-price="28999" data-duration="6 Days / 5 Nights">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1585136917228-7535d1f6a74e?w=400&h=300&fit=crop" alt="Himalayan Spiritual">
+                        <div class="tour-badge">Spiritual</div>
+                        <img src="https://images.unsplash.com/photo-1566837945700-30057527ade0?w=400&h=300&fit=crop" alt="Kashmir Paradise">
+                        <div class="tour-badge">Honeymoon</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 6 Days / 5 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.8</span> <small>(1.2k reviews)</small></div>
+                        <h3>Himalayan Spiritual Journey</h3>
+                        <p><i class="fas fa-route"></i> Haridwar → Rishikesh → Mussoorie → Dehradun</p>
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(900 reviews)</small></div>
+                        <h3>Kashmir Paradise</h3>
+                        <p><i class="fas fa-route"></i> Srinagar → Gulmarg → Pahalgam</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-om"></i> Yoga</span>
+                            <span><i class="fas fa-hotel"></i> Ashram Stay</span>
+                            <span><i class="fas fa-water"></i> Rafting</span>
+                            <span><i class="fas fa-pray"></i> Ganga Aarti</span>
+                            <span><i class="fas fa-snowflake"></i> Snow</span>
+                            <span><i class="fas fa-ship"></i> Shikara Ride</span>
+                            <span><i class="fas fa-hotel"></i> Houseboat</span>
+                            <span><i class="fas fa-utensils"></i> Meals</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹25,999</span>
+                                <span class="price">₹18,999</span>
+                                <span class="offer-tag">27% OFF</span>
+                            </div>
+                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tour-card" data-name="Sikkim Nature Trail" data-price="22999" data-duration="5 Days / 4 Nights">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Sikkim Nature Trail">
+                        <div class="tour-badge">Nature</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 5 Days / 4 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(2.1k reviews)</small></div>
+                        <h3>Sikkim Nature Trail</h3>
+                        <p><i class="fas fa-route"></i> Gangtok → Tsomgo Lake → Nathula Pass → Lachung</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-mountain"></i> Mountain Peaks</span>
+                            <span><i class="fas fa-tree"></i> Nature Trails</span>
+                            <span><i class="fas fa-snowflake"></i> Snow Views</span>
+                            <span><i class="fas fa-hotel"></i> Mountain Lodges</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹32,999</span>
+                                <span class="price">₹22,999</span>
+                                <span class="offer-tag">30% OFF</span>
+                            </div>
+                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tour-card" data-name="Ranthambore Tiger Safari" data-price="26999" data-duration="4 Days / 3 Nights">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=300&fit=crop" alt="Ranthambore Tiger Safari">
+                        <div class="tour-badge">Wildlife</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 4 Days / 3 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(1.6k reviews)</small></div>
+                        <h3>Ranthambore Tiger Safari</h3>
+                        <p><i class="fas fa-route"></i> Jaipur → Ranthambore → Chambal Safari</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-paw"></i> Tiger Sightings</span>
+                            <span><i class="fas fa-binoculars"></i> Wildlife Safari</span>
+                            <span><i class="fas fa-fortress"></i> Fort Tour</span>
+                            <span><i class="fas fa-utensils"></i> Local Cuisine</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹38,999</span>
+                                <span class="price">₹26,999</span>
+                                <span class="offer-tag">31% OFF</span>
+                                <span class="price">₹28,999</span>
+                                <span class="offer-tag">25% OFF</span>
+                            </div>
+                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tour-card" data-name="Mysore Palace & Coffee Tour" data-price="13999" data-duration="3 Days / 2 Nights">
+                    <div class="tour-image">
+                        <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=300&fit=crop" alt="Mysore Palace">
+                        <div class="tour-badge hot">Budget Friendly</div>
+                        <div class="tour-duration"><i class="fas fa-clock"></i> 3 Days / 2 Nights</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.6</span> <small>(1.3k reviews)</small></div>
+                        <h3>Mysore Palace & Coffee Tour</h3>
+                        <p><i class="fas fa-route"></i> Mysore → Coffee Plantations → Madikeri</p>
+                        <div class="tour-highlights">
+                            <span><i class="fas fa-chess-rook"></i> Palace Tour</span>
+                            <span><i class="fas fa-leaf"></i> Coffee Estate</span>
+                            <span><i class="fas fa-camera"></i> Photography</span>
+                            <span><i class="fas fa-utensils"></i> Heritage Meals</span>
+                        </div>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="original-price">₹19,999</span>
+                                <span class="price">₹13,999</span>
+                                <span class="offer-tag">30% OFF</span>
+                            </div>
+                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Services Section -->
     <section class="services">
         <div class="container">
@@ -472,8 +777,8 @@
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="bookings.html">Booking</a></li>
                         <li><a href="destinations.html">Destinations</a></li>
+                        <li><a href="#tours">Tours</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
@@ -692,3 +997,64 @@
 </body>
 
 </html>
+370|                <div class="tour-card" data-name="Golden Triangle Tour" data-price="15999" data-duration="5 Days / 4 Nights">
+371|                    <div class="tour-image">
+372|                        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop" alt="Golden Triangle Tour">
+373|                        <div class="tour-badge">Best Seller</div>
+374|                        <div class="tour-duration"><i class="fas fa-clock"></i> 5 Days / 4 Nights</div>
+375|                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+376|                    </div>
+377|                    <div class="tour-info">
+378|                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(2.3k reviews)</small></div>
+379|                        <h3>Golden Triangle Tour</h3>
+380|                        <p><i class="fas fa-route"></i> Delhi → Agra → Jaipur → Delhi</p>
+381|                        <div class="tour-highlights">
+382|                            <span><i class="fas fa-hotel"></i> 4★ Hotels</span>
+383|                            <span><i class="fas fa-utensils"></i> Meals</span>
+384|                            <span><i class="fas fa-car"></i> Transport</span>
+385|                            <span><i class="fas fa-user-tie"></i> Guide</span>
+386|                        </div>
+387|                        <div class="tour-price">
+388|                            <div class="price-info">
+389|                                <span class="original-price">₹22,999</span>
+390|                                <span class="price">₹15,999</span>
+391|                                <span class="offer-tag">30% OFF</span>
+392|                            </div>
+393|                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+394|                        </div>
+395|                    </div>
+396|                </div>
+397|                <div class="tour-card" data-name="Kerala Backwater Cruise" data-price="24999" data-duration="6 Days / 5 Nights">
+398|                    <div class="tour-image">
+399|                        <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=300&fit=crop" alt="Kerala Backwater Cruise">
+400|                        <div class="tour-badge hot">Trending</div>
+401|                        <div class="tour-duration"><i class="fas fa-clock"></i> 6 Days / 5 Nights</div>
+402|                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+403|                    </div>
+404|                    <div class="tour-info">
+405|                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.8</span> <small>(1.8k reviews)</small></div>
+406|                        <h3>Kerala Backwater Cruise</h3>
+407|                        <p><i class="fas fa-route"></i> Kochi → Munnar → Alleppey → Kovalam</p>
+408|                        <div class="tour-highlights">
+409|                            <span><i class="fas fa-hotel"></i> 5★ Resorts</span>
+410|                            <span><i class="fas fa-utensils"></i> All Meals</span>
+411|                            <span><i class="fas fa-ship"></i> Houseboat</span>
+412|                            <span><i class="fas fa-spa"></i> Ayurveda</span>
+413|                        </div>
+414|                        <div class="tour-price">
+415|                            <div class="price-info">
+416|                                <span class="original-price">₹35,999</span>
+417|                                <span class="price">₹24,999</span>
+418|                                <span class="offer-tag">31% OFF</span>
+419|                            </div>
+420|                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+421|                        </div>
+422|                    </div>
+423|                </div>
+424|                <div class="tour-card" data-name="Ladakh Adventure" data-price="29999" data-duration="7 Days / 6 Nights">
+425|                    <div class="tour-image">
+426|                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=300&fit=crop" alt="Ladakh Adventure">
+427|                        <div class="tour-badge">Adventure</div>
+428|                        <div class="tour-duration"><i class="fas fa-clock"></i> 7 Days / 6 Nights</div>
+429|                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+430|                    </div>

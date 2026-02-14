@@ -192,7 +192,9 @@ img {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 25px;
+    position: relative;
+    z-index: 10;
 }
 
 .nav-links>li {
@@ -217,6 +219,14 @@ img {
 /* Dropdown Menu */
 .dropdown {
     position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
 }
 
 .dropdown-toggle i {
@@ -230,17 +240,19 @@ img {
 
 .dropdown-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     left: 0;
     background: var(--white);
-    min-width: 180px;
-    box-shadow: var(--shadow-lg);
+    min-width: 200px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     border-radius: var(--radius);
-    padding: 10px 0;
+    padding: 12px 0;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(10px);
-    transition: var(--transition);
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1100;
+    border: 1px solid #e0e0e0;
 }
 
 .dropdown:hover .dropdown-menu {
@@ -249,15 +261,30 @@ img {
     transform: translateY(0);
 }
 
+.dropdown-menu li {
+    list-style: none;
+}
+
 .dropdown-menu li a {
-    padding: 10px 20px;
+    padding: 12px 20px;
     display: flex;
     align-items: center;
     gap: 10px;
+    color: var(--text-color);
+    font-size: 14px;
+    transition: var(--transition);
 }
 
 .dropdown-menu li a:hover {
     background: var(--light-color);
+    color: var(--primary-color);
+    padding-left: 25px;
+}
+
+.dropdown-menu li a i {
+    width: 18px;
+    text-align: center;
+    font-size: 14px;
 }
 
 .nav-buttons {
@@ -2315,9 +2342,9 @@ section {
     }
 
     .progress-step span {
-        width: 24px;
-        height: 24px;
         font-size: 11px;
+        width: 28px;
+        height: 28px;
     }
 
     .wizard-step {
@@ -2735,6 +2762,7 @@ section {
 .profile-menu li a:hover {
     background-color: var(--light-color);
     color: var(--primary-color);
+    padding-left: 25px;
 }
 
 .profile-menu li a i {
@@ -2769,4 +2797,503 @@ section {
     .profile-dropdown.active .profile-menu {
         display: block;
     }
+}
+
+/* ========================================
+   Tours Section
+   ======================================== */
+
+.tours-section {
+    background: var(--white);
+}
+
+.tours-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+@media (max-width: 1024px) {
+    .tours-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .tours-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tour-card {
+    background: var(--light-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.tour-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.tour-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.tour-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.tour-card:hover .tour-image img {
+    transform: scale(1.1);
+}
+
+.tour-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.tour-badge.hot {
+    background: var(--danger-color);
+}
+
+.tour-badge.featured {
+    background: var(--accent-color);
+}
+
+.tour-duration {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--white);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tour-info {
+    padding: 18px;
+}
+
+.tour-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--accent-color);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.tour-rating small {
+    color: var(--text-light);
+    font-weight: 400;
+}
+
+.tour-info h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+}
+
+.tour-info > p {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tour-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.tour-highlights span {
+    font-size: 11px;
+    background: var(--white);
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.tour-highlights span i {
+    color: var(--primary-color);
+    font-size: 10px;
+}
+
+.tour-price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* ========================================
+   Favourite Button
+   ======================================== */
+
+.btn-favourite {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 16px;
+    color: var(--text-light);
+    z-index: 5;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-favourite:hover {
+    background: var(--white);
+    transform: scale(1.15);
+    color: var(--danger-color);
+}
+
+.btn-favourite.active {
+    color: var(--danger-color);
+    background: var(--white);
+}
+
+.btn-favourite.active i {
+    font-weight: 900;
+}
+
+/* Adjust destination-type position when favourite button exists */
+.destination-image .btn-favourite,
+.tour-image .btn-favourite {
+    top: 12px;
+    right: 12px;
+}
+
+.destination-image .destination-type {
+    top: 12px;
+    right: 52px;
+}
+
+/* ========================================
+   My Bookings Section
+   ======================================== */
+
+.my-bookings-section {
+    padding: 60px 0;
+    background: var(--light-color);
+}
+
+.bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.booking-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.booking-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.booking-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+}
+
+.booking-card-header .booking-id {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.booking-card-header .booking-status {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.booking-status.confirmed {
+    background: rgba(16, 185, 129, 0.2);
+    color: #a7f3d0;
+}
+
+.booking-status.pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fde68a;
+}
+
+.booking-card-body {
+    padding: 25px;
+}
+
+.booking-details-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .booking-details-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .booking-details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.booking-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.booking-detail-item label {
+    font-size: 11px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.booking-detail-item span {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.booking-travelers {
+    margin-bottom: 20px;
+}
+
+.booking-travelers h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 10px;
+}
+
+.booking-card-actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.booking-card-actions .btn {
+    font-size: 13px;
+    padding: 10px 20px;
+}
+
+.btn-warning {
+    background: var(--accent-color);
+    color: var(--white);
+}
+
+.btn-warning:hover {
+    background: #d97706;
+}
+
+.btn-info {
+    background: var(--secondary-color);
+    color: var(--white);
+}
+
+.btn-info:hover {
+    background: #0891b2;
+}
+
+.no-bookings {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+}
+
+.no-bookings i {
+    font-size: 60px;
+    margin-bottom: 20px;
+    color: var(--border-color);
+}
+
+.no-bookings h3 {
+    font-size: 20px;
+    color: var(--dark-color);
+    margin-bottom: 10px;
+}
+
+/* Edit Booking Modal */
+.edit-booking-header {
+    padding: 25px;
+    background: var(--light-color);
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.edit-booking-header h2 {
+    font-size: 22px;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+}
+
+.edit-booking-header h2 i {
+    color: var(--primary-color);
+}
+
+.edit-booking-header p {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.edit-booking-body {
+    padding: 25px;
+}
+
+.edit-booking-body .form-group {
+    margin-bottom: 18px;
+}
+
+.edit-booking-body .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Favourites Modal */
+.favourites-modal-content {
+    max-width: 500px;
+}
+
+.favourites-header {
+    padding: 25px;
+    background: var(--light-color);
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.favourites-header h2 {
+    font-size: 22px;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+}
+
+.favourites-header h2 i {
+    color: var(--danger-color);
+}
+
+.favourites-body {
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.favourite-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background: var(--light-color);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    transition: var(--transition);
+}
+
+.favourite-item:hover {
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.favourite-item-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.favourite-item-info i {
+    color: var(--danger-color);
+    font-size: 18px;
+}
+
+.favourite-item-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--dark-color);
+}
+
+.favourite-item-type {
+    font-size: 11px;
+    color: var(--text-light);
+}
+
+.favourite-remove {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    transition: var(--transition);
+}
+
+.favourite-remove:hover {
+    color: var(--danger-color);
+}
+
+.no-favourites {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+}
+
+.no-favourites i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: var(--border-color);
 }
