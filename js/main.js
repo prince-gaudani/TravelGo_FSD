@@ -282,6 +282,15 @@ function goToStep(step) {
             return;
         }
 
+        // Validate date is not in the past
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+        
+        if (travelDate < todayStr) {
+            showNotification('Travel date cannot be in the past!', 'error');
+            return;
+        }
+
         bookingData.fromCity = fromCity;
         bookingData.travelDate = travelDate;
         bookingData.numTravelers = parseInt(numTravelers);
@@ -1366,9 +1375,16 @@ function initPasswordToggle() {
 }
 
 function setMinDates() {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    
+    const maxDate = new Date();
+    maxDate.setFullYear(today.getFullYear() + 1);
+    const maxDateStr = maxDate.getFullYear() + '-' + String(maxDate.getMonth() + 1).padStart(2, '0') + '-' + String(maxDate.getDate()).padStart(2, '0');
+
     document.querySelectorAll('input[type="date"]').forEach(input => {
-        input.setAttribute('min', today);
+        input.setAttribute('min', todayStr);
+        input.setAttribute('max', maxDateStr);
     });
 }
 
