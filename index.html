@@ -15,6 +15,12 @@
             opacity: 1 !important;
             visibility: visible !important;
         }
+        
+        /* Fix for tours grid to fill width on PC */
+        .tours-grid .tour-card {
+            flex-grow: 1;
+            max-width: none;
+        }
     </style>
 </head>
 
@@ -368,7 +374,7 @@ Observation: /app/index.html:
                 <!-- Card 1: Golden Triangle -->
                 <div class="tour-card" data-name="Golden Triangle Tour" data-price="15999" data-duration="5 Days / 4 Nights">
                     <div class="tour-image">
-                        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop" alt="Golden Triangle Tour">
+                        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=250&fit=crop" alt="Golden Triangle Tour">
                         <div class="tour-badge">Best Seller</div>
                         <div class="tour-duration"><i class="fas fa-clock"></i> 5 Days / 4 Nights</div>
                         <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
@@ -397,7 +403,7 @@ Observation: /app/index.html:
                 <!-- Card 2: Kerala -->
                 <div class="tour-card" data-name="Kerala Backwater Cruise" data-price="24999" data-duration="6 Days / 5 Nights">
                     <div class="tour-image">
-                        <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=300&fit=crop" alt="Kerala Backwater Cruise">
+                        <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=250&fit=crop" alt="Kerala Backwater Cruise">
                         <div class="tour-badge hot">Trending</div>
                         <div class="tour-duration"><i class="fas fa-clock"></i> 6 Days / 5 Nights</div>
                         <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
@@ -426,7 +432,7 @@ Observation: /app/index.html:
                 <!-- Card 3: Ladakh -->
                 <div class="tour-card" data-name="Ladakh Adventure" data-price="29999" data-duration="7 Days / 6 Nights">
                     <div class="tour-image">
-                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=300&fit=crop" alt="Ladakh Adventure">
+                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=250&fit=crop" alt="Ladakh Adventure">
                         <div class="tour-badge">Adventure</div>
                         <div class="tour-duration"><i class="fas fa-clock"></i> 7 Days / 6 Nights</div>
                         <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
@@ -455,7 +461,7 @@ Observation: /app/index.html:
                 <!-- Card 4: Rajasthan -->
                 <div class="tour-card" data-name="Rajasthan Royal Heritage" data-price="32999" data-duration="8 Days / 7 Nights">
                     <div class="tour-image">
-                        <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=300&fit=crop" alt="Rajasthan Heritage">
+                        <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=250&fit=crop" alt="Rajasthan Heritage">
                         <div class="tour-badge featured">Premium</div>
                         <div class="tour-duration"><i class="fas fa-clock"></i> 8 Days / 7 Nights</div>
                         <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
@@ -484,7 +490,7 @@ Observation: /app/index.html:
                 <!-- Card 5: Goa -->
                 <div class="tour-card" data-name="Goa Beach Party" data-price="11999" data-duration="4 Days / 3 Nights">
                     <div class="tour-image">
-                        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop" alt="Goa Beach Party">
+                        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=250&fit=crop" alt="Goa Beach Party">
                         <div class="tour-badge">Party</div>
                         <div class="tour-duration"><i class="fas fa-clock"></i> 4 Days / 3 Nights</div>
                         <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
@@ -513,54 +519,56 @@ Observation: /app/index.html:
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
+    <!-- New Contact Section -->
+    <section id="contact" class="contact-section">
         <div class="container">
             <div class="section-header">
                 <h2>Contact <span>Us</span></h2>
                 <p>Have questions? We're here to help!</p>
             </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                        <div class="contact-text">
-                            <h4>Address</h4>
-                            <p>123 Travel Street, Mumbai, India 400001</p>
+            <div class="contact-wrapper">
+                <div class="contact-info-box">
+                    <h3>Get in Touch</h3>
+                    <p>We'd love to hear from you. Our team is always here to help.</p>
+                    <div class="contact-details">
+                        <div class="c-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Travel Street, Mumbai, India</span>
+                        </div>
+                        <div class="c-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+91 98765 43210</span>
+                        </div>
+                        <div class="c-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>support@travelgo.com</span>
                         </div>
                     </div>
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                        <div class="contact-text">
-                            <h4>Phone</h4>
-                            <p>+91 98765 43210</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                        <div class="contact-text">
-                            <h4>Email</h4>
-                            <p>support@travelgo.com</p>
-                        </div>
+                    <div class="social-connect">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-                <form class="contact-form" id="contactForm">
-                    <div class="form-row">
-                        <div class="form-group">
+                <div class="contact-form-box">
+                    <form id="contactForm">
+                        <h3>Send us a Message</h3>
+                        <div class="input-group">
                             <input type="text" placeholder="Your Name" required>
                         </div>
-                        <div class="form-group">
+                        <div class="input-group">
                             <input type="email" placeholder="Your Email" required>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" placeholder="Subject" required>
-                    </div>
-                    <div class="form-group">
-                        <textarea placeholder="Your Message" rows="4" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-full">Send Message</button>
-                </form>
+                        <div class="input-group">
+                            <input type="text" placeholder="Subject" required>
+                        </div>
+                        <div class="input-group">
+                            <textarea placeholder="Message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
