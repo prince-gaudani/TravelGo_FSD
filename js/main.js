@@ -1690,7 +1690,149 @@ function removeFavourite(index) {
 // Initialize favourites on page load
 document.addEventListener('DOMContentLoaded', function() {
     initFavourites();
+    initTourFilters();
 });
+
+// ========================================
+// Tour Page: Filters, Search, Sort
+// ========================================
+
+let currentCategory = 'all';
+let currentSearch = '';
+
+function initTourFilters() {
+    const toursGrid = document.getElementById('toursGrid');
+    if (!toursGrid) return;
+
+    // Set min date for travel date
+    const today = new Date();
+    const tbDate = document.getElementById('tbDate');
+    if (tbDate) {
+        const todayStr = today.toISOString().split('T')[0];
+        tbDate.setAttribute('min', todayStr);
+    }
+
+    // Pre-fill logged-in user info
+    const tbName = document.getElementById('tbName');
+    const tbEmail = document.getElementById('tbEmail');
+    if (tbName && localStorage.getItem('userFullName')) {
+        tbName.value = localStorage.getItem('userFullName');
+    }
+    if (tbEmail && localStorage.getItem('userEmail')) {
+        tbEmail.value = localStorage.getItem('userEmail');
+    }
+
+    // Category filter buttons
+    document.querySelectorAll('.tour-filter-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.tour-filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentCategory = this.dataset.category;
+            filterAndSort();
+        });
+    });
+
+    // Search
+    const searchInput = document.getElementById('tourSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            currentSearch = this.value.toLowerCase().trim();
+            filterAndSort();
+        });
+    }
+
+    // Sort
+    const sortSelect = document.getElementById('tourSort');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function () {
+            filterAndSort();
+        });
+    }
+
+    updateCounts();
+}
+
+function filterAndSort() {
+    const cards = Array.from(document.querySelectorAll('#toursGrid .tour-card'));
+    const sortVal = document.getElementById('tourSort')?.value || 'default';
+    let visible = 0;
+
+    cards.forEach(card => {
+        const category = card.dataset.category || '';
+        const name = card.dataset.name?.toLowerCase() || '';
+        const route = card.dataset.route?.toLowerCase() || '';
+        const includes = card.dataset.includes?.toLowerCase() || '';
+
+        const matchCategory = currentCategory === 'all' || category === currentCategory;
+        const matchSearch = !currentSearch ||
+            name.includes(currentSearch) ||
+            route.includes(currentSearch) ||
+            includes.includes(currentSearch) ||
+            category.includes(currentSearch);
+
+        if (matchCategory && matchSearch) {
+            card.style.display = '';
+            visible++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // Sort visible cards
+    const grid = document.getElementById('toursGrid');
+    const visibleCards = cards.filter(c => c.style.display !== 'none');
+
+    visibleCards.sort((a, b) => {
+        const priceA = parseInt(a.dataset.price);
+        const priceB = parseInt(b.dataset.price);
+        const durA = parseInt(a.dataset.duration);
+        const durB = parseInt(b.dataset.duration);
+
+        switch (sortVal) {
+            case 'price-low': return priceA - priceB;
+            case 'price-high': return priceB - priceA;
+            case 'duration-short': return durA - durB;
+            case 'duration-long': return durB - durA;
+            default: return 0;
+        }
+    });
+
+    visibleCards.forEach(card => grid.appendChild(card));
+    cards.filter(c => c.style.display === 'none').forEach(card => grid.appendChild(card));
+
+    document.getElementById('visibleCount').textContent = visible;
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+}
+
+function updateCounts() {
+    const cards = document.querySelectorAll('#toursGrid .tour-card');
+    const total = cards.length;
+    const countAllEl = document.getElementById('countAll');
+    const visibleCountEl = document.getElementById('visibleCount');
+    if (countAllEl) countAllEl.textContent = total;
+    if (visibleCountEl) visibleCountEl.textContent = total;
+
+    // Update per-category counts
+    const categories = {};
+    cards.forEach(card => {
+        const cat = card.dataset.category || '';
+        if (cat) categories[cat] = (categories[cat] || 0) + 1;
+    });
+
+    document.querySelectorAll('.tour-filter-btn').forEach(btn => {
+        const cat = btn.dataset.category;
+        if (cat && cat !== 'all') {
+            let countSpan = btn.querySelector('.count');
+            const count = categories[cat] || 0;
+            if (!countSpan) {
+                countSpan = document.createElement('span');
+                countSpan.className = 'count';
+                btn.appendChild(countSpan);
+            }
+            countSpan.textContent = count;
+        }
+    });
+}
 
 // ========================================
 // Tour Booking Functions (shared)
