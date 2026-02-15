@@ -9,6 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Fix for booking wizard visibility on hover */
+        .modal:hover, .modal-content:hover {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -217,29 +224,6 @@
                                 <span class="original-price">₹45,999</span>
                                 <span class="price">₹35,999</span>
                                 <span class="offer-tag">22% OFF</span>
-                            </div>
-                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
-                                Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="destination-card" data-name="Kerala" data-price="12999" data-type="domestic">
-                    <div class="destination-image">
-                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=300&fit=crop"
-                            alt="Kerala">
-                        <div class="destination-badge">Nature</div>
-                        <div class="destination-type">Domestic</div>
-                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="destination-info">
-                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.8</span></div>
-                        <h3>Kerala</h3>
-                        <p><i class="fas fa-map-marker-alt"></i> South India</p>
-                        <div class="destination-price">
-                            <div class="price-info">
-                                <span class="original-price">₹18,999</span>
-                                <span class="price">₹12,999</span>
-                                <span class="offer-tag">31% OFF</span>
                             </div>
                             <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
                                 Now</button>
@@ -520,35 +504,6 @@ Observation: /app/index.html:
                                 <span class="original-price">₹16,999</span>
                                 <span class="price">₹11,999</span>
                                 <span class="offer-tag">29% OFF</span>
-                            </div>
-                            <a href="tour-packages.html" class="btn btn-small btn-book">View Details</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Card 6: Kashmir -->
-                <div class="tour-card" data-name="Kashmir Paradise" data-price="28999" data-duration="6 Days / 5 Nights">
-                    <div class="tour-image">
-                        <img src="https://images.unsplash.com/photo-1566837945700-30057527ade0?w=400&h=300&fit=crop" alt="Kashmir Paradise">
-                        <div class="tour-badge">Honeymoon</div>
-                        <div class="tour-duration"><i class="fas fa-clock"></i> 6 Days / 5 Nights</div>
-                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="tour-info">
-                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(900 reviews)</small></div>
-                        <h3>Kashmir Paradise</h3>
-                        <p><i class="fas fa-route"></i> Srinagar → Gulmarg → Pahalgam</p>
-                        <div class="tour-highlights">
-                            <span><i class="fas fa-snowflake"></i> Snow</span>
-                            <span><i class="fas fa-ship"></i> Shikara Ride</span>
-                            <span><i class="fas fa-hotel"></i> Houseboat</span>
-                            <span><i class="fas fa-utensils"></i> Meals</span>
-                        </div>
-                        <div class="tour-price">
-                            <div class="price-info">
-                                <span class="original-price">₹38,999</span>
-                                <span class="price">₹28,999</span>
-                                <span class="offer-tag">25% OFF</span>
                             </div>
                             <a href="tour-packages.html" class="btn btn-small btn-book">View Details</a>
                         </div>
