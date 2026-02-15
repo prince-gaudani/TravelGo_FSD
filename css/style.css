@@ -2855,7 +2855,7 @@ section {
 
 .tour-image {
     position: relative;
-    height: 200px;
+    height: 160px;
     overflow: hidden;
 }
 
@@ -3311,4 +3311,113 @@ section {
     font-size: 48px;
     margin-bottom: 15px;
     color: var(--border-color);
+}
+
+/* New Contact Section Styles */
+.contact-section {
+    padding: 60px 0;
+    background: var(--light-color);
+}
+
+.contact-wrapper {
+    display: flex;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.contact-info-box {
+    flex: 1;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 40px;
+    color: var(--white);
+}
+
+.contact-info-box h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--white);
+}
+
+.contact-info-box p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 30px;
+}
+
+.contact-details .c-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.contact-details .c-item i {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-connect {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.social-connect a {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    transition: var(--transition);
+}
+
+.social-connect a:hover {
+    background: var(--white);
+    color: var(--primary-color);
+}
+
+.contact-form-box {
+    flex: 1.5;
+    padding: 40px;
+}
+
+.contact-form-box h3 {
+    font-size: 24px;
+    color: var(--dark-color);
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-family: 'Poppins', sans-serif;
+    transition: var(--transition);
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+@media (max-width: 768px) {
+    .contact-wrapper {
+        flex-direction: column;
+    }
 }
