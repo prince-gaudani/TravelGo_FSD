@@ -5,588 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TravelGo - Smart Travel Booking</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Recreated CSS to match the 'Production Grade' look from your screenshots */
-        :root {
-            --primary: #4f46e5; /* The purple from screenshots */
-            --primary-dark: #4338ca;
-            --secondary: #ec4899;
-            --text-dark: #111827;
-            --text-gray: #6b7280;
-            --bg-light: #f9fafb;
-            --white: #ffffff;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --radius: 1rem;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: var(--white);
-            box-shadow: var(--shadow);
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            font-weight: 500;
-            color: var(--text-dark);
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--primary);
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.5rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-outline {
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            background: transparent;
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: var(--white);
-        }
-
-        .btn-small {
-            padding: 0.4rem 1rem;
-            font-size: 0.9rem;
+        /* Fix for booking wizard visibility on hover */
+        .modal:hover, .modal-content:hover {
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
-        .btn-large {
-            padding: 0.75rem 2rem;
-            font-size: 1.1rem;
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: var(--text-dark);
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 600px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            text-align: center;
-            overflow: hidden;
-        }
-
-        .hero-slider, .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            padding: 2rem;
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .hero-content h1 span {
-            color: #818cf8; /* Light purple for contrast on dark */
-        }
-
-        .hero-content p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .btn-outline-white {
-            border: 2px solid var(--white);
-            color: var(--white);
-        }
-        
-        .btn-outline-white:hover {
-            background: var(--white);
-            color: var(--text-dark);
-        }
-
-        /* Common Section Styles */
-        section {
-            padding: 4rem 2rem;
-        }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .section-header h2 span {
-            color: var(--primary);
-        }
-
-        .section-header p {
-            color: var(--text-gray);
-        }
-
-        /* Grid Layouts */
-        .destinations-grid, .hotels-grid, .tours-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        /* Cards */
-        .destination-card, .hotel-card, .tour-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .destination-card:hover, .hotel-card:hover, .tour-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .destination-image, .hotel-image, .tour-image {
-            position: relative;
-            height: 240px;
-        }
-
-        .destination-image img, .hotel-image img, .tour-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Badges */
-        .destination-badge, .hotel-badge, .tour-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: var(--primary);
-            color: var(--white);
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .destination-badge.hot, .tour-badge.hot {
-            background: #ef4444; /* Red */
-        }
-        
-        .destination-badge.featured, .tour-badge.featured {
-            background: #f59e0b; /* Amber */
-        }
-        
-        .tour-badge.trending {
-             background: #ef4444;
-        }
-
-        .btn-favourite {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: var(--white);
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            color: var(--text-gray);
-            font-size: 1.1rem;
-        }
-        
-        .btn-favourite:hover {
-            color: #ef4444;
-        }
-
-        .destination-type, .tour-duration {
-            position: absolute;
-            bottom: 1rem;
-            left: 1rem;
-            background: rgba(0, 0, 0, 0.6);
-            color: var(--white);
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-            font-size: 0.8rem;
-            backdrop-filter: blur(4px);
-        }
-
-        /* Card Info */
-        .destination-info, .hotel-info, .tour-info {
-            padding: 1.5rem;
+        /* Fix for tours grid to fill width on PC */
+        .tours-grid .tour-card {
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .destination-rating, .tour-rating {
-            color: #f59e0b;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        .tour-rating small {
-            color: var(--text-gray);
-            font-weight: 400;
-            margin-left: 0.25rem;
-        }
-
-        .destination-info h3, .hotel-info h3, .tour-info h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .destination-info p, .hotel-info p, .tour-info p {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Highlights & Amenities */
-        .tour-highlights, .hotel-amenities {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .tour-highlights span, .hotel-amenities span {
-            background: #eef2ff;
-            color: var(--primary);
-            padding: 0.25rem 0.75rem;
-            border-radius: 2rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        /* Price Section */
-        .destination-price, .tour-price, .hotel-price {
-            margin-top: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .price-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .original-price {
-            text-decoration: line-through;
-            color: var(--text-gray);
-            font-size: 0.85rem;
-        }
-
-        .price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .offer-tag {
-            background: #fee2e2;
-            color: #ef4444;
-            font-size: 0.7rem;
-            padding: 0.1rem 0.4rem;
-            border-radius: 0.25rem;
-            font-weight: 600;
-            width: fit-content;
-        }
-
-        /* Footer */
-        .footer {
-            background: #111827;
-            color: #d1d5db;
-            padding: 4rem 2rem 1rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
-        }
-
-        .footer-brand .logo {
-            color: var(--white);
-            margin-bottom: 1rem;
-        }
-
-        .footer h4 {
-            color: var(--white);
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-        }
-
-        .footer ul li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer ul li a:hover {
-            color: var(--primary);
-        }
-
-        .newsletter-form {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .newsletter-form input {
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            border: none;
-            width: 100%;
-        }
-
-        .newsletter-form button {
-            padding: 0.5rem 1rem;
-            background: var(--primary);
-            border: none;
-            color: white;
-            border-radius: 0.25rem;
-            cursor: pointer;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            border-top: 1px solid #374151;
-            padding-top: 2rem;
-            font-size: 0.9rem;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
-            width: 32px;
-            height: 32px;
-            background: rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.3s;
-        }
-
-        .social-links a:hover {
-            background: var(--primary);
-        }
-
-        /* Contact Section */
-        .contact-section {
-            background: white;
-        }
-        
-        .contact-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        
-        .contact-info-box {
-            background: #1e293b;
-            color: white;
-            padding: 3rem;
-        }
-        
-        .contact-form-box {
-            padding: 3rem;
-            background: white;
-        }
-        
-        .contact-details .c-item {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            align-items: center;
-        }
-        
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .input-group input, .input-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            outline: none;
-        }
-        
-        .input-group input:focus, .input-group textarea:focus {
-            border-color: var(--primary);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links, .nav-buttons {
-                display: none;
-            }
-            .hamburger {
-                display: flex;
-            }
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-            .contact-wrapper {
-                grid-template-columns: 1fr;
-            }
-            .destinations-grid, .hotels-grid, .tours-grid {
-                grid-template-columns: 1fr;
-            }
+            max-width: none;
         }
     </style>
 </head>
@@ -603,15 +36,42 @@
                 <li><a href="index.html" class="active">Home</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle">Destination <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="destinations.html?type=domestic"><i class="fas fa-flag"></i> Domestic</a></li>
+                        <li><a href="destinations.html?type=international"><i class="fas fa-globe"></i>
+                                International</a></li>
+                    </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle">Tours <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="bookings.html"><i class="fas fa-mountain"></i> Adventure Tours</a></li>
+                        <li><a href="bookings.html"><i class="fas fa-leaf"></i> Nature Tours</a></li>
+                        <li><a href="bookings.html"><i class="fas fa-chess-rook"></i> Heritage Tours</a></li>
+                        <li><a href="bookings.html"><i class="fas fa-om"></i> Spiritual Tours</a></li>
+                        <li><a href="bookings.html"><i class="fas fa-umbrella-beach"></i> Beach Tours</a></li>
+                    </ul>
                 </li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="nav-buttons" id="authButtons">
                 <a href="login.html" class="btn btn-outline btn-sm">Login</a>
                 <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+            </div>
+            <div class="nav-profile" id="navProfile" style="display: none;">
+                <div class="profile-dropdown">
+                    <div class="profile-trigger" id="profileTrigger">
+                        <img src="https://ui-avatars.com/api/?name=User&background=4f46e5&color=fff" alt="Profile"
+                            class="profile-img">
+                        <span class="profile-name">My Info</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="profile-menu">
+                        <li><a href="my-bookings.html"><i class="fas fa-ticket-alt"></i> My Bookings</a></li>
+                        <li><a href="#" onclick="showFavourites()"><i class="fas fa-heart"></i> Favourites</a></li>
+                        <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="hamburger">
                 <span></span>
@@ -627,6 +87,14 @@
             <div class="slide active">
                 <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&h=800&fit=crop"
                     alt="Luxury Hotel">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1920&h=800&fit=crop"
+                    alt="Premium Resort">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&h=800&fit=crop"
+                    alt="Exotic Destination">
             </div>
             <div class="hero-overlay"></div>
         </div>
@@ -646,6 +114,10 @@
             <div class="section-header">
                 <h2>Featured <span>Destinations</span></h2>
                 <p>Handpicked destinations for your next adventure</p>
+                <div class="destination-tabs">
+                    <a href="destinations.html?type=domestic" class="dest-tab-btn">View All Domestic</a>
+                    <a href="destinations.html?type=international" class="dest-tab-btn">View All International</a>
+                </div>
             </div>
             <div class="destinations-grid">
                 <div class="destination-card" data-name="Manali" data-price="5999" data-type="domestic">
@@ -666,7 +138,8 @@
                                 <span class="price">₹5,999</span>
                                 <span class="offer-tag">33% OFF</span>
                             </div>
-                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
                         </div>
                     </div>
                 </div>
@@ -688,7 +161,8 @@
                                 <span class="price">₹7,499</span>
                                 <span class="offer-tag">25% OFF</span>
                             </div>
-                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
                         </div>
                     </div>
                 </div>
@@ -711,7 +185,54 @@
                                 <span class="price">₹45,999</span>
                                 <span class="offer-tag">30% OFF</span>
                             </div>
-                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-card" data-name="Paris" data-price="69999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&h=300&fit=crop"
+                            alt="Paris">
+                        <div class="destination-badge">Romantic</div>
+                        <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.9</span></div>
+                        <h3>Paris</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> France</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹89,999</span>
+                                <span class="price">₹69,999</span>
+                                <span class="offer-tag">22% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="destination-card" data-name="Bali" data-price="35999" data-type="international">
+                    <div class="destination-image">
+                        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&h=300&fit=crop"
+                            alt="Bali">
+                        <div class="destination-badge">Popular</div>
+                        <div class="destination-type intl">International</div>
+                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>4.7</span></div>
+                        <h3>Bali</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Indonesia</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="original-price">₹45,999</span>
+                                <span class="price">₹35,999</span>
+                                <span class="offer-tag">22% OFF</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book
+                                Now</button>
                         </div>
                     </div>
                 </div>
@@ -787,11 +308,51 @@
                         </div>
                     </div>
                 </div>
+                <div class="hotel-card">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=250&fit=crop"
+                            alt="Luxury Hotel">
+                        <div class="hotel-badge">4 Star</div>
+                    </div>
+                    <div class="hotel-info">
+                        <h3>Royal Orchid</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Bangalore</p>
+                        <div class="hotel-amenities">
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-dumbbell"></i></span>
+                            <span><i class="fas fa-concierge-bell"></i></span>
+                            <span><i class="fas fa-utensils"></i></span>
+                        </div>
+                        <div class="hotel-price">
+                            <span class="price">₹5,200/night</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hotel-card">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&h=250&fit=crop"
+                            alt="City Hotel">
+                        <div class="hotel-badge">5 Star</div>
+                    </div>
+                    <div class="hotel-info">
+                        <h3>Grand Central</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Delhi</p>
+                        <div class="hotel-amenities">
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-spa"></i></span>
+                            <span><i class="fas fa-cocktail"></i></span>
+                            <span><i class="fas fa-car"></i></span>
+                        </div>
+                        <div class="hotel-price">
+                            <span class="price">₹9,500/night</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Featured Tours (FIXED: Removed duplicate section tags and cleaned up structure) -->
+    <!-- Featured Tours -->
     <section id="tours" class="tours-section">
         <div class="container">
             <div class="section-header">
@@ -799,6 +360,15 @@
                 <p>Curated tour packages for unforgettable experiences</p>
             </div>
             <div class="tours-grid">
+                <div class="tour-card" data-name="Golden Triangle Tour" data-price="15999" data-duration="5 Days / 4 Nights">
+
+   <section id="tours" class="tours-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Popular <span>Tours</span></h2>
+                <p>Curated tour packages for unforgettable experiences</p>
+          </div>
+           <div class="tours-grid">
                 <!-- Card 1: Golden Triangle -->
                 <div class="tour-card" data-name="Golden Triangle Tour" data-price="15999" data-duration="5 Days / 4 Nights">
                     <div class="tour-image">
@@ -881,7 +451,7 @@
                                 <span class="price">₹29,999</span>
                                 <span class="offer-tag">30% OFF</span>
                             </div>
-                            <a href="#" class="btn btn-small btn-book">View Details</a>
+                            <a href="tour-packages.html" class="btn btn-small btn-book">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -910,7 +480,7 @@
                                 <span class="price">₹32,999</span>
                                 <span class="offer-tag">28% OFF</span>
                             </div>
-                            <a href="#" class="btn btn-small btn-book">View Details</a>
+                            <a href="tour-packages.html" class="btn btn-small btn-book">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -939,7 +509,7 @@
                                 <span class="price">₹11,999</span>
                                 <span class="offer-tag">29% OFF</span>
                             </div>
-                            <a href="#" class="btn btn-small btn-book">View Details</a>
+                            <a href="tour-packages.html" class="btn btn-small btn-book">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -947,7 +517,7 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- New Contact Section -->
     <section id="contact" class="contact-section">
         <div class="container">
             <div class="section-header">
@@ -1029,11 +599,11 @@
                 <div class="footer-links">
                     <h4>Services</h4>
                     <ul>
-                        <li><a href="#">Flight Booking</a></li>
-                        <li><a href="#">Train Booking</a></li>
-                        <li><a href="#">Bus Booking</a></li>
-                        <li><a href="#">Hotel Booking</a></li>
-                        <li><a href="#">Resort Booking</a></li>
+                        <li><a href="bookings.html?tab=flight">Flight Booking</a></li>
+                        <li><a href="bookings.html?tab=train">Train Booking</a></li>
+                        <li><a href="bookings.html?tab=bus">Bus Booking</a></li>
+                        <li><a href="bookings.html?tab=hotel">Hotel Booking</a></li>
+                        <li><a href="bookings.html?tab=resort">Resort Booking</a></li>
                     </ul>
                 </div>
                 <div class="footer-newsletter">
@@ -1051,25 +621,254 @@
         </div>
     </footer>
 
-    <script>
-        // Basic interactivity
-        function toggleFavourite(btn) {
-            btn.classList.toggle('active');
-            if(btn.classList.contains('active')) {
-                btn.innerHTML = '<i class="fas fa-heart" style="color: #ef4444;"></i>';
-            } else {
-                btn.innerHTML = '<i class="far fa-heart"></i>';
-            }
-        }
+    <!-- Booking Wizard Modal -->
+    <div class="modal" id="bookingWizard">
+        <div class="modal-content wizard-content">
+            <span class="modal-close" onclick="closeWizard()">&times;</span>
 
-        function startBooking(btn) {
-            alert("Booking feature would open here!");
-        }
+            <!-- Progress Bar -->
+            <div class="wizard-progress">
+                <div class="progress-step active" data-step="1"><span>1</span> Transport</div>
+                <div class="progress-step" data-step="2"><span>2</span> Select</div>
+                <div class="progress-step" data-step="3"><span>3</span> Travelers</div>
+                <div class="progress-step" data-step="4"><span>4</span> ID Proof</div>
+                <div class="progress-step" data-step="5"><span>5</span> Preview</div>
+            </div>
 
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert("Message sent successfully!");
-        });
-    </script>
+            <!-- Step 1: Choose Transport -->
+            <div class="wizard-step active" id="step1">
+                <div class="step-header">
+                    <h2>Book Trip to <span id="wizardDestination">Destination</span></h2>
+                    <p>Choose your preferred mode of transport</p>
+                </div>
+                <div class="transport-options">
+                    <div class="transport-card" onclick="selectTransport('flight')">
+                        <i class="fas fa-plane"></i>
+                        <h3>Flight</h3>
+                        <p>Fast & Comfortable</p>
+                    </div>
+                    <div class="transport-card" onclick="selectTransport('bus')">
+                        <i class="fas fa-bus"></i>
+                        <h3>Bus</h3>
+                        <p>Affordable & Scenic</p>
+                    </div>
+                    <div class="transport-card" onclick="selectTransport('train')">
+                        <i class="fas fa-train"></i>
+                        <h3>Train</h3>
+                        <p>Relaxed Journey</p>
+                    </div>
+                </div>
+                <div class="step-footer">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>From City</label>
+                            <select id="fromCity" class="form-control">
+                                <option value="">Select Departure City</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Ahmedabad">Ahmedabad</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Travel Date</label>
+                            <input type="date" id="travelDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Travelers</label>
+                            <select id="numTravelers" class="form-control">
+                                <option value="1">1 Person</option>
+                                <option value="2">2 Persons</option>
+                                <option value="3">3 Persons</option>
+                                <option value="4">4 Persons</option>
+                                <option value="5">5 Persons</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(2)" id="step1Next" disabled>
+                        Next: View Available Options <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Select Flight/Bus -->
+            <div class="wizard-step" id="step2">
+                <div class="step-header">
+                    <h2>Available <span id="transportTypeTitle">Flights</span></h2>
+                    <p id="routeInfo">Delhi → Manali | 15 Feb 2026</p>
+                </div>
+                <div class="available-options" id="availableOptions">
+                    <!-- Options will be populated by JavaScript -->
+                </div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(1)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(3)" id="step2Next" disabled>
+                        Next: Enter Traveler Details <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Traveler Details -->
+            <div class="wizard-step" id="step3">
+                <div class="step-header">
+                    <h2>Traveler Details</h2>
+                    <p>Enter details for each traveler one by one</p>
+                </div>
+                <div class="traveler-tabs" id="travelerTabs">
+                    <!-- Tabs will be populated by JavaScript -->
+                </div>
+                <div class="traveler-form-container" id="travelerFormContainer">
+                    <!-- Form will be populated by JavaScript -->
+                </div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(2)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(4)" id="step3Next">
+                        Next: Upload ID Proof <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: ID Proof Upload -->
+            <div class="wizard-step" id="step4">
+                <div class="step-header">
+                    <h2>Upload ID Proof</h2>
+                    <p>Upload valid government ID for verification</p>
+                </div>
+                <div class="id-upload-section" id="idUploadSection">
+                    <!-- Upload forms will be populated by JavaScript -->
+                </div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(3)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary btn-large" onclick="goToStep(5)">
+                        Next: Preview Booking <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 5: Preview & Confirm -->
+            <div class="wizard-step" id="step5">
+                <div class="step-header">
+                    <h2>Booking Preview</h2>
+                    <p>Review your booking details before confirming</p>
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <!-- Preview will be populated by JavaScript -->
+                </div>
+                <div class="step-footer">
+                    <button class="btn btn-outline" onclick="goToStep(4)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-success btn-large" onclick="confirmBooking()">
+                        <i class="fas fa-check"></i> Confirm & Pay ₹<span id="finalTotal">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cancel Button Footer -->
+            <div class="wizard-cancel-footer">
+                <button class="btn btn-danger btn-cancel-booking" onclick="closeWizard()">
+                    <i class="fas fa-times"></i> Cancel Booking
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content invoice-content">
+            <div class="invoice-header">
+                <div class="invoice-logo">
+                    <i class="fas fa-plane-departure"></i>
+                    <span>TravelGo</span>
+                </div>
+                <div class="invoice-title">
+                    <h2>Booking Confirmed!</h2>
+                    <p>Invoice #<span id="invoiceNumber">TG000000</span></p>
+                </div>
+            </div>
+            <div class="invoice-body" id="invoiceBody"></div>
+            <div class="invoice-actions">
+                <button class="btn btn-outline" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                <button class="btn btn-outline" onclick="downloadInvoice()"><i class="fas fa-download"></i>
+                    Download</button>
+                <button class="btn btn-primary" onclick="closeInvoiceModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
 </body>
+
 </html>
+370|                <div class="tour-card" data-name="Golden Triangle Tour" data-price="15999" data-duration="5 Days / 4 Nights">
+371|                    <div class="tour-image">
+372|                        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop" alt="Golden Triangle Tour">
+373|                        <div class="tour-badge">Best Seller</div>
+374|                        <div class="tour-duration"><i class="fas fa-clock"></i> 5 Days / 4 Nights</div>
+375|                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+376|                    </div>
+377|                    <div class="tour-info">
+378|                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.9</span> <small>(2.3k reviews)</small></div>
+379|                        <h3>Golden Triangle Tour</h3>
+380|                        <p><i class="fas fa-route"></i> Delhi → Agra → Jaipur → Delhi</p>
+381|                        <div class="tour-highlights">
+382|                            <span><i class="fas fa-hotel"></i> 4★ Hotels</span>
+383|                            <span><i class="fas fa-utensils"></i> Meals</span>
+384|                            <span><i class="fas fa-car"></i> Transport</span>
+385|                            <span><i class="fas fa-user-tie"></i> Guide</span>
+386|                        </div>
+387|                        <div class="tour-price">
+388|                            <div class="price-info">
+389|                                <span class="original-price">₹22,999</span>
+390|                                <span class="price">₹15,999</span>
+391|                                <span class="offer-tag">30% OFF</span>
+392|                            </div>
+393|                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+394|                        </div>
+395|                    </div>
+396|                </div>
+397|                <div class="tour-card" data-name="Kerala Backwater Cruise" data-price="24999" data-duration="6 Days / 5 Nights">
+398|                    <div class="tour-image">
+399|                        <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=300&fit=crop" alt="Kerala Backwater Cruise">
+400|                        <div class="tour-badge hot">Trending</div>
+401|                        <div class="tour-duration"><i class="fas fa-clock"></i> 6 Days / 5 Nights</div>
+402|                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+403|                    </div>
+404|                    <div class="tour-info">
+405|                        <div class="tour-rating"><i class="fas fa-star"></i><span>4.8</span> <small>(1.8k reviews)</small></div>
+406|                        <h3>Kerala Backwater Cruise</h3>
+407|                        <p><i class="fas fa-route"></i> Kochi → Munnar → Alleppey → Kovalam</p>
+408|                        <div class="tour-highlights">
+409|                            <span><i class="fas fa-hotel"></i> 5★ Resorts</span>
+410|                            <span><i class="fas fa-utensils"></i> All Meals</span>
+411|                            <span><i class="fas fa-ship"></i> Houseboat</span>
+412|                            <span><i class="fas fa-spa"></i> Ayurveda</span>
+413|                        </div>
+414|                        <div class="tour-price">
+415|                            <div class="price-info">
+416|                                <span class="original-price">₹35,999</span>
+417|                                <span class="price">₹24,999</span>
+418|                                <span class="offer-tag">31% OFF</span>
+419|                            </div>
+420|                            <a href="bookings.html" class="btn btn-small btn-book">Book Now</a>
+421|                        </div>
+422|                    </div>
+423|                </div>
+424|                <div class="tour-card" data-name="Ladakh Adventure" data-price="29999" data-duration="7 Days / 6 Nights">
+425|                    <div class="tour-image">
+426|                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=300&fit=crop" alt="Ladakh Adventure">
+427|                        <div class="tour-badge">Adventure</div>
+428|                        <div class="tour-duration"><i class="fas fa-clock"></i> 7 Days / 6 Nights</div>
+429|                        <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+430|                    </div>
