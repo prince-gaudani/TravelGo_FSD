@@ -1188,7 +1188,50 @@ function loadMyBookings() {
         return;
     }
 
-    container.innerHTML = bookings.map((b, index) => `
+    container.innerHTML = bookings.map((b, index) => {
+        if (b.type === 'Tour Package') {
+            // Tour package booking format
+            return `
+        <div class="booking-card">
+            <div class="booking-card-header">
+                <span class="booking-id"><i class="fas fa-ticket-alt"></i> ${b.id}</span>
+                <span class="booking-status confirmed">${b.status || 'Confirmed'}</span>
+            </div>
+            <div class="booking-card-body">
+                <div class="booking-details-grid">
+                    <div class="booking-detail-item">
+                        <label>Tour Package</label>
+                        <span>${b.destination}</span>
+                    </div>
+                    <div class="booking-detail-item">
+                        <label>Route</label>
+                        <span>${b.route || 'N/A'}</span>
+                    </div>
+                    <div class="booking-detail-item">
+                        <label>Duration</label>
+                        <span>${b.duration || 'N/A'}</span>
+                    </div>
+                    <div class="booking-detail-item">
+                        <label>Travel Date</label>
+                        <span>${b.date ? new Date(b.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A'}</span>
+                    </div>
+                </div>
+                <div class="booking-travelers">
+                    <h4><i class="fas fa-users"></i> Travelers: ${b.travelers} Person(s)</h4>
+                    <p style="font-size: 13px; color: var(--text-light); margin-top: 4px;">Booked by: ${b.travelerName || 'N/A'}</p>
+                </div>
+                <div class="booking-detail-item" style="margin-bottom: 15px;">
+                    <label>Total Amount</label>
+                    <span style="color: var(--success-color); font-size: 18px;">${b.total}</span>
+                </div>
+                <div class="booking-card-actions">
+                    <button class="btn btn-outline" onclick="viewTourInvoice(${index})"><i class="fas fa-eye"></i> View Invoice</button>
+                </div>
+            </div>
+        </div>`;
+        } else {
+            // Destination booking format
+            return `
         <div class="booking-card">
             <div class="booking-card-header">
                 <span class="booking-id"><i class="fas fa-ticket-alt"></i> ${b.invoiceNumber}</span>
@@ -1225,8 +1268,57 @@ function loadMyBookings() {
                     <button class="btn btn-primary" onclick="downloadHistoryInvoice(${index})"><i class="fas fa-download"></i> Download</button>
                 </div>
             </div>
+        </div>`;
+        }
+    }).join('');
+}
+
+function viewTourInvoice(index) {
+    const bookings = JSON.parse(localStorage.getItem('travelgo_bookings') || '[]');
+    const b = bookings[index];
+    if (!b) return;
+
+    document.getElementById('invoiceNumber').textContent = b.id;
+    document.getElementById('invoiceBody').innerHTML = `
+        <div class="invoice-section">
+            <h4>Tour Package Details</h4>
+            <table class="invoice-table">
+                <tr><td><strong>Booking ID</strong></td><td>${b.id}</td></tr>
+                <tr><td><strong>Tour Package</strong></td><td>${b.destination}</td></tr>
+                <tr><td><strong>Route</strong></td><td>${b.route || 'N/A'}</td></tr>
+                <tr><td><strong>Duration</strong></td><td>${b.duration || 'N/A'}</td></tr>
+                <tr><td><strong>Travel Date</strong></td><td>${b.date ? new Date(b.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A'}</td></tr>
+                <tr><td><strong>Status</strong></td><td><span style="color: #10b981; font-weight: 600;">${b.status || 'Confirmed'}</span></td></tr>
+            </table>
         </div>
-    `).join('');
+        <div class="invoice-section">
+            <h4>Traveler Info</h4>
+            <table class="invoice-table">
+                <tr><td><strong>Name</strong></td><td>${b.travelerName || 'N/A'}</td></tr>
+                <tr><td><strong>Email</strong></td><td>${b.email || 'N/A'}</td></tr>
+                <tr><td><strong>Phone</strong></td><td>${b.phone || 'N/A'}</td></tr>
+                <tr><td><strong>Travelers</strong></td><td>${b.travelers} Person(s)</td></tr>
+                <tr><td><strong>Special Requests</strong></td><td>${b.requests || 'None'}</td></tr>
+            </table>
+        </div>
+        ${b.includes && b.includes.length ? `
+        <div class="invoice-section">
+            <h4>Package Includes</h4>
+            <p>${b.includes.map(i => '<span style="display:inline-block;background:#eef2ff;color:#4f46e5;padding:4px 12px;border-radius:20px;margin:3px;font-size:13px;"><i class="fas fa-check-circle"></i> ' + i.trim() + '</span>').join('')}</p>
+        </div>` : ''}
+        <div class="invoice-section">
+            <h4>Payment</h4>
+            <div class="invoice-total">Total Paid: ${b.total}</div>
+        </div>
+        <div class="invoice-section" style="text-align: center; color: #10b981; margin-top: 30px;">
+            <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 15px;"></i>
+            <h3>Booking Confirmed!</h3>
+            <p>Confirmation sent to ${b.email || 'your email'}</p>
+        </div>
+    `;
+
+    document.getElementById('invoiceModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 function viewHistoryInvoice(index) {
@@ -1599,3 +1691,176 @@ function removeFavourite(index) {
 document.addEventListener('DOMContentLoaded', function() {
     initFavourites();
 });
+
+// ========================================
+// Tour Booking Functions (shared)
+// ========================================
+
+var currentTourData = {};
+
+function openTourBooking(btn) {
+    const card = btn.closest('.tour-card');
+    if (!card) return;
+
+    currentTourData = {
+        name: card.dataset.name,
+        price: parseInt(card.dataset.price),
+        originalPrice: parseInt(card.dataset.originalPrice),
+        discount: parseInt(card.dataset.discount),
+        duration: card.dataset.durationText,
+        route: card.dataset.route,
+        image: card.dataset.image,
+        rating: card.dataset.rating,
+        reviews: card.dataset.reviews,
+        includes: card.dataset.includes?.split(',') || []
+    };
+
+    document.getElementById('tourBookingImg').src = currentTourData.image;
+    document.getElementById('tourBookingName').textContent = currentTourData.name;
+    document.getElementById('tourBookingRoute').textContent = currentTourData.route;
+
+    document.getElementById('tourBookingDetails').innerHTML = `
+        <div class="tour-detail-item">
+            <i class="fas fa-clock"></i>
+            <div class="detail-text">
+                <span class="detail-label">Duration</span>
+                <span class="detail-value">${currentTourData.duration}</span>
+            </div>
+        </div>
+        <div class="tour-detail-item">
+            <i class="fas fa-star"></i>
+            <div class="detail-text">
+                <span class="detail-label">Rating</span>
+                <span class="detail-value">${currentTourData.rating} ★ (${currentTourData.reviews} reviews)</span>
+            </div>
+        </div>
+        <div class="tour-detail-item">
+            <i class="fas fa-tag"></i>
+            <div class="detail-text">
+                <span class="detail-label">Price Per Person</span>
+                <span class="detail-value">₹${currentTourData.price.toLocaleString('en-IN')}</span>
+            </div>
+        </div>
+        <div class="tour-detail-item">
+            <i class="fas fa-percent"></i>
+            <div class="detail-text">
+                <span class="detail-label">Discount</span>
+                <span class="detail-value" style="color: var(--success-color);">${currentTourData.discount}% OFF</span>
+            </div>
+        </div>
+    `;
+
+    const includesHTML = currentTourData.includes.map(item =>
+        '<span><i class="fas fa-check-circle"></i> ' + item.trim() + '</span>'
+    ).join('');
+    document.getElementById('tourBookingIncludes').innerHTML = includesHTML;
+
+    const tbName = document.getElementById('tbName');
+    const tbEmail = document.getElementById('tbEmail');
+    if (tbName && localStorage.getItem('userFullName')) tbName.value = localStorage.getItem('userFullName');
+    if (tbEmail && localStorage.getItem('userEmail')) tbEmail.value = localStorage.getItem('userEmail');
+
+    updateTourPrice();
+
+    document.getElementById('tourBookingModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeTourBooking() {
+    document.getElementById('tourBookingModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function updateTourPrice() {
+    const travelers = parseInt(document.getElementById('tbTravelers').value) || 2;
+    const basePrice = currentTourData.originalPrice || 0;
+    const discountedPrice = currentTourData.price || 0;
+    const subtotal = basePrice * travelers;
+    const discountAmt = (basePrice - discountedPrice) * travelers;
+    const afterDiscount = subtotal - discountAmt;
+    const gst = Math.round(afterDiscount * 0.05);
+    const total = afterDiscount + gst;
+
+    document.getElementById('tbBasePrice').textContent = '₹' + basePrice.toLocaleString('en-IN');
+    document.getElementById('tbTravelerCount').textContent = travelers;
+    document.getElementById('tbDiscountAmt').textContent = '- ₹' + discountAmt.toLocaleString('en-IN');
+    document.getElementById('tbGST').textContent = '₹' + gst.toLocaleString('en-IN');
+    document.getElementById('tbTotal').textContent = '₹' + total.toLocaleString('en-IN');
+}
+
+function submitTourBooking(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('tbName').value.trim();
+    const email = document.getElementById('tbEmail').value.trim();
+    const phone = document.getElementById('tbPhone').value.trim();
+    const date = document.getElementById('tbDate').value;
+    const travelers = parseInt(document.getElementById('tbTravelers').value);
+    const requests = document.getElementById('tbRequests').value.trim();
+
+    if (!name || !email || !phone || !date) {
+        showNotification('Please fill all required fields!', 'error');
+        return;
+    }
+
+    const totalText = document.getElementById('tbTotal').textContent;
+    const invoiceNum = 'TG' + Date.now().toString().slice(-6);
+
+    const booking = {
+        id: invoiceNum,
+        type: 'Tour Package',
+        destination: currentTourData.name,
+        route: currentTourData.route,
+        duration: currentTourData.duration,
+        date: date,
+        travelers: travelers,
+        travelerName: name,
+        email: email,
+        phone: phone,
+        requests: requests,
+        total: totalText,
+        includes: currentTourData.includes,
+        bookedAt: new Date().toISOString(),
+        status: 'Confirmed'
+    };
+
+    const bookings = JSON.parse(localStorage.getItem('travelgo_bookings') || '[]');
+    bookings.push(booking);
+    localStorage.setItem('travelgo_bookings', JSON.stringify(bookings));
+
+    closeTourBooking();
+
+    document.getElementById('invoiceNumber').textContent = invoiceNum;
+    document.getElementById('invoiceBody').innerHTML = `
+        <div style="padding: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div>
+                    <h4 style="margin-bottom: 8px; color: #4f46e5;">Tour Details</h4>
+                    <p><strong>Package:</strong> ${currentTourData.name}</p>
+                    <p><strong>Route:</strong> ${currentTourData.route}</p>
+                    <p><strong>Duration:</strong> ${currentTourData.duration}</p>
+                    <p><strong>Travel Date:</strong> ${new Date(date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 8px; color: #4f46e5;">Traveler Info</h4>
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Phone:</strong> ${phone}</p>
+                    <p><strong>Travelers:</strong> ${travelers} Person(s)</p>
+                </div>
+            </div>
+            <div style="text-align: right; font-size: 20px; font-weight: 700; color: #10b981; padding: 15px; background: #f0fdf4; border-radius: 8px;">
+                Total Paid: ${totalText}
+            </div>
+            <div style="text-align: center; color: #10b981; margin-top: 30px;">
+                <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                <h3>Tour Booking Confirmed!</h3>
+                <p>Confirmation sent to ${email}</p>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('invoiceModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    showNotification('Tour booked successfully!', 'success');
+}

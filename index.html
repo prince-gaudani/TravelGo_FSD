@@ -19,6 +19,44 @@
             max-width: none;
         }
     </style>
+    <style>
+        /* Tour Booking Modal */
+        .tour-booking-modal .modal-content { max-width: 700px; border-radius: 16px; overflow: hidden; }
+        .tour-booking-header { position: relative; height: 200px; overflow: hidden; }
+        .tour-booking-header img { width: 100%; height: 100%; object-fit: cover; }
+        .tour-booking-header .overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 25px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; }
+        .tour-booking-header .overlay h2 { font-size: 22px; margin-bottom: 4px; }
+        .tour-booking-header .overlay p { font-size: 13px; opacity: 0.9; display: flex; align-items: center; gap: 6px; }
+        .tour-booking-body { padding: 25px; }
+        .tour-booking-details { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .tour-detail-item { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--light-color); border-radius: 10px; }
+        .tour-detail-item i { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; flex-shrink: 0; }
+        .tour-detail-item .detail-text { display: flex; flex-direction: column; }
+        .tour-detail-item .detail-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+        .tour-detail-item .detail-value { font-size: 14px; font-weight: 600; color: var(--dark-color); }
+        .tour-booking-form h3 { font-size: 16px; font-weight: 600; color: var(--dark-color); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .tour-booking-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .tour-booking-form .form-group { margin-bottom: 15px; }
+        .tour-booking-form .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--dark-color); margin-bottom: 6px; }
+        .tour-booking-form .form-group input, .tour-booking-form .form-group select { width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        .tour-booking-form .form-group input:focus, .tour-booking-form .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .tour-price-summary { background: var(--light-color); border-radius: 12px; padding: 20px; margin-top: 20px; }
+        .price-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; color: var(--text-color); }
+        .price-row.total { border-top: 2px solid var(--border-color); margin-top: 8px; padding-top: 12px; font-size: 18px; font-weight: 700; color: var(--dark-color); }
+        .price-row.total .amount { color: var(--success-color); }
+        .price-row .discount { color: var(--success-color); }
+        .tour-booking-actions { display: flex; gap: 12px; margin-top: 20px; }
+        .tour-booking-actions .btn { flex: 1; padding: 14px; font-size: 15px; border-radius: 10px; }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+        .includes-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .includes-grid span { font-size: 12px; background: #eef2ff; color: var(--primary-color); padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; font-weight: 500; }
+        .includes-grid span i { font-size: 11px; }
+        @media (max-width: 768px) {
+            .tour-booking-details { grid-template-columns: 1fr; }
+            .tour-booking-form .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 
 <body>
@@ -349,7 +387,7 @@
             </div>
             <div class="tours-grid">
                 <!-- Card 1: Golden Triangle -->
-                <div class="tour-card" data-name="Golden Triangle Tour" data-price="15999" data-duration="5 Days / 4 Nights">
+                <div class="tour-card" data-name="Golden Triangle Tour" data-price="15999" data-original-price="22999" data-discount="30" data-duration="5 Days / 4 Nights" data-duration-text="5 Days / 4 Nights" data-route="Delhi → Agra → Jaipur → Delhi" data-image="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=250&fit=crop" data-rating="4.9" data-reviews="2.3k" data-includes="4★ Hotels,Meals,Transport,Guide" data-type="tour" data-category="heritage">
                     <div class="tour-image">
                         <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=250&fit=crop" alt="Golden Triangle Tour">
                         <div class="tour-badge">Best Seller</div>
@@ -372,13 +410,13 @@
                                 <span class="price">₹15,999</span>
                                 <span class="offer-tag">30% OFF</span>
                             </div>
-                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                            <button class="btn btn-small btn-book" onclick="openTourBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 2: Kerala -->
-                <div class="tour-card" data-name="Kerala Backwater Cruise" data-price="24999" data-duration="6 Days / 5 Nights">
+                <div class="tour-card" data-name="Kerala Backwater Cruise" data-price="24999" data-original-price="35999" data-discount="31" data-duration="6 Days / 5 Nights" data-duration-text="6 Days / 5 Nights" data-route="Kochi → Munnar → Alleppey → Kovalam" data-image="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=250&fit=crop" data-rating="4.8" data-reviews="1.8k" data-includes="5★ Resorts,All Meals,Houseboat,Ayurveda" data-type="tour" data-category="nature">
                     <div class="tour-image">
                         <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=250&fit=crop" alt="Kerala Backwater Cruise">
                         <div class="tour-badge hot">Trending</div>
@@ -401,13 +439,13 @@
                                 <span class="price">₹24,999</span>
                                 <span class="offer-tag">31% OFF</span>
                             </div>
-                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                            <button class="btn btn-small btn-book" onclick="openTourBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 3: Ladakh -->
-                <div class="tour-card" data-name="Ladakh Adventure" data-price="29999" data-duration="7 Days / 6 Nights">
+                <div class="tour-card" data-name="Ladakh Adventure" data-price="29999" data-original-price="42999" data-discount="30" data-duration="7 Days / 6 Nights" data-duration-text="7 Days / 6 Nights" data-route="Leh → Nubra → Pangong → Leh" data-image="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=250&fit=crop" data-rating="4.9" data-reviews="1.5k" data-includes="Camping,Meals,Bike Ride,Trekking" data-type="tour" data-category="adventure">
                     <div class="tour-image">
                         <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400&h=250&fit=crop" alt="Ladakh Adventure">
                         <div class="tour-badge">Adventure</div>
@@ -430,13 +468,13 @@
                                 <span class="price">₹29,999</span>
                                 <span class="offer-tag">30% OFF</span>
                             </div>
-                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                            <button class="btn btn-small btn-book" onclick="openTourBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 4: Rajasthan -->
-                <div class="tour-card" data-name="Rajasthan Royal Heritage" data-price="32999" data-duration="8 Days / 7 Nights">
+                <div class="tour-card" data-name="Rajasthan Royal Heritage" data-price="32999" data-original-price="45999" data-discount="28" data-duration="8 Days / 7 Nights" data-duration-text="8 Days / 7 Nights" data-route="Jaipur → Jodhpur → Udaipur → Jaisalmer" data-image="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=250&fit=crop" data-rating="5.0" data-reviews="980" data-includes="Palace Stay,Royal Dining,Camel Safari,Folk Show" data-type="tour" data-category="heritage">
                     <div class="tour-image">
                         <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=250&fit=crop" alt="Rajasthan Heritage">
                         <div class="tour-badge featured">Premium</div>
@@ -459,13 +497,13 @@
                                 <span class="price">₹32,999</span>
                                 <span class="offer-tag">28% OFF</span>
                             </div>
-                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                            <button class="btn btn-small btn-book" onclick="openTourBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 5: Goa -->
-                <div class="tour-card" data-name="Goa Beach Party" data-price="11999" data-duration="4 Days / 3 Nights">
+                <div class="tour-card" data-name="Goa Beach Party" data-price="11999" data-original-price="16999" data-discount="29" data-duration="4 Days / 3 Nights" data-duration-text="4 Days / 3 Nights" data-route="North Goa → South Goa → Old Goa" data-image="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=250&fit=crop" data-rating="4.7" data-reviews="1.5k" data-includes="Beach Resort,Water Sports,Nightlife,Cruise" data-type="tour" data-category="beach">
                     <div class="tour-image">
                         <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=250&fit=crop" alt="Goa Beach Party">
                         <div class="tour-badge">Party</div>
@@ -488,7 +526,7 @@
                                 <span class="price">₹11,999</span>
                                 <span class="offer-tag">29% OFF</span>
                             </div>
-                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                            <button class="btn btn-small btn-book" onclick="openTourBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
@@ -772,6 +810,91 @@
                 <button class="btn btn-outline" onclick="downloadInvoice()"><i class="fas fa-download"></i>
                     Download</button>
                 <button class="btn btn-primary" onclick="closeInvoiceModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour Booking Modal -->
+    <div class="modal tour-booking-modal" id="tourBookingModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeTourBooking()">&times;</span>
+            <div class="tour-booking-header">
+                <img id="tourBookingImg" src="" alt="Tour">
+                <div class="overlay">
+                    <h2 id="tourBookingName">Tour Package</h2>
+                    <p><i class="fas fa-route"></i> <span id="tourBookingRoute">Route</span></p>
+                </div>
+            </div>
+            <div class="tour-booking-body">
+                <div class="tour-booking-details" id="tourBookingDetails"></div>
+                <div class="includes-grid" id="tourBookingIncludes"></div>
+                <div class="tour-booking-form">
+                    <h3>Booking Information</h3>
+                    <form onsubmit="submitTourBooking(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name *</label>
+                                <input type="text" id="tbName" required placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="tbEmail" required placeholder="Enter email">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Phone *</label>
+                                <input type="tel" id="tbPhone" required placeholder="Phone number">
+                            </div>
+                            <div class="form-group">
+                                <label>Travel Date *</label>
+                                <input type="date" id="tbDate" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Travelers</label>
+                                <select id="tbTravelers" onchange="updateTourPrice()">
+                                    <option value="1">1 Person</option>
+                                    <option value="2" selected>2 Persons</option>
+                                    <option value="3">3 Persons</option>
+                                    <option value="4">4 Persons</option>
+                                    <option value="5">5 Persons</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Special Requests</label>
+                                <input type="text" id="tbRequests" placeholder="Any special requests?">
+                            </div>
+                        </div>
+                        <div class="tour-price-summary">
+                            <div class="price-row">
+                                <span>Base Price</span>
+                                <span id="tbBasePrice">₹0</span>
+                            </div>
+                            <div class="price-row">
+                                <span>Travelers</span>
+                                <span>× <span id="tbTravelerCount">2</span></span>
+                            </div>
+                            <div class="price-row">
+                                <span>Discount</span>
+                                <span class="discount" id="tbDiscountAmt">- ₹0</span>
+                            </div>
+                            <div class="price-row">
+                                <span>GST (5%)</span>
+                                <span id="tbGST">₹0</span>
+                            </div>
+                            <div class="price-row total">
+                                <span>Total Amount</span>
+                                <span class="amount" id="tbTotal">₹0</span>
+                            </div>
+                        </div>
+                        <div class="tour-booking-actions">
+                            <button type="button" class="btn btn-outline" onclick="closeTourBooking()">Cancel</button>
+                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Confirm Booking</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
