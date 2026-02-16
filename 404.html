@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelGo - Page Not Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --dark: #1e293b;
+            --light: #f1f5f9;
+            --text: #475569;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            color: var(--dark);
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 16px 40px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header .logo i {
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .logo span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Main Content */
+        .error-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        /* Background decorations */
+        .bg-decoration {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.06;
+            pointer-events: none;
+        }
+
+        .bg-decoration.one {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -100px;
+            right: -100px;
+        }
+
+        .bg-decoration.two {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            bottom: -80px;
+            left: -80px;
+        }
+
+        .bg-decoration.three {
+            width: 200px;
+            height: 200px;
+            background: var(--accent);
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+        }
+
+        /* Floating clouds */
+        .cloud {
+            position: absolute;
+            color: #cbd5e1;
+            opacity: 0.25;
+            animation: drift 20s linear infinite;
+            pointer-events: none;
+        }
+
+        .cloud:nth-child(1) {
+            top: 15%;
+            left: -60px;
+            font-size: 50px;
+            animation-duration: 25s;
+        }
+
+        .cloud:nth-child(2) {
+            top: 35%;
+            left: -80px;
+            font-size: 35px;
+            animation-duration: 30s;
+            animation-delay: 5s;
+        }
+
+        .cloud:nth-child(3) {
+            top: 65%;
+            left: -50px;
+            font-size: 45px;
+            animation-duration: 22s;
+            animation-delay: 10s;
+        }
+
+        @keyframes drift {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(calc(100vw + 150px));
+            }
+        }
+
+        /* Airplane */
+        .airplane {
+            position: absolute;
+            top: 18%;
+            right: 15%;
+            font-size: 48px;
+            color: var(--primary);
+            opacity: 0.7;
+            animation: fly 6s ease-in-out infinite;
+        }
+
+        .airplane-trail {
+            position: absolute;
+            top: calc(18% + 30px);
+            right: calc(15% + 55px);
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(to left, rgba(79, 70, 229, 0.3), transparent);
+            animation: fly 6s ease-in-out infinite;
+            transform: rotate(-5deg);
+        }
+
+        @keyframes fly {
+            0%, 100% {
+                transform: translate(0, 0) rotate(-8deg);
+            }
+            25% {
+                transform: translate(-15px, -20px) rotate(-12deg);
+            }
+            50% {
+                transform: translate(10px, -30px) rotate(-5deg);
+            }
+            75% {
+                transform: translate(20px, -10px) rotate(-10deg);
+            }
+        }
+
+        /* 404 Number */
+        .error-code {
+            font-size: clamp(120px, 20vw, 220px);
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradient-shift 4s ease-in-out infinite;
+            position: relative;
+            margin-bottom: 10px;
+            user-select: none;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Compass icon between the digits */
+        .compass-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .compass-icon {
+            font-size: clamp(60px, 10vw, 110px);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: spin-compass 8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin-compass {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Suitcase illustration */
+        .suitcase-scene {
+            margin: 20px 0 30px;
+            position: relative;
+            width: 120px;
+            height: 100px;
+        }
+
+        .suitcase-body {
+            width: 90px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--accent), #d97706);
+            border-radius: 8px;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .suitcase-body::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 36px;
+            height: 18px;
+            border: 4px solid #d97706;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .suitcase-body::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 14px;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            border-radius: 3px;
+        }
+
+        .suitcase-stripe {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+        }
+
+        .suitcase-sticker {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            animation: sticker-bounce 3s ease-in-out infinite;
+        }
+
+        .suitcase-sticker.one {
+            background: var(--primary);
+            top: 8px;
+            right: 8px;
+        }
+
+        .suitcase-sticker.two {
+            background: var(--secondary);
+            bottom: 8px;
+            left: 8px;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes sticker-bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        /* Text */
+        .error-title {
+            font-size: clamp(22px, 4vw, 34px);
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .error-title i {
+            color: var(--accent);
+            margin-left: 6px;
+            animation: wave 2s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes wave {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(15deg);
+            }
+            75% {
+                transform: rotate(-10deg);
+            }
+        }
+
+        .error-subtitle {
+            font-size: clamp(14px, 2vw, 17px);
+            color: var(--text);
+            font-weight: 400;
+            margin-bottom: 36px;
+            text-align: center;
+            max-width: 480px;
+            line-height: 1.7;
+        }
+
+        /* Buttons */
+        .error-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(79, 70, 229, 0.35);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-home::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(79, 70, 229, 0.45);
+        }
+
+        .btn-home:hover::before {
+            opacity: 1;
+        }
+
+        .btn-home span,
+        .btn-home i {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-explore {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-explore:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(79, 70, 229, 0.25);
+        }
+
+        /* Footer hint */
+        .footer-hint {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .footer-hint i {
+            color: var(--accent);
+        }
+
+        /* Entrance animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s ease forwards;
+        }
+
+        .fade-up:nth-child(2) { animation-delay: 0.15s; }
+        .fade-up:nth-child(3) { animation-delay: 0.3s; }
+        .fade-up:nth-child(4) { animation-delay: 0.45s; }
+        .fade-up:nth-child(5) { animation-delay: 0.6s; }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 14px 20px;
+            }
+
+            .airplane {
+                font-size: 32px;
+                top: 12%;
+                right: 8%;
+            }
+
+            .airplane-trail {
+                width: 50px;
+                top: calc(12% + 20px);
+                right: calc(8% + 38px);
+            }
+
+            .suitcase-scene {
+                width: 90px;
+                height: 80px;
+            }
+
+            .suitcase-body {
+                width: 70px;
+                height: 50px;
+            }
+
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .btn-home,
+            .btn-explore {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .logo {
+                font-size: 20px;
+            }
+
+            .header .logo i {
+                font-size: 24px;
+            }
+
+            .bg-decoration.three {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <i class="fas fa-globe-americas"></i>
+            <span>TravelGo</span>
+        </a>
+    </header>
+
+    <!-- Main -->
+    <main class="error-container">
+
+        <!-- Background decorations -->
+        <div class="bg-decoration one"></div>
+        <div class="bg-decoration two"></div>
+        <div class="bg-decoration three"></div>
+
+        <!-- Floating clouds -->
+        <i class="fas fa-cloud cloud"></i>
+        <i class="fas fa-cloud cloud"></i>
+        <i class="fas fa-cloud cloud"></i>
+
+        <!-- Floating airplane -->
+        <div class="airplane">
+            <i class="fas fa-plane"></i>
+        </div>
+        <div class="airplane-trail"></div>
+
+        <!-- 404 Number -->
+        <div class="error-code fade-up">
+            4<span class="compass-wrapper"><i class="fas fa-compass compass-icon"></i></span>4
+        </div>
+
+        <!-- Suitcase illustration -->
+        <div class="suitcase-scene fade-up">
+            <div class="suitcase-body">
+                <div class="suitcase-stripe"></div>
+                <div class="suitcase-sticker one">✈</div>
+                <div class="suitcase-sticker two">☀</div>
+            </div>
+        </div>
+
+        <!-- Message -->
+        <h1 class="error-title fade-up">
+            Oops! This page is on vacation <i class="fas fa-umbrella-beach"></i>
+        </h1>
+        <p class="error-subtitle fade-up">
+            The page you're looking for doesn't exist or has been moved.
+            Don't worry — let's get you back on track to your next adventure!
+        </p>
+
+        <!-- Actions -->
+        <div class="error-actions fade-up">
+            <a href="index.html" class="btn-home">
+                <i class="fas fa-home"></i>
+                <span>Back to Home</span>
+            </a>
+            <a href="destinations.html" class="btn-explore">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Explore Destinations</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <div class="footer-hint">
+        <i class="fas fa-heart"></i> TravelGo — Your journey starts here
+    </div>
+
+</body>
+
+</html>
