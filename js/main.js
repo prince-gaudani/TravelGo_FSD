@@ -1189,7 +1189,8 @@ function loadMyBookings() {
     }
 
     container.innerHTML = bookings.map((b, index) => {
-        if (b.type === 'Tour Package') {
+        if (b.type === 'Tour Package' || b.type === 'Stay Booking') {
+            const typeLabel = b.type === 'Stay Booking' ? (b.stayType === 'resort' ? 'Resort' : 'Hotel') : 'Tour Package';
             // Tour package booking format
             return `
         <div class="booking-card">
@@ -1200,11 +1201,11 @@ function loadMyBookings() {
             <div class="booking-card-body">
                 <div class="booking-details-grid">
                     <div class="booking-detail-item">
-                        <label>Tour Package</label>
+                        <label>${typeLabel}</label>
                         <span>${b.destination}</span>
                     </div>
                     <div class="booking-detail-item">
-                        <label>Route</label>
+                        <label>${b.type === 'Stay Booking' ? 'Location' : 'Route'}</label>
                         <span>${b.route || 'N/A'}</span>
                     </div>
                     <div class="booking-detail-item">
@@ -1226,6 +1227,7 @@ function loadMyBookings() {
                 </div>
                 <div class="booking-card-actions">
                     <button class="btn btn-outline" onclick="viewTourInvoice(${index})"><i class="fas fa-eye"></i> View Invoice</button>
+                    <button class="btn btn-primary" onclick="downloadTourInvoice(${index})"><i class="fas fa-download"></i> Download</button>
                 </div>
             </div>
         </div>`;
@@ -1319,6 +1321,63 @@ function viewTourInvoice(index) {
 
     document.getElementById('invoiceModal').classList.add('active');
     document.body.style.overflow = 'hidden';
+}
+
+function downloadTourInvoice(index) {
+    const bookings = JSON.parse(localStorage.getItem('travelgo_bookings') || '[]');
+    const b = bookings[index];
+    if (!b) return;
+
+    const invoiceNumber = b.id;
+    const invoiceContent = `
+        <div class="invoice-section">
+            <h4>Tour Package Details</h4>
+            <table class="invoice-table">
+                <tr><td><strong>Booking ID</strong></td><td>${b.id}</td></tr>
+                <tr><td><strong>Tour Package</strong></td><td>${b.destination}</td></tr>
+                <tr><td><strong>Route</strong></td><td>${b.route || 'N/A'}</td></tr>
+                <tr><td><strong>Duration</strong></td><td>${b.duration || 'N/A'}</td></tr>
+                <tr><td><strong>Travel Date</strong></td><td>${b.date ? new Date(b.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A'}</td></tr>
+                <tr><td><strong>Status</strong></td><td><span style="color: #10b981; font-weight: 600;">${b.status || 'Confirmed'}</span></td></tr>
+            </table>
+        </div>
+        <div class="invoice-section">
+            <h4>Traveler Info</h4>
+            <table class="invoice-table">
+                <tr><td><strong>Name</strong></td><td>${b.travelerName || 'N/A'}</td></tr>
+                <tr><td><strong>Email</strong></td><td>${b.email || 'N/A'}</td></tr>
+                <tr><td><strong>Phone</strong></td><td>${b.phone || 'N/A'}</td></tr>
+                <tr><td><strong>Travelers</strong></td><td>${b.travelers} Person(s)</td></tr>
+                <tr><td><strong>Special Requests</strong></td><td>${b.requests || 'None'}</td></tr>
+            </table>
+        </div>
+        <div class="invoice-section">
+            <h4>Payment</h4>
+            <div class="invoice-total">Total Paid: ${b.total}</div>
+        </div>`;
+
+    const invoiceHTML = `<!DOCTYPE html><html><head><title>Invoice - ${invoiceNumber}</title>
+    <style>* { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: 'Segoe UI', sans-serif; padding: 40px; color: #334155; }
+    .invoice-container { max-width: 800px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+    .inv-header { background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; padding: 30px; display: flex; justify-content: space-between; align-items: center; }
+    .inv-logo { font-size: 28px; font-weight: 700; } .inv-title { text-align: right; }
+    .inv-body { padding: 30px; } table { width: 100%; border-collapse: collapse; } th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+    th { background: #f8fafc; font-weight: 600; } .invoice-total { text-align: right; font-size: 20px; font-weight: 700; color: #10b981; padding: 15px; background: #f0fdf4; border-radius: 8px; }
+    .invoice-section { margin-bottom: 20px; } .invoice-section h4 { margin-bottom: 10px; } @media print { body { padding: 0; } }</style></head>
+    <body>
+    <div class="invoice-container"><div class="inv-header"><div class="inv-logo">✈ TravelGo</div><div class="inv-title"><h2>Tour Booking Invoice</h2><p>#${invoiceNumber}</p></div></div>
+    <div class="inv-body">${invoiceContent}</div></div></body></html>`;
+
+    const blob = new Blob([invoiceHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'TravelGo_Tour_Invoice_' + invoiceNumber + '.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showNotification('Tour invoice downloaded successfully!', 'success');
 }
 
 function viewHistoryInvoice(index) {
