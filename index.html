@@ -56,6 +56,34 @@
             .tour-booking-details { grid-template-columns: 1fr; }
             .tour-booking-form .form-row { grid-template-columns: 1fr; }
         }
+        .hotel-price { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .about-section { padding: 80px 0; background: #fff; }
+        .about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: center; }
+        .about-card { background: var(--light-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 22px; box-shadow: var(--shadow-sm); }
+        .about-highlights { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 15px; }
+        .about-point { background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; font-size: 14px; font-weight: 500; color: var(--dark-color); display: flex; gap: 8px; align-items: center; }
+        .reviews-section { padding: 80px 0; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); }
+        .reviews-carousel { position: relative; overflow: hidden; border-radius: 14px; }
+        .reviews-track { display: flex; transition: transform 0.45s ease; }
+        .review-card { min-width: 100%; background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 28px; }
+        .review-stars { color: #f59e0b; margin-bottom: 10px; }
+        .review-author { margin-top: 12px; font-weight: 600; color: var(--dark-color); }
+        .review-meta { color: var(--text-light); font-size: 13px; }
+        .reviews-controls { margin-top: 14px; display: flex; gap: 10px; justify-content: center; }
+        .reviews-controls button { width: 40px; height: 40px; border-radius: 999px; border: 1px solid var(--border-color); background: #fff; color: var(--primary-color); cursor: pointer; }
+        .admin-section { padding: 80px 0; background: #fff; }
+        .admin-panel { background: var(--light-color); border: 1px solid var(--border-color); border-radius: 14px; padding: 24px; }
+        .admin-panel .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .admin-panel .form-group { margin-bottom: 12px; }
+        .admin-panel .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--dark-color); }
+        .admin-panel .form-group input, .admin-panel .form-group select { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; }
+        .admin-list { margin-top: 18px; border-top: 1px solid var(--border-color); padding-top: 16px; }
+        .admin-list-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid var(--border-color); background: #fff; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+        .admin-list-item small { color: var(--text-light); }
+        @media (max-width: 900px) {
+            .about-grid { grid-template-columns: 1fr; }
+            .admin-panel .form-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 
@@ -85,6 +113,7 @@
                         <li><a href="stay.html?type=resort"><i class="fas fa-umbrella-beach"></i> Resorts</a></li>
                     </ul>
                 </li>
+                <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="nav-buttons" id="authButtons">
@@ -135,8 +164,35 @@
             <h1>Experience Premium <span>Travel</span></h1>
             <p>Discover luxury destinations, 5-star hotels, and exclusive resorts.</p>
             <div class="hero-buttons">
-                <a href="bookings.html" class="btn btn-primary btn-large">Book Now</a>
+                <a href="destinations.html" class="btn btn-primary btn-large">Book Now</a>
                 <a href="#destinations" class="btn btn-outline-white btn-large">Explore</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>About <span>TravelGo</span></h2>
+                <p>Professional travel planning platform for destinations, tours, and premium stays.</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>Built for modern travelers</h3>
+                    <p>TravelGo helps you discover top destinations, compare curated tours, and book hotels or resorts with a smooth end-to-end process. We focus on trusted listings, transparent pricing, and simple booking management.</p>
+                    <div class="about-highlights">
+                        <div class="about-point"><i class="fas fa-shield-alt"></i> Secure booking flow</div>
+                        <div class="about-point"><i class="fas fa-headset"></i> 24x7 support</div>
+                        <div class="about-point"><i class="fas fa-tags"></i> Competitive pricing</div>
+                        <div class="about-point"><i class="fas fa-star"></i> Verified reviews</div>
+                    </div>
+                </div>
+                <div class="about-card">
+                    <h3>Why travelers choose us</h3>
+                    <p>From quick weekend escapes to premium long holidays, our platform is designed to give complete control: search, compare, book, and track everything in one place.</p>
+                    <p style="margin-top: 10px;">Start planning your next trip with confidence and a professional-grade booking experience.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -281,7 +337,7 @@
                 <p>Premium stays for your perfect getaway</p>
             </div>
             <div class="hotels-grid">
-                <div class="hotel-card">
+                <div class="hotel-card" data-name="Taj Palace Hotel" data-price="12500" data-original-price="14999" data-discount="17" data-duration-text="1 Night Stay" data-route="Mumbai, Maharashtra" data-image="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=250&fit=crop" data-rating="4.9" data-reviews="1.2k" data-includes="Breakfast,Spa Access,Pool,Airport Pickup" data-category="hotel">
                     <div class="hotel-image">
                         <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=250&fit=crop"
                             alt="Taj Hotel">
@@ -298,10 +354,11 @@
                         </div>
                         <div class="hotel-price">
                             <span class="price">₹12,500/night</span>
+                            <button class="btn btn-small btn-book" onclick="openStayBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
-                <div class="hotel-card">
+                <div class="hotel-card" data-name="Palm Beach Resort" data-price="8999" data-original-price="10999" data-discount="18" data-duration-text="1 Night Stay" data-route="Goa" data-image="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=250&fit=crop" data-rating="4.8" data-reviews="940" data-includes="Breakfast,Beach Access,Cocktail Welcome,Pool" data-category="resort">
                     <div class="hotel-image">
                         <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=250&fit=crop"
                             alt="Beach Resort">
@@ -318,10 +375,11 @@
                         </div>
                         <div class="hotel-price">
                             <span class="price">₹8,999/night</span>
+                            <button class="btn btn-small btn-book" onclick="openStayBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
-                <div class="hotel-card">
+                <div class="hotel-card" data-name="Himalayan Heights" data-price="6500" data-original-price="7999" data-discount="19" data-duration-text="1 Night Stay" data-route="Manali" data-image="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=250&fit=crop" data-rating="4.7" data-reviews="760" data-includes="Bonfire,Mountain View,Dinner,Breakfast" data-category="resort">
                     <div class="hotel-image">
                         <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=250&fit=crop"
                             alt="Mountain Resort">
@@ -338,10 +396,11 @@
                         </div>
                         <div class="hotel-price">
                             <span class="price">₹6,500/night</span>
+                            <button class="btn btn-small btn-book" onclick="openStayBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
-                <div class="hotel-card">
+                <div class="hotel-card" data-name="Royal Orchid" data-price="5200" data-original-price="6299" data-discount="17" data-duration-text="1 Night Stay" data-route="Bangalore" data-image="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=250&fit=crop" data-rating="4.6" data-reviews="880" data-includes="Gym,Breakfast,Free Wi-Fi,Concierge" data-category="hotel">
                     <div class="hotel-image">
                         <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=250&fit=crop"
                             alt="Luxury Hotel">
@@ -358,10 +417,11 @@
                         </div>
                         <div class="hotel-price">
                             <span class="price">₹5,200/night</span>
+                            <button class="btn btn-small btn-book" onclick="openStayBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
-                <div class="hotel-card">
+                <div class="hotel-card" data-name="Grand Central" data-price="9500" data-original-price="11899" data-discount="20" data-duration-text="1 Night Stay" data-route="Delhi" data-image="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&h=250&fit=crop" data-rating="4.8" data-reviews="1.1k" data-includes="Spa,Airport Transfer,Breakfast,Lounge Access" data-category="hotel">
                     <div class="hotel-image">
                         <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&h=250&fit=crop"
                             alt="City Hotel">
@@ -378,6 +438,7 @@
                         </div>
                         <div class="hotel-price">
                             <span class="price">₹9,500/night</span>
+                            <button class="btn btn-small btn-book" onclick="openStayBooking(this)">Book Now</button>
                         </div>
                     </div>
                 </div>
@@ -541,6 +602,42 @@
         </div>
     </section>
 
+    <!-- Customer Reviews -->
+    <section class="reviews-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Customer <span>Reviews</span></h2>
+                <p>What travelers say after booking with TravelGo</p>
+            </div>
+            <div class="reviews-carousel" id="reviewsCarousel">
+                <div class="reviews-track" id="reviewsTrack">
+                    <article class="review-card">
+                        <div class="review-stars"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></div>
+                        <p>"The tour process was very smooth. We booked Kerala in minutes and got instant confirmation with clear pricing."</p>
+                        <div class="review-author">Ritika Sharma</div>
+                        <div class="review-meta">Mumbai - Tour Booking</div>
+                    </article>
+                    <article class="review-card">
+                        <div class="review-stars"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></div>
+                        <p>"Hotel booking quality is excellent. The stay matched exactly with details, amenities, and support was responsive."</p>
+                        <div class="review-author">Aman Verma</div>
+                        <div class="review-meta">Bangalore - Hotel Stay</div>
+                    </article>
+                    <article class="review-card">
+                        <div class="review-stars"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star-half-alt"></i></div>
+                        <p>"Professional platform with reliable options. I liked the clear itinerary view and invoice flow after payment."</p>
+                        <div class="review-author">Neha Kapoor</div>
+                        <div class="review-meta">Delhi - Family Trip</div>
+                    </article>
+                </div>
+            </div>
+            <div class="reviews-controls">
+                <button type="button" id="reviewPrev" aria-label="Previous review"><i class="fas fa-chevron-left"></i></button>
+                <button type="button" id="reviewNext" aria-label="Next review"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
     <!-- New Contact Section -->
     <section id="contact" class="contact-section">
         <div class="container">
@@ -591,6 +688,67 @@
                         <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="adminSection" class="admin-section" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Admin <span>Dashboard</span></h2>
+                <p>Add new destinations, tours, hotels, and resorts from one place.</p>
+            </div>
+            <div class="admin-panel">
+                <form id="adminAddForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="adminCategory" required>
+                                <option value="destination">Destination</option>
+                                <option value="tour">Tour</option>
+                                <option value="hotel">Hotel</option>
+                                <option value="resort">Resort</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="adminName" required placeholder="Item name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Location / Route</label>
+                            <input type="text" id="adminRoute" required placeholder="Goa or Delhi -> Agra">
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="url" id="adminImage" required placeholder="https://...">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="number" id="adminPrice" required min="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Original Price</label>
+                            <input type="number" id="adminOriginalPrice" min="100">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Duration / Stay</label>
+                            <input type="text" id="adminDuration" placeholder="5 Days / 4 Nights or 1 Night Stay">
+                        </div>
+                        <div class="form-group">
+                            <label>Includes (comma separated)</label>
+                            <input type="text" id="adminIncludes" placeholder="Meals,Guide,Transport">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Item</button>
+                </form>
+                <div class="admin-list" id="adminItemList"></div>
             </div>
         </div>
     </section>
@@ -904,3 +1062,5 @@
 </body>
 
 </html>
+
+

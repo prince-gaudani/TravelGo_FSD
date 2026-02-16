@@ -10,7 +10,15 @@ document.addEventListener('DOMContentLoaded', function () {
     setMinDates();
     loadMyBookings();
     initHeroSlider();
+    initReviewCarousel();
+    initAdminFeatures();
+    loadAdminContent();
 });
+
+const ADMIN_CREDENTIALS = {
+    email: 'admin123@gmail.com',
+    password: 'Ad@1234'
+};
 
 
 
@@ -46,11 +54,23 @@ function initAuth() {
             const password = document.getElementById('password').value;
 
             // Get stored users
+            const isAdminLogin = email.toLowerCase() === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password;
             const users = JSON.parse(localStorage.getItem('travelgo_users') || '[]');
             const user = users.find(u => u.email === email && u.password === password);
 
-            if (user) {
+            if (isAdminLogin) {
                 localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('isAdmin', 'true');
+                localStorage.setItem('userEmail', ADMIN_CREDENTIALS.email);
+                localStorage.setItem('userName', 'Admin');
+                localStorage.setItem('userFullName', 'System Admin');
+                showNotification('Admin login successful!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            } else if (user) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.removeItem('isAdmin');
                 localStorage.setItem('userEmail', user.email);
                 localStorage.setItem('userName', user.firstName);
                 localStorage.setItem('userFullName', user.firstName + ' ' + user.lastName);
@@ -119,6 +139,7 @@ function updateAuthUI(isLoggedIn) {
 
 function handleLogout() {
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('isAdmin');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
     localStorage.removeItem('userFullName');
@@ -1750,6 +1771,9 @@ function removeFavourite(index) {
 document.addEventListener('DOMContentLoaded', function() {
     initFavourites();
     initTourFilters();
+    initReviewCarousel();
+    initAdminFeatures();
+    loadAdminContent();
 });
 
 // ========================================
@@ -1913,9 +1937,42 @@ function openTourBooking(btn) {
         image: card.dataset.image,
         rating: card.dataset.rating,
         reviews: card.dataset.reviews,
-        includes: card.dataset.includes?.split(',') || []
+        includes: card.dataset.includes?.split(',') || [],
+        bookingType: 'Tour Package'
     };
 
+    populateBookingModal(currentTourData);
+}
+
+function openStayBooking(btn) {
+    const card = btn.closest('.hotel-card');
+    if (!card) return;
+
+    const price = parseInt(card.dataset.price || '0');
+    const originalPrice = parseInt(card.dataset.originalPrice || String(Math.round(price * 1.2)));
+    const discount = parseInt(card.dataset.discount || String(Math.max(0, Math.round(((originalPrice - price) / Math.max(originalPrice, 1)) * 100))));
+    const defaultIncludes = card.dataset.category === 'resort'
+        ? 'Breakfast,Pool Access,Evening Activities,Free Wi-Fi'
+        : 'Breakfast,Free Wi-Fi,Housekeeping,Front Desk Support';
+
+    currentTourData = {
+        name: card.dataset.name || card.querySelector('h3')?.textContent || 'Premium Stay',
+        price: price,
+        originalPrice: originalPrice,
+        discount: discount,
+        duration: card.dataset.durationText || '1 Night Stay',
+        route: card.dataset.route || 'Location not specified',
+        image: card.dataset.image || card.querySelector('img')?.src || '',
+        rating: card.dataset.rating || '4.7',
+        reviews: card.dataset.reviews || '500+',
+        includes: (card.dataset.includes || defaultIncludes).split(','),
+        bookingType: card.dataset.category === 'resort' ? 'Resort Stay' : 'Hotel Stay'
+    };
+
+    populateBookingModal(currentTourData);
+}
+
+function populateBookingModal(data) {
     document.getElementById('tourBookingImg').src = currentTourData.image;
     document.getElementById('tourBookingName').textContent = currentTourData.name;
     document.getElementById('tourBookingRoute').textContent = currentTourData.route;
@@ -2009,7 +2066,7 @@ function submitTourBooking(e) {
 
     const booking = {
         id: invoiceNum,
-        type: 'Tour Package',
+        type: currentTourData.bookingType || 'Tour Package',
         destination: currentTourData.name,
         route: currentTourData.route,
         duration: currentTourData.duration,
@@ -2036,7 +2093,7 @@ function submitTourBooking(e) {
         <div style="padding: 20px;">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                 <div>
-                    <h4 style="margin-bottom: 8px; color: #4f46e5;">Tour Details</h4>
+                    <h4 style="margin-bottom: 8px; color: #4f46e5;">${currentTourData.bookingType || 'Tour Package'} Details</h4>
                     <p><strong>Package:</strong> ${currentTourData.name}</p>
                     <p><strong>Route:</strong> ${currentTourData.route}</p>
                     <p><strong>Duration:</strong> ${currentTourData.duration}</p>
@@ -2055,7 +2112,7 @@ function submitTourBooking(e) {
             </div>
             <div style="text-align: center; color: #10b981; margin-top: 30px;">
                 <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 15px;"></i>
-                <h3>Tour Booking Confirmed!</h3>
+                <h3>${currentTourData.bookingType || 'Tour Package'} Confirmed!</h3>
                 <p>Confirmation sent to ${email}</p>
             </div>
         </div>
@@ -2063,5 +2120,217 @@ function submitTourBooking(e) {
 
     document.getElementById('invoiceModal').classList.add('active');
     document.body.style.overflow = 'hidden';
-    showNotification('Tour booked successfully!', 'success');
+    showNotification((currentTourData.bookingType || 'Tour Package') + ' booked successfully!', 'success');
+}
+
+// ========================================
+// Reviews Carousel
+// ========================================
+
+function initReviewCarousel() {
+    const track = document.getElementById('reviewsTrack');
+    if (!track) return;
+
+    const slides = Array.from(track.children);
+    const prevBtn = document.getElementById('reviewPrev');
+    const nextBtn = document.getElementById('reviewNext');
+    let current = 0;
+
+    function render() {
+        track.style.transform = `translateX(-${current * 100}%)`;
+    }
+
+    prevBtn?.addEventListener('click', function () {
+        current = (current - 1 + slides.length) % slides.length;
+        render();
+    });
+
+    nextBtn?.addEventListener('click', function () {
+        current = (current + 1) % slides.length;
+        render();
+    });
+
+    setInterval(() => {
+        current = (current + 1) % slides.length;
+        render();
+    }, 4500);
+}
+
+// ========================================
+// Admin Content Management
+// ========================================
+
+const ADMIN_CONTENT_KEY = 'travelgo_admin_content';
+
+function getAdminContent() {
+    return JSON.parse(localStorage.getItem(ADMIN_CONTENT_KEY) || '[]');
+}
+
+function saveAdminContent(items) {
+    localStorage.setItem(ADMIN_CONTENT_KEY, JSON.stringify(items));
+}
+
+function initAdminFeatures() {
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
+    const adminSection = document.getElementById('adminSection');
+    if (adminSection) adminSection.style.display = isAdmin ? 'block' : 'none';
+
+    const form = document.getElementById('adminAddForm');
+    if (!form || !isAdmin) return;
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const category = document.getElementById('adminCategory').value;
+        const name = document.getElementById('adminName').value.trim();
+        const route = document.getElementById('adminRoute').value.trim();
+        const image = document.getElementById('adminImage').value.trim();
+        const price = parseInt(document.getElementById('adminPrice').value || '0');
+        const originalPriceVal = parseInt(document.getElementById('adminOriginalPrice').value || '0');
+        const duration = document.getElementById('adminDuration').value.trim();
+        const includes = document.getElementById('adminIncludes').value.trim();
+
+        if (!category || !name || !route || !image || !price) {
+            showNotification('Please fill all required admin fields.', 'error');
+            return;
+        }
+
+        const originalPrice = originalPriceVal > price ? originalPriceVal : Math.round(price * 1.2);
+        const discount = Math.max(0, Math.round(((originalPrice - price) / originalPrice) * 100));
+
+        const items = getAdminContent();
+        items.unshift({
+            id: 'AD' + Date.now(),
+            category,
+            name,
+            route,
+            image,
+            price,
+            originalPrice,
+            discount,
+            duration: duration || (category === 'tour' ? '5 Days / 4 Nights' : '1 Night Stay'),
+            includes: includes || 'Meals,Support,Comfort',
+            rating: (4.5 + Math.random() * 0.5).toFixed(1),
+            reviews: Math.floor(200 + Math.random() * 900).toString()
+        });
+
+        saveAdminContent(items);
+        form.reset();
+        showNotification('Item added successfully.', 'success');
+        loadAdminContent();
+    });
+}
+
+function removeAdminItem(id) {
+    const updated = getAdminContent().filter(item => item.id !== id);
+    saveAdminContent(updated);
+    loadAdminContent();
+    showNotification('Admin item removed.', 'info');
+}
+
+function loadAdminContent() {
+    document.querySelectorAll('.admin-item').forEach(el => el.remove());
+    const items = getAdminContent();
+
+    const destinationsGrid = document.querySelector('.destinations-grid');
+    const toursGrid = document.getElementById('toursGrid') || document.querySelector('.tours-grid');
+    const staysGrid = document.querySelector('.hotels-grid');
+
+    items.forEach(item => {
+        if (item.category === 'destination' && destinationsGrid) {
+            destinationsGrid.insertAdjacentHTML('beforeend', `
+                <div class="destination-card admin-item" data-name="${escapeHtml(item.name)}" data-price="${item.price}" data-type="domestic">
+                    <div class="destination-image">
+                        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">
+                        <div class="destination-badge">Admin</div>
+                        <div class="destination-type">Domestic</div>
+                    </div>
+                    <div class="destination-info">
+                        <div class="destination-rating"><i class="fas fa-star"></i><span>${escapeHtml(item.rating)}</span></div>
+                        <h3>${escapeHtml(item.name)}</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> ${escapeHtml(item.route)}</p>
+                        <div class="destination-price">
+                            <div class="price-info">
+                                <span class="price">â‚¹${Number(item.price).toLocaleString('en-IN')}</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        if (item.category === 'tour' && toursGrid) {
+            toursGrid.insertAdjacentHTML('beforeend', `
+                <div class="tour-card admin-item" data-name="${escapeHtml(item.name)}" data-price="${item.price}" data-original-price="${item.originalPrice}" data-discount="${item.discount}" data-duration="${escapeHtml(item.duration)}" data-duration-text="${escapeHtml(item.duration)}" data-route="${escapeHtml(item.route)}" data-image="${escapeHtml(item.image)}" data-rating="${escapeHtml(item.rating)}" data-reviews="${escapeHtml(item.reviews)}" data-includes="${escapeHtml(item.includes)}" data-type="tour" data-category="custom">
+                    <div class="tour-image">
+                        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">
+                        <div class="tour-badge">Admin</div>
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-rating"><i class="fas fa-star"></i><span>${escapeHtml(item.rating)}</span> <small>(${escapeHtml(item.reviews)} reviews)</small></div>
+                        <h3>${escapeHtml(item.name)}</h3>
+                        <p><i class="fas fa-route"></i> ${escapeHtml(item.route)}</p>
+                        <div class="tour-price">
+                            <div class="price-info">
+                                <span class="price">â‚¹${Number(item.price).toLocaleString('en-IN')}</span>
+                            </div>
+                            <button class="btn btn-small btn-book" onclick="openTourBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        if ((item.category === 'hotel' || item.category === 'resort') && staysGrid) {
+            const badge = item.category === 'resort' ? 'Resort' : 'Hotel';
+            staysGrid.insertAdjacentHTML('beforeend', `
+                <div class="hotel-card admin-item" data-name="${escapeHtml(item.name)}" data-price="${item.price}" data-original-price="${item.originalPrice}" data-discount="${item.discount}" data-duration-text="${escapeHtml(item.duration)}" data-route="${escapeHtml(item.route)}" data-image="${escapeHtml(item.image)}" data-rating="${escapeHtml(item.rating)}" data-reviews="${escapeHtml(item.reviews)}" data-includes="${escapeHtml(item.includes)}" data-category="${item.category}">
+                    <div class="hotel-image">
+                        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">
+                        <div class="hotel-badge ${item.category === 'resort' ? 'resort' : ''}">${badge}</div>
+                    </div>
+                    <div class="hotel-info">
+                        <h3>${escapeHtml(item.name)}</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> ${escapeHtml(item.route)}</p>
+                        <div class="hotel-amenities">
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-utensils"></i></span>
+                            <span><i class="fas fa-spa"></i></span>
+                            <span><i class="fas fa-car"></i></span>
+                        </div>
+                        <div class="hotel-price">
+                            <span class="price">â‚¹${Number(item.price).toLocaleString('en-IN')}/night</span>
+                            <button class="btn btn-small btn-book" onclick="openStayBooking(this)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+    });
+
+    const adminList = document.getElementById('adminItemList');
+    if (adminList) {
+        if (!items.length) {
+            adminList.innerHTML = '<p style="color: var(--text-light);">No admin items added yet.</p>';
+        } else {
+            adminList.innerHTML = items.map(item => `
+                <div class="admin-list-item">
+                    <div>
+                        <strong>${escapeHtml(item.name)}</strong>
+                        <small>${item.category} | ${escapeHtml(item.route)} | â‚¹${Number(item.price).toLocaleString('en-IN')}</small>
+                    </div>
+                    <button class="btn btn-outline btn-sm" type="button" onclick="removeAdminItem('${item.id}')">Delete</button>
+                </div>
+            `).join('');
+        }
+    }
+}
+
+function escapeHtml(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
