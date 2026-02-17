@@ -1981,6 +1981,8 @@ function getCardCurrentData(card) {
     };
 }
 
+let activeAdminEditCard = null;
+
 function openAdminCardEditor(card) {
     let modal = document.getElementById('adminCardEditModal');
     if (!modal) {
@@ -2025,7 +2027,7 @@ function openAdminCardEditor(card) {
                         </div>
                         <div class="form-group">
                             <label>Image URL</label>
-                            <input type="url" id="aceImage" required>
+                            <input type="text" id="aceImage" required placeholder="https://... or relative path">
                         </div>
                         <div class="form-group">
                             <label>Highlights / Includes (comma separated)</label>
@@ -2045,6 +2047,7 @@ function openAdminCardEditor(card) {
             modal.classList.remove('active');
             document.body.style.overflow = '';
             modal.dataset.cardKey = '';
+            activeAdminEditCard = null;
         };
         modal.querySelector('#closeAdminCardEdit').addEventListener('click', closeEditor);
         modal.querySelector('#cancelAdminCardEdit').addEventListener('click', closeEditor);
@@ -2054,11 +2057,26 @@ function openAdminCardEditor(card) {
 
         modal.querySelector('#adminCardEditForm').addEventListener('submit', function (e) {
             e.preventDefault();
+            const formEl = e.currentTarget;
+            if (formEl && !formEl.checkValidity()) {
+                formEl.reportValidity();
+                showNotification('Please fill all required fields with valid values.', 'error');
+                return;
+            }
+
             const key = modal.dataset.cardKey;
-            if (!key) return;
-            const targetCard = Array.from(document.querySelectorAll('.destination-card, .tour-card, .hotel-card'))
-                .find(c => c.dataset.cardKey === key);
-            if (!targetCard) return;
+            if (!key) {
+                showNotification('Unable to identify this card. Please reopen editor and try again.', 'error');
+                return;
+            }
+            const targetCard = (activeAdminEditCard && document.body.contains(activeAdminEditCard))
+                ? activeAdminEditCard
+                : Array.from(document.querySelectorAll('.destination-card, .tour-card, .hotel-card'))
+                    .find(c => c.dataset.cardKey === key);
+            if (!targetCard) {
+                showNotification('Selected card was not found. Refresh page and try again.', 'error');
+                return;
+            }
 
             const updated = {
                 name: document.getElementById('aceName').value.trim(),
@@ -2071,6 +2089,11 @@ function openAdminCardEditor(card) {
                 includes: document.getElementById('aceIncludes').value.trim()
             };
 
+            if (!updated.image) {
+                const fallbackImage = targetCard.dataset.image || targetCard.querySelector('img')?.src || '';
+                updated.image = fallbackImage;
+            }
+
             applyCardDataToDom(targetCard, updated);
             persistCardUpdate(targetCard, updated);
             if (typeof applyDestinationFilters === 'function') applyDestinationFilters();
@@ -2079,10 +2102,13 @@ function openAdminCardEditor(card) {
             showNotification('Card updated successfully.', 'success');
             modal.classList.remove('active');
             document.body.style.overflow = '';
+            modal.dataset.cardKey = '';
+            activeAdminEditCard = null;
         });
     }
 
     const data = getCardCurrentData(card);
+    activeAdminEditCard = card;
     modal.dataset.cardKey = getCardIdentity(card);
     document.getElementById('aceName').value = data.name;
     document.getElementById('aceLocation').value = data.location;
