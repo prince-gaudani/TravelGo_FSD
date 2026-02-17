@@ -45,6 +45,15 @@ function initAuth() {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+            const loginPhoneInput = document.querySelector('#loginForm input[type="tel"]');
+
+            if (loginPhoneInput) {
+                const loginPhone = loginPhoneInput.value.trim();
+                if (loginPhone && !validatePhone(loginPhone)) {
+                    showNotification('Please enter a valid phone number (10 digits, first digit cannot be 0).', 'error');
+                    return;
+                }
+            }
 
             // Get stored users
             const users = JSON.parse(localStorage.getItem('travelgo_users') || '[]');
@@ -226,7 +235,7 @@ function startBooking(button) {
     const card = button.closest('.destination-card') || button.closest('.tour-card');
     bookingData.destination = card.dataset.name;
     bookingData.basePrice = parseInt(card.dataset.price);
-    bookingData.destinationType = card.dataset.type || 'tour';
+    bookingData.destinationType = card.dataset.type === 'international' ? 'international' : 'domestic';
 
     document.getElementById('wizardDestination').textContent = bookingData.destination;
     document.getElementById('bookingWizard').classList.add('active');
@@ -242,6 +251,8 @@ function resetWizard() {
     bookingData.travelers = [];
     bookingData.idProofs = [];
 
+    applyTransportOptionsByDestinationType();
+
     document.querySelectorAll('.transport-card').forEach(c => c.classList.remove('selected'));
     document.getElementById('step1Next').disabled = true;
     document.getElementById('step2Next').disabled = true;
@@ -255,6 +266,11 @@ function closeWizard() {
 }
 
 function selectTransport(type) {
+    if (bookingData.destinationType === 'international' && type !== 'flight') {
+        showNotification('For international trips, only flight booking is available.', 'info');
+        return;
+    }
+
     bookingData.transportType = type;
 
     const cards = document.querySelectorAll('.transport-card');
@@ -268,6 +284,22 @@ function selectTransport(type) {
 
     if (fromCity && travelDate) {
         document.getElementById('step1Next').disabled = false;
+    }
+}
+
+function applyTransportOptionsByDestinationType() {
+    const cards = Array.from(document.querySelectorAll('.transport-card'));
+    if (!cards.length) return;
+
+    cards.forEach((card, index) => {
+        const transportType = index === 0 ? 'flight' : index === 1 ? 'bus' : 'train';
+        const shouldShow = bookingData.destinationType !== 'international' || transportType === 'flight';
+        card.style.display = shouldShow ? '' : 'none';
+        card.classList.remove('selected');
+    });
+
+    if (bookingData.destinationType === 'international' && bookingData.transportType !== 'flight') {
+        bookingData.transportType = '';
     }
 }
 
@@ -596,7 +628,7 @@ function validateFieldOnBlur(fieldType, num) {
         case 'phone':
             if (value && !validatePhone(value)) {
                 isValid = false;
-                errorMessage = 'Please enter a valid 10-digit phone number';
+                errorMessage = 'Please enter a valid 10-digit phone number (first digit cannot be 0)';
             }
             break;
     }
@@ -671,7 +703,7 @@ function saveAndNext(num) {
             return;
         }
         if (!phone || !validatePhone(phone)) {
-            showNotification('Please enter a valid 10-digit phone number', 'error');
+            showNotification('Please enter a valid 10-digit phone number (first digit cannot be 0)', 'error');
             highlightError(`phone_${num}`);
             return;
         }
@@ -683,7 +715,7 @@ function saveAndNext(num) {
             return;
         }
         if (phone && !validatePhone(phone)) {
-            showNotification('Please enter a valid 10-digit phone number', 'error');
+            showNotification('Please enter a valid 10-digit phone number (first digit cannot be 0)', 'error');
             highlightError(`phone_${num}`);
             return;
         }
@@ -737,7 +769,7 @@ function validateTravelerForms() {
                 return false;
             }
             if (!t.phone || !validatePhone(t.phone)) {
-                showNotification('Please provide a valid 10-digit phone number for primary traveler', 'error');
+                showNotification('Please provide a valid 10-digit phone number for primary traveler (first digit cannot be 0)', 'error');
                 showTravelerForm(1);
                 highlightError('phone_1');
                 return false;
@@ -751,7 +783,7 @@ function validateTravelerForms() {
                 return false;
             }
             if (t.phone && !validatePhone(t.phone)) {
-                showNotification(`Please enter a valid phone number for Traveler ${travelerNum}`, 'error');
+                showNotification(`Please enter a valid phone number for Traveler ${travelerNum} (first digit cannot be 0)`, 'error');
                 showTravelerForm(travelerNum);
                 highlightError(`phone_${travelerNum}`);
                 return false;
@@ -784,7 +816,7 @@ function validateEmail(email) {
 }
 
 function validatePhone(phone) {
-    const phoneRegex = /^[0-9]{10}$/;
+    const phoneRegex = /^[1-9][0-9]{9}$/;
     return phoneRegex.test(phone.replace(/[\s\-]/g, ''));
 }
 
@@ -1472,6 +1504,11 @@ function handleSignup(form) {
 
     if (password.length < 6) {
         showNotification('Password must be at least 6 characters!', 'error');
+        return;
+    }
+
+    if (!phone || !validatePhone(phone)) {
+        showNotification('Please enter a valid phone number (10 digits, first digit cannot be 0).', 'error');
         return;
     }
 
