@@ -1819,6 +1819,25 @@ function initTourFilters() {
         });
     }
 
+    const resetBtn = document.getElementById('tourResetFilters');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+            currentCategory = 'all';
+            currentSearch = '';
+            currentBudget = 'all';
+
+            document.querySelectorAll('.tour-filter-btn').forEach(b => b.classList.remove('active'));
+            const allBtn = document.querySelector('.tour-filter-btn[data-category="all"]');
+            if (allBtn) allBtn.classList.add('active');
+
+            if (searchInput) searchInput.value = '';
+            if (sortSelect) sortSelect.value = 'default';
+            if (budgetSelect) budgetSelect.value = 'all';
+
+            filterAndSort();
+        });
+    }
+
     updateCounts();
 }
 

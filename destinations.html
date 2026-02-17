@@ -8,6 +8,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        .tour-filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .tour-filter-btn {
+            padding: 10px 22px;
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tour-filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(79, 70, 229, 0.05);
+        }
+        .tour-filter-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
         .destinations-toolbar {
             display: flex;
             justify-content: space-between;
@@ -69,6 +99,9 @@
         .budget-select select:focus {
             outline: none;
             border-color: var(--primary-color);
+        }
+        .reset-filters-btn {
+            white-space: nowrap;
         }
         .no-results {
             text-align: center;
@@ -150,17 +183,23 @@
         <div class="container">
             <h1 id="pageTitle">All Destinations</h1>
             <p id="pageSubtitle">Explore our handpicked destinations</p>
-            <div class="filter-tabs">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="domestic">Domestic</button>
-                <button class="filter-btn" data-filter="international">International</button>
-            </div>
         </div>
     </section>
 
     <!-- Destinations Grid -->
     <section class="destinations-page">
         <div class="container">
+            <div class="tour-filters" id="destinationFilters">
+                <button class="tour-filter-btn active" data-category="all">
+                    <i class="fas fa-th"></i> All Destinations
+                </button>
+                <button class="tour-filter-btn" data-category="domestic">
+                    <i class="fas fa-flag"></i> Domestic
+                </button>
+                <button class="tour-filter-btn" data-category="international">
+                    <i class="fas fa-globe"></i> International
+                </button>
+            </div>
             <div class="destinations-toolbar">
                 <div class="results-count">
                     Showing <strong id="destinationVisibleCount">0</strong> destinations
@@ -187,6 +226,7 @@
                             <option value="rating">Rating: Highest</option>
                         </select>
                     </div>
+                    <button class="btn btn-outline btn-sm reset-filters-btn" id="destinationResetFilters">Reset Filters</button>
                 </div>
             </div>
             <div class="destinations-grid" id="destinationsGrid">
@@ -936,22 +976,22 @@
             if (type === 'domestic') {
                 document.getElementById('pageTitle').textContent = 'Domestic Destinations';
                 document.getElementById('pageSubtitle').textContent = 'Explore beautiful places across India';
-                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-                document.querySelector('.filter-btn[data-filter="domestic"]').classList.add('active');
+                document.querySelectorAll('.tour-filter-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.tour-filter-btn[data-category="domestic"]').classList.add('active');
                 destinationFilter = 'domestic';
             } else if (type === 'international') {
                 document.getElementById('pageTitle').textContent = 'International Destinations';
                 document.getElementById('pageSubtitle').textContent = 'Discover amazing places around the world';
-                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-                document.querySelector('.filter-btn[data-filter="international"]').classList.add('active');
+                document.querySelectorAll('.tour-filter-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.tour-filter-btn[data-category="international"]').classList.add('active');
                 destinationFilter = 'international';
             }
 
-            document.querySelectorAll('.filter-btn').forEach(btn => {
+            document.querySelectorAll('.tour-filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tour-filter-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    destinationFilter = this.dataset.filter || 'all';
+                    destinationFilter = this.dataset.category || 'all';
                     applyDestinationFilters();
                 });
             });
@@ -975,6 +1015,25 @@
             if (budgetSelect) {
                 budgetSelect.addEventListener('change', function () {
                     destinationBudget = this.value || 'all';
+                    applyDestinationFilters();
+                });
+            }
+
+            const resetBtn = document.getElementById('destinationResetFilters');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function () {
+                    destinationFilter = 'all';
+                    destinationSearch = '';
+                    destinationBudget = 'all';
+                    const allBtn = document.querySelector('.tour-filter-btn[data-category="all"]');
+                    document.querySelectorAll('.tour-filter-btn').forEach(b => b.classList.remove('active'));
+                    if (allBtn) allBtn.classList.add('active');
+                    const searchEl = document.getElementById('destinationSearch');
+                    const budgetEl = document.getElementById('destinationBudget');
+                    const sortEl = document.getElementById('destinationSort');
+                    if (searchEl) searchEl.value = '';
+                    if (budgetEl) budgetEl.value = 'all';
+                    if (sortEl) sortEl.value = 'default';
                     applyDestinationFilters();
                 });
             }

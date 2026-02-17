@@ -25,6 +25,7 @@
         .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 14px; }
         .sort-select select, .budget-select select { padding: 10px 35px 10px 15px; border: 1px solid var(--border-color); border-radius: 25px; font-size: 14px; font-family: 'Poppins', sans-serif; cursor: pointer; appearance: none; background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E") no-repeat right 12px center; }
         .sort-select select:focus, .budget-select select:focus { outline: none; border-color: var(--primary-color); }
+        .reset-filters-btn { white-space: nowrap; }
         .no-results { text-align: center; padding: 60px 20px; color: var(--text-light); display: none; }
         .no-results i { font-size: 48px; margin-bottom: 15px; color: var(--border-color); }
         .no-results h3 { color: var(--dark-color); margin-bottom: 8px; }
@@ -187,6 +188,7 @@
                             <option value="rating">Rating: Highest</option>
                         </select>
                     </div>
+                    <button class="btn btn-outline btn-sm reset-filters-btn" id="stayResetFilters">Reset Filters</button>
                 </div>
             </div>
 
@@ -822,6 +824,25 @@
             if (budgetSelect) {
                 budgetSelect.addEventListener('change', function () {
                     stayBudget = this.value || 'all';
+                    stayFilterAndSort();
+                });
+            }
+
+            const resetBtn = document.getElementById('stayResetFilters');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function () {
+                    stayCategory = 'all';
+                    staySearch = '';
+                    stayBudget = 'all';
+                    const allBtn = document.querySelector('.tour-filter-btn[data-category="all"]');
+                    document.querySelectorAll('.tour-filter-btn').forEach(b => b.classList.remove('active'));
+                    if (allBtn) allBtn.classList.add('active');
+                    const searchEl = document.getElementById('staySearch');
+                    const budgetEl = document.getElementById('stayBudget');
+                    const sortEl = document.getElementById('staySort');
+                    if (searchEl) searchEl.value = '';
+                    if (budgetEl) budgetEl.value = 'all';
+                    if (sortEl) sortEl.value = 'default';
                     stayFilterAndSort();
                 });
             }
