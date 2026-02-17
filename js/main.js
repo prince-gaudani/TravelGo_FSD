@@ -1755,6 +1755,7 @@ function customizeAdminProfileMenu() {
 
     profileMenu.innerHTML = `
         <li><a href="#" id="adminBookingsBtn"><i class="fas fa-history"></i> User Bookings</a></li>
+        <li><a href="#" id="adminRestoreCardsBtn"><i class="fas fa-undo"></i> Restore Deleted Cards</a></li>
         <li><a href="admin.html"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
         <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
     `;
@@ -1764,6 +1765,14 @@ function customizeAdminProfileMenu() {
         adminBookingsBtn.addEventListener('click', function (e) {
             e.preventDefault();
             showAdminBookingHistory();
+        });
+    }
+
+    const adminRestoreCardsBtn = document.getElementById('adminRestoreCardsBtn');
+    if (adminRestoreCardsBtn) {
+        adminRestoreCardsBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            restoreDeletedCards();
         });
     }
 
@@ -1913,21 +1922,19 @@ function deleteCardFromSite(card) {
         setHiddenCardKeys(hidden);
     }
 
-    const customId = card.dataset.customId;
-    if (customId) {
-        const store = getCustomContentStore();
-        const type = getCardType(card);
-        if (type === 'destination') store.destinations = store.destinations.filter(i => i.id !== customId);
-        if (type === 'tour') store.tours = store.tours.filter(i => i.id !== customId);
-        if (type === 'stay') store.stays = store.stays.filter(i => i.id !== customId);
-        saveCustomContentStore(store);
-    }
-
     card.remove();
     if (typeof applyDestinationFilters === 'function') applyDestinationFilters();
     if (typeof filterAndSort === 'function') filterAndSort();
     if (typeof stayFilterAndSort === 'function') stayFilterAndSort();
     showNotification('Card deleted from site view.', 'success');
+}
+
+function restoreDeletedCards() {
+    localStorage.removeItem('travelgo_hidden_cards');
+    showNotification('Deleted cards restored. Refreshing view...', 'success');
+    setTimeout(() => {
+        window.location.reload();
+    }, 350);
 }
 
 function getCardOverrides() {
