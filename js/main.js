@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadMyBookings();
     initHeroSlider();
     loadCustomContentOnPage();
+    initAdminSiteControls();
     initReviewCarousel();
 });
 
@@ -28,7 +29,7 @@ function initAuth() {
     // Mandatory login gate - redirect to login if not on auth pages
     const currentPage = window.location.href.toLowerCase();
     const isAuthPage = currentPage.includes('login.html') || currentPage.includes('signup.html');
-    const isAdminPage = currentPage.includes('admin.html');
+    const isAdminPage = currentPage.includes('admin.html') || currentPage.includes('admin-');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
@@ -108,13 +109,7 @@ function initAuth() {
     }
 
     // Logout Handling
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            handleLogout();
-        });
-    }
+    bindLogoutButton();
 
     // Profile Dropdown Toggle
     const profileTrigger = document.getElementById('profileTrigger');
@@ -149,13 +144,28 @@ function updateAuthUI(isLoggedIn) {
         if (authButtons) authButtons.style.display = 'none';
         if (navProfile) {
             navProfile.style.display = 'block';
-            const userName = localStorage.getItem('userName') || 'User';
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            const userName = isAdmin ? 'Admin' : (localStorage.getItem('userName') || 'User');
             if (profileName) profileName.textContent = userName;
-            if (profileImg) profileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=4f46e5&color=fff`;
+            if (profileImg) {
+                const bg = isAdmin ? '0f172a' : '4f46e5';
+                profileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=${bg}&color=fff`;
+            }
         }
     } else {
         if (authButtons) authButtons.style.display = 'flex';
         if (navProfile) navProfile.style.display = 'none';
+    }
+}
+
+function bindLogoutButton() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn && !logoutBtn.dataset.boundLogout) {
+        logoutBtn.dataset.boundLogout = '1';
+        logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            handleLogout();
+        });
     }
 }
 
@@ -1551,38 +1561,17 @@ function loadCustomContentOnPage() {
 
 function appendCustomDestinations(items) {
     const destinationPageGrid = document.getElementById('destinationsGrid');
-    const indexGrid = document.querySelector('#destinations .destinations-grid');
-
-    if (destinationPageGrid) {
-        items.forEach(item => destinationPageGrid.insertAdjacentHTML('beforeend', createDestinationCardHtml(item)));
-    }
-    if (indexGrid) {
-        items.slice(0, 6).forEach(item => indexGrid.insertAdjacentHTML('beforeend', createDestinationCardHtml(item)));
-    }
+    if (destinationPageGrid) items.forEach(item => destinationPageGrid.insertAdjacentHTML('beforeend', createDestinationCardHtml(item)));
 }
 
 function appendCustomTours(items) {
     const toursPageGrid = document.getElementById('toursGrid');
-    const indexToursGrid = document.querySelector('#tours .tours-grid');
-
-    if (toursPageGrid) {
-        items.forEach(item => toursPageGrid.insertAdjacentHTML('beforeend', createTourCardHtml(item)));
-    }
-    if (indexToursGrid) {
-        items.slice(0, 6).forEach(item => indexToursGrid.insertAdjacentHTML('beforeend', createTourCardHtml(item)));
-    }
+    if (toursPageGrid) items.forEach(item => toursPageGrid.insertAdjacentHTML('beforeend', createTourCardHtml(item)));
 }
 
 function appendCustomStays(items) {
     const staysPageGrid = document.getElementById('staysGrid');
-    const indexHotelsGrid = document.querySelector('.hotels-resorts .hotels-grid');
-
-    if (staysPageGrid) {
-        items.forEach(item => staysPageGrid.insertAdjacentHTML('beforeend', createStayTourCardHtml(item)));
-    }
-    if (indexHotelsGrid) {
-        items.slice(0, 6).forEach(item => indexHotelsGrid.insertAdjacentHTML('beforeend', createHomeHotelCardHtml(item)));
-    }
+    if (staysPageGrid) items.forEach(item => staysPageGrid.insertAdjacentHTML('beforeend', createStayTourCardHtml(item)));
 }
 
 function createDestinationCardHtml(item) {
@@ -1599,7 +1588,7 @@ function createDestinationCardHtml(item) {
     const rating = Number(item.rating || 4.7).toFixed(1);
 
     return `
-        <div class="destination-card" data-name="${name}" data-price="${price}" data-type="${type}">
+        <div class="destination-card" data-name="${name}" data-price="${price}" data-type="${type}" data-custom-id="${escapeHtml(item.id || '')}">
             <div class="destination-image">
                 <img src="${image}" alt="${name}">
                 <div class="destination-badge">${badge}</div>
@@ -1640,7 +1629,7 @@ function createTourCardHtml(item) {
     const badge = escapeHtml(item.badge || 'Custom');
 
     return `
-        <div class="tour-card" data-name="${name}" data-price="${price}" data-duration="${durationDays}" data-category="${category}" data-type="tour"
+        <div class="tour-card" data-name="${name}" data-price="${price}" data-duration="${durationDays}" data-category="${category}" data-type="tour" data-custom-id="${escapeHtml(item.id || '')}"
              data-image="${image}" data-route="${route}" data-duration-text="${durationText}"
              data-original-price="${originalPrice}" data-discount="${discount}" data-rating="${rating}" data-reviews="${reviews}"
              data-includes="${includes}">
@@ -1686,7 +1675,7 @@ function createStayTourCardHtml(item) {
     const badge = escapeHtml(item.badge || (stayType === 'resort' ? 'Resort' : 'Hotel'));
 
     return `
-        <div class="tour-card" data-name="${name}" data-price="${price}" data-duration="1" data-category="${category}" data-type="stay" data-stay-type="${stayType}"
+        <div class="tour-card" data-name="${name}" data-price="${price}" data-duration="1" data-category="${category}" data-type="stay" data-stay-type="${stayType}" data-custom-id="${escapeHtml(item.id || '')}"
              data-image="${image}" data-route="${route}" data-duration-text="Per Night"
              data-original-price="${originalPrice}" data-discount="${discount}" data-rating="${rating}" data-reviews="${reviews}"
              data-includes="${includes}">
@@ -1730,7 +1719,7 @@ function createHomeHotelCardHtml(item) {
     const badge = escapeHtml(item.badge || (stayType === 'resort' ? 'Resort' : 'Hotel'));
 
     return `
-        <div class="hotel-card" data-name="${name}" data-price="${price}" data-original-price="${originalPrice}" data-discount="${discount}" data-duration-text="1 Night Stay" data-route="${route}" data-image="${image}" data-rating="${rating}" data-reviews="${reviews}" data-includes="${includes}" data-category="${stayType}">
+        <div class="hotel-card" data-name="${name}" data-price="${price}" data-original-price="${originalPrice}" data-discount="${discount}" data-duration-text="1 Night Stay" data-route="${route}" data-image="${image}" data-rating="${rating}" data-reviews="${reviews}" data-includes="${includes}" data-category="${stayType}" data-custom-id="${escapeHtml(item.id || '')}">
             <div class="hotel-image">
                 <img src="${image}" alt="${name}">
                 <div class="hotel-badge ${stayType === 'resort' ? 'resort' : ''}">${badge}</div>
@@ -1746,6 +1735,221 @@ function createHomeHotelCardHtml(item) {
             </div>
         </div>
     `;
+}
+
+function initAdminSiteControls() {
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
+    if (!isAdmin) return;
+
+    customizeAdminProfileMenu();
+    injectAdminDeleteStyles();
+    applyHiddenCardState();
+    attachAdminDeleteButtons();
+}
+
+function customizeAdminProfileMenu() {
+    const profileMenu = document.querySelector('.profile-menu');
+    if (!profileMenu) return;
+
+    profileMenu.innerHTML = `
+        <li><a href="#" id="adminBookingsBtn"><i class="fas fa-history"></i> User Bookings</a></li>
+        <li><a href="admin.html"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
+        <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    `;
+
+    const adminBookingsBtn = document.getElementById('adminBookingsBtn');
+    if (adminBookingsBtn) {
+        adminBookingsBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            showAdminBookingHistory();
+        });
+    }
+
+    bindLogoutButton();
+}
+
+function injectAdminDeleteStyles() {
+    if (document.getElementById('adminDeleteStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'adminDeleteStyles';
+    style.textContent = `
+        .admin-delete-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(239, 68, 68, 0.95);
+            color: #fff;
+            cursor: pointer;
+            z-index: 8;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+        }
+        .admin-delete-btn:hover { transform: scale(1.08); }
+        [data-admin-hidden="1"] { display: none !important; }
+    `;
+    document.head.appendChild(style);
+}
+
+function getHiddenCardKeys() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem('travelgo_hidden_cards') || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function setHiddenCardKeys(keys) {
+    localStorage.setItem('travelgo_hidden_cards', JSON.stringify(keys));
+}
+
+function getCardType(card) {
+    if (card.classList.contains('destination-card')) return 'destination';
+    if (card.classList.contains('hotel-card')) return 'stay';
+    if (card.classList.contains('tour-card')) {
+        return card.dataset.type === 'stay' ? 'stay' : 'tour';
+    }
+    return 'unknown';
+}
+
+function getCardIdentity(card) {
+    const type = getCardType(card);
+    const customId = card.dataset.customId;
+    if (customId) return `${type}:custom:${customId}`;
+
+    const name = (card.dataset.name || card.querySelector('h3')?.textContent || '').toLowerCase().trim();
+    const route = (card.dataset.route || card.querySelector('p')?.textContent || '').toLowerCase().trim();
+    const price = card.dataset.price || '';
+    return `${type}:base:${name}|${route}|${price}`;
+}
+
+function applyHiddenCardState() {
+    const hiddenKeys = new Set(getHiddenCardKeys());
+    document.querySelectorAll('.destination-card, .tour-card, .hotel-card').forEach(card => {
+        const key = getCardIdentity(card);
+        if (hiddenKeys.has(key)) {
+            card.style.display = 'none';
+            card.dataset.adminHidden = '1';
+        }
+    });
+}
+
+function attachAdminDeleteButtons() {
+    const cardSelector = '.destination-card, .tour-card, .hotel-card';
+    document.querySelectorAll(cardSelector).forEach(card => {
+        if (card.dataset.adminDeleteReady === '1') return;
+        card.dataset.adminDeleteReady = '1';
+
+        const imageWrap = card.querySelector('.destination-image, .tour-image, .hotel-image');
+        if (!imageWrap) return;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'admin-delete-btn';
+        btn.title = 'Delete this card';
+        btn.innerHTML = '<i class="fas fa-trash"></i>';
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteCardFromSite(card);
+        });
+        imageWrap.appendChild(btn);
+    });
+}
+
+function deleteCardFromSite(card) {
+    const key = getCardIdentity(card);
+    const hidden = getHiddenCardKeys();
+    if (!hidden.includes(key)) {
+        hidden.push(key);
+        setHiddenCardKeys(hidden);
+    }
+
+    const customId = card.dataset.customId;
+    if (customId) {
+        const store = getCustomContentStore();
+        const type = getCardType(card);
+        if (type === 'destination') store.destinations = store.destinations.filter(i => i.id !== customId);
+        if (type === 'tour') store.tours = store.tours.filter(i => i.id !== customId);
+        if (type === 'stay') store.stays = store.stays.filter(i => i.id !== customId);
+        saveCustomContentStore(store);
+    }
+
+    card.remove();
+    if (typeof applyDestinationFilters === 'function') applyDestinationFilters();
+    if (typeof filterAndSort === 'function') filterAndSort();
+    if (typeof stayFilterAndSort === 'function') stayFilterAndSort();
+    showNotification('Card deleted from site view.', 'success');
+}
+
+function showAdminBookingHistory() {
+    let modal = document.getElementById('adminBookingHistoryModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'modal active';
+        modal.id = 'adminBookingHistoryModal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width:900px;">
+                <span class="modal-close" id="closeAdminBookings">&times;</span>
+                <div style="padding: 22px;">
+                    <h2 style="margin-bottom: 12px;">User Booking History</h2>
+                    <div id="adminBookingHistoryBody"></div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.querySelector('#closeAdminBookings').addEventListener('click', function () {
+            modal.remove();
+            document.body.style.overflow = '';
+        });
+    } else {
+        modal.classList.add('active');
+    }
+
+    const bookings = JSON.parse(localStorage.getItem('travelgo_bookings') || '[]');
+    const body = modal.querySelector('#adminBookingHistoryBody');
+
+    if (!bookings.length) {
+        body.innerHTML = '<p style="color:var(--text-light);">No user bookings found yet.</p>';
+    } else {
+        body.innerHTML = `
+            <div style="overflow:auto;">
+                <table class="preview-table" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Destination</th>
+                            <th>Traveler</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${bookings.map(b => `
+                            <tr>
+                                <td>${escapeHtml(b.id || 'N/A')}</td>
+                                <td>${escapeHtml(b.type || 'Booking')}</td>
+                                <td>${escapeHtml(b.destination || 'N/A')}</td>
+                                <td>${escapeHtml(b.travelerName || 'N/A')}</td>
+                                <td>${escapeHtml(b.email || 'N/A')}</td>
+                                <td>${escapeHtml(b.phone || 'N/A')}</td>
+                                <td>${escapeHtml(b.total || 'N/A')}</td>
+                                <td>${escapeHtml(b.status || 'Confirmed')}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    document.body.style.overflow = 'hidden';
 }
 
 // ========================================
