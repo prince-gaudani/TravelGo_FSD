@@ -354,6 +354,9 @@ function goToStep(step) {
     }
 
     if (step === 5) {
+        if (!validateIdProofUploads()) {
+            return;
+        }
         generatePreview();
     }
 
@@ -857,18 +860,19 @@ function populateIdUpload() {
     let html = '';
     for (let i = 1; i <= bookingData.numTravelers; i++) {
         const traveler = bookingData.travelers[i - 1];
+        const travelerLabel = traveler.name ? `${traveler.name} (Traveler ${i})` : `Traveler ${i}`;
         html += `
             <div class="id-upload-card">
                 <div class="upload-header">
-                    <i class="fas fa-user"></i>
-                    <span>${traveler.name || 'Traveler ' + i}</span>
+                    <i class="fas fa-id-card"></i>
+                    <span>ID Proof for ${travelerLabel} <span class="required">*</span></span>
                 </div>
                 <div class="upload-body">
                     <label class="upload-area" id="uploadArea${i}">
                         <input type="file" accept="image/*,.pdf" onchange="handleFileUpload(${i}, this)" hidden>
                         <div class="upload-placeholder" id="placeholder${i}">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Click to upload ID proof</p>
+                            <p>Upload ID proof for Traveler ${i}</p>
                             <span>Aadhar, PAN, Passport, Driving License</span>
                         </div>
                         <div class="upload-preview" id="preview${i}" style="display:none;">
@@ -1032,7 +1036,23 @@ function getSelectedOptionData() {
     }
 }
 
+function validateIdProofUploads() {
+    for (let i = 0; i < bookingData.numTravelers; i++) {
+        if (!bookingData.idProofs[i]) {
+            const travelerName = bookingData.travelers[i]?.name || ('Traveler ' + (i + 1));
+            showNotification(`Please upload ID proof for ${travelerName}`, 'error');
+            goToStep(4);
+            return false;
+        }
+    }
+    return true;
+}
+
 function confirmBooking() {
+    if (!validateIdProofUploads()) {
+        return;
+    }
+
     const transportPrice = bookingData.selectedOption?.price || 0;
     const totalTransport = transportPrice * bookingData.numTravelers;
     const packagePrice = bookingData.basePrice * bookingData.numTravelers;
