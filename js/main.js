@@ -45,7 +45,13 @@ function initAuth() {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+            const rememberCheckbox = document.querySelector('#loginForm input[type="checkbox"]');
             const loginPhoneInput = document.querySelector('#loginForm input[type="tel"]');
+
+            if (rememberCheckbox && !rememberCheckbox.checked) {
+                showNotification('Please check "Remember Me" to continue.', 'error');
+                return;
+            }
 
             if (loginPhoneInput) {
                 const loginPhone = loginPhoneInput.value.trim();
@@ -1495,6 +1501,7 @@ function handleSignup(form) {
     const phone = document.getElementById('phone').value.trim();
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
+    const termsCheckbox = document.querySelector('#signupForm input[type="checkbox"]');
     const btn = form.querySelector('button[type="submit"]');
 
     if (password !== confirmPassword) {
@@ -1509,6 +1516,11 @@ function handleSignup(form) {
 
     if (!phone || !validatePhone(phone)) {
         showNotification('Please enter a valid phone number (10 digits, first digit cannot be 0).', 'error');
+        return;
+    }
+
+    if (termsCheckbox && !termsCheckbox.checked) {
+        showNotification('Please agree to the Terms & Conditions to continue.', 'error');
         return;
     }
 
