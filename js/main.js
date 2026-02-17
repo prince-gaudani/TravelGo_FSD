@@ -1851,19 +1851,40 @@ function getCardIdentity(card) {
         return key;
     }
 
+    // Use a stable, cross-page key so admin edits/deletes propagate to user pages.
+    const name = (card.dataset.name || card.querySelector('h3')?.textContent || '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim();
+    const fallbackRoute = (card.dataset.route || card.querySelector('p')?.textContent || '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim();
+    const fallbackPrice = (card.dataset.price || '').trim();
+    const key = name
+        ? `${type}:base-name:${name}`
+        : `${type}:base-fallback:${fallbackRoute}|${fallbackPrice}`;
+    card.dataset.cardKey = key;
+    return key;
+}
+
+function getLegacyCardIdentity(card) {
+    const type = getCardType(card);
+    const customId = card.dataset.customId;
+    if (customId) return `${type}:custom:${customId}`;
+
     const name = (card.dataset.name || card.querySelector('h3')?.textContent || '').toLowerCase().trim();
     const route = (card.dataset.route || card.querySelector('p')?.textContent || '').toLowerCase().trim();
     const price = card.dataset.price || '';
-    const key = `${type}:base:${name}|${route}|${price}`;
-    card.dataset.cardKey = key;
-    return key;
+    return `${type}:base:${name}|${route}|${price}`;
 }
 
 function applyHiddenCardState() {
     const hiddenKeys = new Set(getHiddenCardKeys());
     document.querySelectorAll('.destination-card, .tour-card, .hotel-card').forEach(card => {
         const key = getCardIdentity(card);
-        if (hiddenKeys.has(key)) {
+        const legacyKey = getLegacyCardIdentity(card);
+        if (hiddenKeys.has(key) || hiddenKeys.has(legacyKey)) {
             card.style.display = 'none';
             card.dataset.adminHidden = '1';
         }
@@ -1916,11 +1937,15 @@ function deleteCardFromSite(card) {
     if (!ok) return;
 
     const key = getCardIdentity(card);
+    const legacyKey = getLegacyCardIdentity(card);
     const hidden = getHiddenCardKeys();
     if (!hidden.includes(key)) {
         hidden.push(key);
-        setHiddenCardKeys(hidden);
     }
+    if (legacyKey !== key && !hidden.includes(legacyKey)) {
+        hidden.push(legacyKey);
+    }
+    setHiddenCardKeys(hidden);
 
     card.remove();
     if (typeof applyDestinationFilters === 'function') applyDestinationFilters();
@@ -1954,7 +1979,8 @@ function applyCardOverridesOnPage() {
     const overrides = getCardOverrides();
     document.querySelectorAll('.destination-card, .tour-card, .hotel-card').forEach(card => {
         const key = getCardIdentity(card);
-        const data = overrides[key];
+        const legacyKey = getLegacyCardIdentity(card);
+        const data = overrides[key] || overrides[legacyKey];
         if (data) applyCardDataToDom(card, data);
     });
 }
@@ -2194,8 +2220,10 @@ function applyCardDataToDom(card, data) {
 
 function persistCardUpdate(card, data) {
     const key = getCardIdentity(card);
+    const legacyKey = getLegacyCardIdentity(card);
     const overrides = getCardOverrides();
     overrides[key] = data;
+    if (legacyKey !== key) overrides[legacyKey] = data;
     setCardOverrides(overrides);
 
     const customId = card.dataset.customId;
