@@ -1080,6 +1080,11 @@
             let visible = 0;
 
             cards.forEach(card => {
+                if (card.dataset.adminHidden === '1') {
+                    card.style.display = 'none';
+                    return;
+                }
+
                 const type = card.dataset.type || '';
                 const name = (card.dataset.name || '').toLowerCase();
                 const place = (card.querySelector('.destination-info p')?.textContent || '').toLowerCase();

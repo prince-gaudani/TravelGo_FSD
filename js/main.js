@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 const ADMIN_EMAIL = 'admin@gmail.com';
 const ADMIN_PASSWORD = 'Ad@123';
 const CUSTOM_CONTENT_KEY = 'travelgo_custom_content';
+const DELETED_CARD_META_KEY = 'travelgo_hidden_card_meta';
 
 
 
@@ -1746,6 +1747,7 @@ function initAdminSiteControls() {
     customizeAdminProfileMenu();
     injectAdminDeleteStyles();
     hideBookingButtonsForAdmin();
+    hideFavouriteButtonsForAdmin();
     attachAdminActionButtons();
 }
 
@@ -1772,7 +1774,7 @@ function customizeAdminProfileMenu() {
     if (adminRestoreCardsBtn) {
         adminRestoreCardsBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            restoreDeletedCards();
+            showDeletedCardsRestoreModal();
         });
     }
 
@@ -1832,6 +1834,19 @@ function setHiddenCardKeys(keys) {
     localStorage.setItem('travelgo_hidden_cards', JSON.stringify(keys));
 }
 
+function getDeletedCardMeta() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(DELETED_CARD_META_KEY) || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function setDeletedCardMeta(items) {
+    localStorage.setItem(DELETED_CARD_META_KEY, JSON.stringify(Array.isArray(items) ? items : []));
+}
+
 function getCardType(card) {
     if (card.classList.contains('destination-card')) return 'destination';
     if (card.classList.contains('hotel-card')) return 'stay';
@@ -1879,6 +1894,98 @@ function getLegacyCardIdentity(card) {
     return `${type}:base:${name}|${route}|${price}`;
 }
 
+function upsertDeletedCardMeta(card, keys) {
+    const type = getCardType(card);
+    const name = (card.dataset.name || card.querySelector('h3')?.textContent || 'Unknown').trim();
+    const location = (card.dataset.route || card.querySelector('p')?.textContent || '').replace(/\s+/g, ' ').trim();
+    const normalizedKeys = Array.from(new Set((keys || []).filter(Boolean)));
+    if (!normalizedKeys.length) return;
+
+    const meta = getDeletedCardMeta();
+    const existing = meta.find(item => Array.isArray(item.keys) && item.keys.some(k => normalizedKeys.includes(k)));
+    const payload = {
+        id: normalizedKeys[0],
+        type,
+        name,
+        location,
+        keys: normalizedKeys,
+        deletedAt: new Date().toISOString()
+    };
+
+    if (existing) {
+        existing.type = payload.type;
+        existing.name = payload.name;
+        existing.location = payload.location;
+        existing.deletedAt = payload.deletedAt;
+        existing.keys = Array.from(new Set([...(existing.keys || []), ...normalizedKeys]));
+        setDeletedCardMeta(meta);
+        return;
+    }
+
+    meta.push(payload);
+    setDeletedCardMeta(meta);
+}
+
+function removeDeletedMetaByKeys(keys) {
+    const toRemove = new Set((keys || []).filter(Boolean));
+    if (!toRemove.size) return;
+    const meta = getDeletedCardMeta();
+    const next = meta.filter(item => !(item.keys || []).some(k => toRemove.has(k)));
+    setDeletedCardMeta(next);
+}
+
+function parseHiddenKeyInfo(key) {
+    const matchName = String(key || '').match(/^([^:]+):base-name:(.+)$/);
+    if (matchName) {
+        return { type: matchName[1], name: matchName[2], key };
+    }
+    const matchLegacy = String(key || '').match(/^([^:]+):base:([^|]+)\|/);
+    if (matchLegacy) {
+        return { type: matchLegacy[1], name: matchLegacy[2], key };
+    }
+    const matchCustom = String(key || '').match(/^([^:]+):custom:(.+)$/);
+    if (matchCustom) {
+        return { type: matchCustom[1], name: `custom-${matchCustom[2]}`, key };
+    }
+    return { type: 'item', name: String(key || 'unknown'), key };
+}
+
+function buildDeletedItemsForRestore() {
+    const hiddenKeys = getHiddenCardKeys();
+    const hiddenSet = new Set(hiddenKeys);
+    const entries = [];
+
+    getDeletedCardMeta().forEach(item => {
+        const itemKeys = Array.isArray(item.keys) ? item.keys.filter(k => hiddenSet.has(k)) : [];
+        if (!itemKeys.length) return;
+        entries.push({
+            id: item.id || itemKeys[0],
+            type: item.type || 'item',
+            name: item.name || 'Unknown',
+            location: item.location || '',
+            keys: itemKeys,
+            deletedAt: item.deletedAt || ''
+        });
+        itemKeys.forEach(k => hiddenSet.delete(k));
+    });
+
+    const grouped = {};
+    Array.from(hiddenSet).forEach(key => {
+        const info = parseHiddenKeyInfo(key);
+        const gid = `${info.type}:${info.name}`;
+        if (!grouped[gid]) {
+            grouped[gid] = { id: gid, type: info.type, name: info.name, location: '', keys: [], deletedAt: '' };
+        }
+        grouped[gid].keys.push(key);
+    });
+
+    return [...entries, ...Object.values(grouped)].sort((a, b) => {
+        const da = Date.parse(a.deletedAt || '') || 0;
+        const db = Date.parse(b.deletedAt || '') || 0;
+        return db - da;
+    });
+}
+
 function applyHiddenCardState() {
     const hiddenKeys = new Set(getHiddenCardKeys());
     document.querySelectorAll('.destination-card, .tour-card, .hotel-card').forEach(card => {
@@ -1894,6 +2001,13 @@ function applyHiddenCardState() {
 function hideBookingButtonsForAdmin() {
     document.querySelectorAll('.destination-card .btn-book, .tour-card .btn-book, .hotel-card .btn-book').forEach(btn => {
         btn.style.display = 'none';
+    });
+}
+
+function hideFavouriteButtonsForAdmin() {
+    document.querySelectorAll('.btn-favourite').forEach(btn => {
+        btn.style.display = 'none';
+        btn.setAttribute('aria-hidden', 'true');
     });
 }
 
@@ -1946,6 +2060,7 @@ function deleteCardFromSite(card) {
         hidden.push(legacyKey);
     }
     setHiddenCardKeys(hidden);
+    upsertDeletedCardMeta(card, [key, legacyKey]);
 
     card.remove();
     if (typeof applyDestinationFilters === 'function') applyDestinationFilters();
@@ -1956,10 +2071,118 @@ function deleteCardFromSite(card) {
 
 function restoreDeletedCards() {
     localStorage.removeItem('travelgo_hidden_cards');
+    localStorage.removeItem(DELETED_CARD_META_KEY);
     showNotification('Deleted cards restored. Refreshing view...', 'success');
     setTimeout(() => {
         window.location.reload();
     }, 350);
+}
+
+function restoreDeletedCardItem(itemId) {
+    const items = buildDeletedItemsForRestore();
+    const target = items.find(i => i.id === itemId);
+    if (!target) {
+        showNotification('Deleted item not found.', 'error');
+        return;
+    }
+
+    const removeSet = new Set(target.keys || []);
+    const nextHidden = getHiddenCardKeys().filter(k => !removeSet.has(k));
+    setHiddenCardKeys(nextHidden);
+    removeDeletedMetaByKeys(target.keys || []);
+
+    document.querySelectorAll('.destination-card, .tour-card, .hotel-card').forEach(card => {
+        const key = getCardIdentity(card);
+        const legacy = getLegacyCardIdentity(card);
+        if (removeSet.has(key) || removeSet.has(legacy)) {
+            card.dataset.adminHidden = '0';
+            card.style.display = '';
+        }
+    });
+
+    if (typeof applyDestinationFilters === 'function') applyDestinationFilters();
+    if (typeof filterAndSort === 'function') filterAndSort();
+    if (typeof stayFilterAndSort === 'function') stayFilterAndSort();
+    showNotification('Item restored successfully.', 'success');
+}
+
+function showDeletedCardsRestoreModal() {
+    let modal = document.getElementById('adminRestoreCardsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'modal active';
+        modal.id = 'adminRestoreCardsModal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width:760px;">
+                <span class="modal-close" id="closeAdminRestoreCards">&times;</span>
+                <div style="padding: 22px;">
+                    <h2 style="margin-bottom: 12px;">Restore Deleted Cards</h2>
+                    <div id="adminRestoreCardsBody"></div>
+                    <div style="display:flex; gap:10px; margin-top:14px;">
+                        <button type="button" class="btn btn-outline" id="restoreAllDeletedCardsBtn">Restore All</button>
+                        <button type="button" class="btn btn-primary" id="closeDeletedCardsModalBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const closeRestoreModal = function () {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        modal.querySelector('#closeAdminRestoreCards').addEventListener('click', closeRestoreModal);
+        modal.querySelector('#closeDeletedCardsModalBtn').addEventListener('click', closeRestoreModal);
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) closeRestoreModal();
+        });
+
+        modal.querySelector('#restoreAllDeletedCardsBtn').addEventListener('click', function () {
+            const ok = window.confirm('Restore all deleted cards?');
+            if (!ok) return;
+            restoreDeletedCards();
+        });
+
+        modal.addEventListener('click', function (e) {
+            const btn = e.target.closest('button[data-restore-item-id]');
+            if (!btn) return;
+            const id = btn.dataset.restoreItemId;
+            if (!id) return;
+            restoreDeletedCardItem(id);
+            renderDeletedCardsRestoreBody(modal);
+        });
+    } else {
+        modal.classList.add('active');
+    }
+
+    renderDeletedCardsRestoreBody(modal);
+    document.body.style.overflow = 'hidden';
+}
+
+function renderDeletedCardsRestoreBody(modal) {
+    const body = modal.querySelector('#adminRestoreCardsBody');
+    if (!body) return;
+
+    const items = buildDeletedItemsForRestore();
+    if (!items.length) {
+        body.innerHTML = '<p style="color:var(--text-light);">No deleted cards found.</p>';
+        return;
+    }
+
+    body.innerHTML = `
+        <div style="display:grid; gap:8px; max-height:380px; overflow:auto;">
+            ${items.map(item => `
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; border:1px solid var(--border-color); border-radius:10px; padding:10px;">
+                    <div>
+                        <div style="font-weight:600;">${escapeHtml(item.name || 'Unknown')}</div>
+                        <div style="font-size:12px; color:var(--text-light);">${escapeHtml(item.type || 'item')}${item.location ? ' | ' + escapeHtml(item.location) : ''}</div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm" data-restore-item-id="${escapeHtml(item.id)}">Restore</button>
+                </div>
+            `).join('')}
+        </div>
+    `;
 }
 
 function getCardOverrides() {
