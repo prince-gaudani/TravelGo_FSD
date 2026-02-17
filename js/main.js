@@ -1760,6 +1760,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 let currentCategory = 'all';
 let currentSearch = '';
+let currentBudget = 'all';
 
 function initTourFilters() {
     const toursGrid = document.getElementById('toursGrid');
@@ -1810,6 +1811,14 @@ function initTourFilters() {
         });
     }
 
+    const budgetSelect = document.getElementById('tourBudget');
+    if (budgetSelect) {
+        budgetSelect.addEventListener('change', function () {
+            currentBudget = this.value || 'all';
+            filterAndSort();
+        });
+    }
+
     updateCounts();
 }
 
@@ -1823,6 +1832,7 @@ function filterAndSort() {
         const name = card.dataset.name?.toLowerCase() || '';
         const route = card.dataset.route?.toLowerCase() || '';
         const includes = card.dataset.includes?.toLowerCase() || '';
+        const price = parseInt(card.dataset.price || '0', 10);
 
         const matchCategory = currentCategory === 'all' || category === currentCategory;
         const matchSearch = !currentSearch ||
@@ -1830,8 +1840,9 @@ function filterAndSort() {
             route.includes(currentSearch) ||
             includes.includes(currentSearch) ||
             category.includes(currentSearch);
+        const matchBudget = matchesBudgetRange(price, currentBudget);
 
-        if (matchCategory && matchSearch) {
+        if (matchCategory && matchSearch && matchBudget) {
             card.style.display = '';
             visible++;
         } else {
@@ -1863,6 +1874,16 @@ function filterAndSort() {
 
     document.getElementById('visibleCount').textContent = visible;
     document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+}
+
+function matchesBudgetRange(price, range) {
+    if (!range || range === 'all') return true;
+    const parts = range.split('-');
+    if (parts.length !== 2) return true;
+    const min = parseInt(parts[0], 10);
+    const max = parseInt(parts[1], 10);
+    if (Number.isNaN(min) || Number.isNaN(max)) return true;
+    return price >= min && price <= max;
 }
 
 function updateCounts() {

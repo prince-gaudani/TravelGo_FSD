@@ -7,6 +7,89 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .destinations-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .destinations-toolbar .results-count {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .destinations-toolbar .results-count strong {
+            color: var(--dark-color);
+        }
+        .destinations-toolbar .toolbar-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .search-box {
+            position: relative;
+        }
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 14px;
+            width: 260px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        .sort-select select,
+        .budget-select select {
+            padding: 10px 35px 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            appearance: none;
+            background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E") no-repeat right 12px center;
+        }
+        .sort-select select:focus,
+        .budget-select select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+            display: none;
+        }
+        .no-results i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--border-color);
+        }
+        .no-results h3 {
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+        @media (max-width: 768px) {
+            .destinations-toolbar { flex-direction: column; align-items: stretch; }
+            .search-box input { width: 100%; }
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -78,6 +161,34 @@
     <!-- Destinations Grid -->
     <section class="destinations-page">
         <div class="container">
+            <div class="destinations-toolbar">
+                <div class="results-count">
+                    Showing <strong id="destinationVisibleCount">0</strong> destinations
+                </div>
+                <div class="toolbar-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="destinationSearch" placeholder="Search destinations...">
+                    </div>
+                    <div class="budget-select">
+                        <select id="destinationBudget">
+                            <option value="all">Budget: Any</option>
+                            <option value="0-10000">Up to ₹10,000</option>
+                            <option value="10001-30000">₹10,001 - ₹30,000</option>
+                            <option value="30001-60000">₹30,001 - ₹60,000</option>
+                            <option value="60001-9999999">Above ₹60,000</option>
+                        </select>
+                    </div>
+                    <div class="sort-select">
+                        <select id="destinationSort">
+                            <option value="default">Sort: Recommended</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="rating">Rating: Highest</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="destinations-grid" id="destinationsGrid">
                 <!-- DOMESTIC DESTINATIONS (25) -->
                 <div class="destination-card" data-name="Manali" data-price="5999" data-type="domestic">
@@ -631,6 +742,11 @@
                     </div>
                 </div>
             </div>
+            <div class="no-results" id="destinationNoResults">
+                <i class="fas fa-search"></i>
+                <h3>No destinations found</h3>
+                <p>Try adjusting your filters or search term</p>
+            </div>
         </div>
     </section>
 
@@ -809,6 +925,10 @@
 
     <script src="js/main.js"></script>
     <script>
+        let destinationFilter = 'all';
+        let destinationSearch = '';
+        let destinationBudget = 'all';
+
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const type = urlParams.get('type');
@@ -818,33 +938,107 @@
                 document.getElementById('pageSubtitle').textContent = 'Explore beautiful places across India';
                 document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
                 document.querySelector('.filter-btn[data-filter="domestic"]').classList.add('active');
-                filterDestinations('domestic');
+                destinationFilter = 'domestic';
             } else if (type === 'international') {
                 document.getElementById('pageTitle').textContent = 'International Destinations';
                 document.getElementById('pageSubtitle').textContent = 'Discover amazing places around the world';
                 document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
                 document.querySelector('.filter-btn[data-filter="international"]').classList.add('active');
-                filterDestinations('international');
+                destinationFilter = 'international';
             }
 
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    filterDestinations(this.dataset.filter);
+                    destinationFilter = this.dataset.filter || 'all';
+                    applyDestinationFilters();
                 });
             });
+
+            const searchInput = document.getElementById('destinationSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    destinationSearch = this.value.toLowerCase().trim();
+                    applyDestinationFilters();
+                });
+            }
+
+            const sortSelect = document.getElementById('destinationSort');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', function () {
+                    applyDestinationFilters();
+                });
+            }
+
+            const budgetSelect = document.getElementById('destinationBudget');
+            if (budgetSelect) {
+                budgetSelect.addEventListener('change', function () {
+                    destinationBudget = this.value || 'all';
+                    applyDestinationFilters();
+                });
+            }
+
+            applyDestinationFilters();
         });
 
-        function filterDestinations(filter) {
-            const cards = document.querySelectorAll('.destination-card');
+        function destinationMatchesBudget(price, range) {
+            if (!range || range === 'all') return true;
+            const parts = range.split('-');
+            if (parts.length !== 2) return true;
+            const min = parseInt(parts[0], 10);
+            const max = parseInt(parts[1], 10);
+            if (Number.isNaN(min) || Number.isNaN(max)) return true;
+            return price >= min && price <= max;
+        }
+
+        function applyDestinationFilters() {
+            const cards = Array.from(document.querySelectorAll('#destinationsGrid .destination-card'));
+            const sortVal = document.getElementById('destinationSort')?.value || 'default';
+            let visible = 0;
+
             cards.forEach(card => {
-                if (filter === 'all' || card.dataset.type === filter) {
-                    card.style.display = 'block';
+                const type = card.dataset.type || '';
+                const name = (card.dataset.name || '').toLowerCase();
+                const place = (card.querySelector('.destination-info p')?.textContent || '').toLowerCase();
+                const price = parseInt(card.dataset.price || '0', 10);
+
+                const matchType = destinationFilter === 'all' || type === destinationFilter;
+                const matchSearch = !destinationSearch ||
+                    name.includes(destinationSearch) ||
+                    place.includes(destinationSearch) ||
+                    type.includes(destinationSearch);
+                const matchBudget = destinationMatchesBudget(price, destinationBudget);
+
+                if (matchType && matchSearch && matchBudget) {
+                    card.style.display = '';
+                    visible++;
                 } else {
                     card.style.display = 'none';
                 }
             });
+
+            const grid = document.getElementById('destinationsGrid');
+            const visibleCards = cards.filter(c => c.style.display !== 'none');
+            visibleCards.sort((a, b) => {
+                const priceA = parseInt(a.dataset.price || '0', 10);
+                const priceB = parseInt(b.dataset.price || '0', 10);
+                const ratingA = parseFloat(a.querySelector('.destination-rating span')?.textContent || '0');
+                const ratingB = parseFloat(b.querySelector('.destination-rating span')?.textContent || '0');
+                switch (sortVal) {
+                    case 'price-low': return priceA - priceB;
+                    case 'price-high': return priceB - priceA;
+                    case 'rating': return ratingB - ratingA;
+                    default: return 0;
+                }
+            });
+            visibleCards.forEach(card => grid.appendChild(card));
+            cards.filter(c => c.style.display === 'none').forEach(card => grid.appendChild(card));
+
+            const visibleEl = document.getElementById('destinationVisibleCount');
+            if (visibleEl) visibleEl.textContent = visible;
+            const noResultsEl = document.getElementById('destinationNoResults');
+            if (noResultsEl) noResultsEl.style.display = visible === 0 ? 'block' : 'none';
         }
     </script>
 </body>
