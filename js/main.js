@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadMyBookings();
     initHeroSlider();
     loadCustomContentOnPage();
+    applyHiddenCardState();
     applyCardOverridesOnPage();
     initAdminSiteControls();
     initReviewCarousel();
@@ -1744,7 +1745,6 @@ function initAdminSiteControls() {
 
     customizeAdminProfileMenu();
     injectAdminDeleteStyles();
-    applyHiddenCardState();
     hideBookingButtonsForAdmin();
     attachAdminActionButtons();
 }
