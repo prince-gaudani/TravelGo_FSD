@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelGo Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-page { background: #f8fafc; min-height: 100vh; }
+        .admin-wrap { max-width: 1200px; margin: 0 auto; padding: 24px 16px 40px; }
+        .admin-topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .admin-title h1 { font-size: 28px; color: var(--dark-color); }
+        .admin-title p { color: var(--text-light); font-size: 14px; }
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .admin-card { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; box-shadow: var(--shadow-sm); }
+        .admin-card h2 { font-size: 18px; margin-bottom: 12px; color: var(--dark-color); }
+        .admin-help { margin-top: 14px; padding: 12px; border-radius: 10px; background: #eef2ff; color: #3730a3; font-size: 13px; }
+        .admin-help strong { display: block; margin-bottom: 6px; }
+        .admin-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .admin-form .form-group { margin-bottom: 10px; }
+        .admin-form label { display: block; font-size: 12px; color: var(--dark-color); margin-bottom: 5px; font-weight: 600; }
+        .admin-form input, .admin-form select, .admin-form textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+        }
+        .admin-form textarea { resize: vertical; min-height: 70px; }
+        .admin-list { margin-top: 10px; display: grid; gap: 8px; }
+        .admin-item {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-item .meta { font-size: 12px; color: var(--text-light); }
+        .admin-empty { font-size: 13px; color: var(--text-light); padding: 10px; }
+        @media (max-width: 900px) {
+            .admin-grid { grid-template-columns: 1fr; }
+            .admin-form .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="admin-page">
+    <div class="admin-wrap">
+        <div class="admin-topbar">
+            <div class="admin-title">
+                <h1><i class="fas fa-user-shield"></i> TravelGo Admin Panel</h1>
+                <p>Add and manage destinations, tours, hotels, and resorts from one place.</p>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <a href="index.html" class="btn btn-outline">View Site</a>
+                <a href="#" id="logoutBtn" class="btn btn-primary">Logout</a>
+            </div>
+        </div>
+
+        <div class="admin-grid">
+            <section class="admin-card">
+                <h2>Add Destination</h2>
+                <form id="destinationAdminForm" class="admin-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select id="adDestinationType" required>
+                                <option value="domestic">Domestic</option>
+                                <option value="international">International</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="adDestinationName" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Location Label</label>
+                            <input type="text" id="adDestinationLocation" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Badge</label>
+                            <input type="text" id="adDestinationBadge" placeholder="Popular">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="number" id="adDestinationPrice" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Original Price</label>
+                            <input type="number" id="adDestinationOriginalPrice" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Rating</label>
+                            <input type="number" id="adDestinationRating" min="1" max="5" step="0.1" value="4.7">
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="url" id="adDestinationImage" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Destination</button>
+                </form>
+                <div class="admin-help">
+                    <strong>Recommended destination fields</strong>
+                    Add `best month`, `ideal duration`, `visa needed`, and `family-friendly score` in future.
+                </div>
+                <div id="destinationAdminList" class="admin-list"></div>
+            </section>
+
+            <section class="admin-card">
+                <h2>Add Tour</h2>
+                <form id="tourAdminForm" class="admin-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="adTourName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="adTourCategory" required>
+                                <option value="adventure">Adventure</option>
+                                <option value="nature">Nature</option>
+                                <option value="heritage">Heritage</option>
+                                <option value="spiritual">Spiritual</option>
+                                <option value="beach">Beach</option>
+                                <option value="honeymoon">Honeymoon</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Route</label>
+                        <input type="text" id="adTourRoute" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Duration Text</label>
+                            <input type="text" id="adTourDurationText" placeholder="5 Days / 4 Nights" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Duration Days (for sort)</label>
+                            <input type="number" id="adTourDurationDays" min="1" value="4" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="number" id="adTourPrice" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Original Price</label>
+                            <input type="number" id="adTourOriginalPrice" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Rating</label>
+                            <input type="number" id="adTourRating" min="1" max="5" step="0.1" value="4.8">
+                        </div>
+                        <div class="form-group">
+                            <label>Reviews</label>
+                            <input type="text" id="adTourReviews" placeholder="1.2k">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Includes (comma separated)</label>
+                        <textarea id="adTourIncludes" required>Hotels,Meals,Transport,Guide</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Badge</label>
+                            <input type="text" id="adTourBadge" placeholder="Best Seller">
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="url" id="adTourImage" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Tour</button>
+                </form>
+                <div class="admin-help">
+                    <strong>Recommended tour fields</strong>
+                    Add `difficulty level`, `cancellation policy`, `group size`, and `pickup city`.
+                </div>
+                <div id="tourAdminList" class="admin-list"></div>
+            </section>
+
+            <section class="admin-card">
+                <h2>Add Hotel / Resort</h2>
+                <form id="stayAdminForm" class="admin-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Stay Type</label>
+                            <select id="adStayType" required>
+                                <option value="hotel">Hotel</option>
+                                <option value="resort">Resort</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="adStayCategory" required>
+                                <option value="luxury">Luxury</option>
+                                <option value="budget">Budget</option>
+                                <option value="beach">Beach</option>
+                                <option value="mountain">Mountain</option>
+                                <option value="city">City</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="adStayName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="adStayRoute" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price (per night)</label>
+                            <input type="number" id="adStayPrice" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Original Price</label>
+                            <input type="number" id="adStayOriginalPrice" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Rating</label>
+                            <input type="number" id="adStayRating" min="1" max="5" step="0.1" value="4.6">
+                        </div>
+                        <div class="form-group">
+                            <label>Reviews</label>
+                            <input type="text" id="adStayReviews" placeholder="840">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Amenities (comma separated)</label>
+                        <textarea id="adStayIncludes" required>Free WiFi,Breakfast,Pool</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Badge</label>
+                            <input type="text" id="adStayBadge" placeholder="Premium">
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="url" id="adStayImage" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Stay</button>
+                </form>
+                <div class="admin-help">
+                    <strong>Recommended stay fields</strong>
+                    Add `check-in window`, `meal plan`, `free cancellation`, and `pet-friendly tag`.
+                </div>
+                <div id="stayAdminList" class="admin-list"></div>
+            </section>
+
+            <section class="admin-card">
+                <h2>Implementation Notes</h2>
+                <p style="font-size:13px;color:var(--text-color);">
+                    Anything you add here is stored in local storage and rendered automatically across:
+                    <strong>Home, Destinations, Tours, and Stay</strong>.
+                </p>
+                <ul style="margin-top:10px; padding-left:18px; color:var(--text-light); font-size:13px;">
+                    <li>Destinations: type, price, rating, badge, image, location</li>
+                    <li>Tours: route, duration, includes, category, rating, discount</li>
+                    <li>Hotels/Resorts: stay type, category, amenities, pricing, location</li>
+                    <li>Filters and sorting will include new entries automatically</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        (function () {
+            const key = 'travelgo_custom_content';
+            const storeDefault = { destinations: [], tours: [], stays: [] };
+
+            function getStore() {
+                try {
+                    const parsed = JSON.parse(localStorage.getItem(key) || '{}');
+                    return {
+                        destinations: Array.isArray(parsed.destinations) ? parsed.destinations : [],
+                        tours: Array.isArray(parsed.tours) ? parsed.tours : [],
+                        stays: Array.isArray(parsed.stays) ? parsed.stays : []
+                    };
+                } catch (e) {
+                    return storeDefault;
+                }
+            }
+
+            function setStore(data) {
+                localStorage.setItem(key, JSON.stringify(data));
+            }
+
+            function byId(id) {
+                return document.getElementById(id);
+            }
+
+            function itemTemplate(item, type) {
+                const title = item.name || 'Untitled';
+                const sub = type === 'destination'
+                    ? (item.type + ' | ' + (item.location || ''))
+                    : type === 'tour'
+                        ? ((item.category || '') + ' | ' + (item.route || ''))
+                        : ((item.stayType || '') + ' | ' + (item.route || ''));
+                return `
+                    <div class="admin-item">
+                        <div>
+                            <strong>${title}</strong>
+                            <div class="meta">${sub}</div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" data-delete-type="${type}" data-id="${item.id}">Delete</button>
+                    </div>
+                `;
+            }
+
+            function render() {
+                const store = getStore();
+                byId('destinationAdminList').innerHTML = store.destinations.length
+                    ? store.destinations.map(i => itemTemplate(i, 'destination')).join('')
+                    : '<div class="admin-empty">No custom destinations yet.</div>';
+                byId('tourAdminList').innerHTML = store.tours.length
+                    ? store.tours.map(i => itemTemplate(i, 'tour')).join('')
+                    : '<div class="admin-empty">No custom tours yet.</div>';
+                byId('stayAdminList').innerHTML = store.stays.length
+                    ? store.stays.map(i => itemTemplate(i, 'stay')).join('')
+                    : '<div class="admin-empty">No custom stays yet.</div>';
+            }
+
+            function uniqueId(prefix) {
+                return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+            }
+
+            byId('destinationAdminForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const store = getStore();
+                store.destinations.push({
+                    id: uniqueId('dest'),
+                    type: byId('adDestinationType').value,
+                    name: byId('adDestinationName').value.trim(),
+                    location: byId('adDestinationLocation').value.trim(),
+                    badge: byId('adDestinationBadge').value.trim() || 'Popular',
+                    price: parseInt(byId('adDestinationPrice').value, 10),
+                    originalPrice: parseInt(byId('adDestinationOriginalPrice').value, 10),
+                    rating: parseFloat(byId('adDestinationRating').value || '4.7'),
+                    image: byId('adDestinationImage').value.trim(),
+                    createdAt: new Date().toISOString()
+                });
+                setStore(store);
+                this.reset();
+                byId('adDestinationRating').value = '4.7';
+                byId('adDestinationType').value = 'domestic';
+                render();
+                showNotification('Destination added successfully!', 'success');
+            });
+
+            byId('tourAdminForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const store = getStore();
+                store.tours.push({
+                    id: uniqueId('tour'),
+                    name: byId('adTourName').value.trim(),
+                    category: byId('adTourCategory').value,
+                    route: byId('adTourRoute').value.trim(),
+                    durationText: byId('adTourDurationText').value.trim(),
+                    durationDays: parseInt(byId('adTourDurationDays').value, 10),
+                    price: parseInt(byId('adTourPrice').value, 10),
+                    originalPrice: parseInt(byId('adTourOriginalPrice').value, 10),
+                    rating: parseFloat(byId('adTourRating').value || '4.8'),
+                    reviews: byId('adTourReviews').value.trim() || '100',
+                    includes: byId('adTourIncludes').value.trim(),
+                    badge: byId('adTourBadge').value.trim() || 'Custom',
+                    image: byId('adTourImage').value.trim(),
+                    createdAt: new Date().toISOString()
+                });
+                setStore(store);
+                this.reset();
+                byId('adTourCategory').value = 'adventure';
+                byId('adTourDurationDays').value = '4';
+                byId('adTourRating').value = '4.8';
+                byId('adTourIncludes').value = 'Hotels,Meals,Transport,Guide';
+                render();
+                showNotification('Tour added successfully!', 'success');
+            });
+
+            byId('stayAdminForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const store = getStore();
+                store.stays.push({
+                    id: uniqueId('stay'),
+                    stayType: byId('adStayType').value,
+                    category: byId('adStayCategory').value,
+                    name: byId('adStayName').value.trim(),
+                    route: byId('adStayRoute').value.trim(),
+                    price: parseInt(byId('adStayPrice').value, 10),
+                    originalPrice: parseInt(byId('adStayOriginalPrice').value, 10),
+                    rating: parseFloat(byId('adStayRating').value || '4.6'),
+                    reviews: byId('adStayReviews').value.trim() || '100',
+                    includes: byId('adStayIncludes').value.trim(),
+                    badge: byId('adStayBadge').value.trim() || (byId('adStayType').value === 'resort' ? 'Resort' : 'Hotel'),
+                    image: byId('adStayImage').value.trim(),
+                    createdAt: new Date().toISOString()
+                });
+                setStore(store);
+                this.reset();
+                byId('adStayType').value = 'hotel';
+                byId('adStayCategory').value = 'luxury';
+                byId('adStayRating').value = '4.6';
+                byId('adStayIncludes').value = 'Free WiFi,Breakfast,Pool';
+                render();
+                showNotification('Stay added successfully!', 'success');
+            });
+
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('button[data-delete-type]');
+                if (!btn) return;
+                const type = btn.getAttribute('data-delete-type');
+                const id = btn.getAttribute('data-id');
+                const store = getStore();
+                if (type === 'destination') store.destinations = store.destinations.filter(i => i.id !== id);
+                if (type === 'tour') store.tours = store.tours.filter(i => i.id !== id);
+                if (type === 'stay') store.stays = store.stays.filter(i => i.id !== id);
+                setStore(store);
+                render();
+                showNotification('Item removed.', 'info');
+            });
+
+            render();
+        })();
+    </script>
+</body>
+</html>

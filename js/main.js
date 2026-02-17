@@ -10,8 +10,13 @@ document.addEventListener('DOMContentLoaded', function () {
     setMinDates();
     loadMyBookings();
     initHeroSlider();
+    loadCustomContentOnPage();
     initReviewCarousel();
 });
+
+const ADMIN_EMAIL = 'admin@gmail.com';
+const ADMIN_PASSWORD = 'Ad@123';
+const CUSTOM_CONTENT_KEY = 'travelgo_custom_content';
 
 
 
@@ -23,16 +28,23 @@ function initAuth() {
     // Mandatory login gate - redirect to login if not on auth pages
     const currentPage = window.location.href.toLowerCase();
     const isAuthPage = currentPage.includes('login.html') || currentPage.includes('signup.html');
+    const isAdminPage = currentPage.includes('admin.html');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+    if (isAdminPage && !isAdmin) {
+        window.location.href = 'login.html';
+        return;
+    }
 
     if (!isAuthPage && !isLoggedIn) {
         window.location.href = 'login.html';
         return;
     }
 
-    // If logged in and on auth page, redirect to index
+    // If logged in and on auth page, redirect based on role
     if (isAuthPage && isLoggedIn) {
-        window.location.href = 'index.html';
+        window.location.href = isAdmin ? 'admin.html' : 'index.html';
         return;
     }
 
@@ -61,12 +73,26 @@ function initAuth() {
                 }
             }
 
+            if (email.toLowerCase() === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('isAdmin', 'true');
+                localStorage.setItem('userEmail', ADMIN_EMAIL);
+                localStorage.setItem('userName', 'Admin');
+                localStorage.setItem('userFullName', 'System Admin');
+                showNotification('Admin login successful!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 800);
+                return;
+            }
+
             // Get stored users
             const users = JSON.parse(localStorage.getItem('travelgo_users') || '[]');
             const user = users.find(u => u.email === email && u.password === password);
 
             if (user) {
                 localStorage.setItem('isLoggedIn', 'true');
+                localStorage.removeItem('isAdmin');
                 localStorage.setItem('userEmail', user.email);
                 localStorage.setItem('userName', user.firstName);
                 localStorage.setItem('userFullName', user.firstName + ' ' + user.lastName);
@@ -135,6 +161,7 @@ function updateAuthUI(isLoggedIn) {
 
 function handleLogout() {
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('isAdmin');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
     localStorage.removeItem('userFullName');
@@ -1479,6 +1506,246 @@ function downloadHistoryInvoice(index) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showNotification('Invoice downloaded successfully!', 'success');
+}
+
+// ========================================
+// Custom Content (Admin Managed)
+// ========================================
+
+function getCustomContentStore() {
+    const fallback = { destinations: [], tours: [], stays: [] };
+    try {
+        const parsed = JSON.parse(localStorage.getItem(CUSTOM_CONTENT_KEY) || '{}');
+        return {
+            destinations: Array.isArray(parsed.destinations) ? parsed.destinations : [],
+            tours: Array.isArray(parsed.tours) ? parsed.tours : [],
+            stays: Array.isArray(parsed.stays) ? parsed.stays : []
+        };
+    } catch (e) {
+        return fallback;
+    }
+}
+
+function saveCustomContentStore(data) {
+    localStorage.setItem(CUSTOM_CONTENT_KEY, JSON.stringify(data));
+}
+
+function escapeHtml(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function loadCustomContentOnPage() {
+    const currentPage = window.location.href.toLowerCase();
+    if (currentPage.includes('admin.html')) return;
+
+    const store = getCustomContentStore();
+    if (store.destinations.length) appendCustomDestinations(store.destinations);
+    if (store.tours.length) appendCustomTours(store.tours);
+    if (store.stays.length) appendCustomStays(store.stays);
+}
+
+function appendCustomDestinations(items) {
+    const destinationPageGrid = document.getElementById('destinationsGrid');
+    const indexGrid = document.querySelector('#destinations .destinations-grid');
+
+    if (destinationPageGrid) {
+        items.forEach(item => destinationPageGrid.insertAdjacentHTML('beforeend', createDestinationCardHtml(item)));
+    }
+    if (indexGrid) {
+        items.slice(0, 6).forEach(item => indexGrid.insertAdjacentHTML('beforeend', createDestinationCardHtml(item)));
+    }
+}
+
+function appendCustomTours(items) {
+    const toursPageGrid = document.getElementById('toursGrid');
+    const indexToursGrid = document.querySelector('#tours .tours-grid');
+
+    if (toursPageGrid) {
+        items.forEach(item => toursPageGrid.insertAdjacentHTML('beforeend', createTourCardHtml(item)));
+    }
+    if (indexToursGrid) {
+        items.slice(0, 6).forEach(item => indexToursGrid.insertAdjacentHTML('beforeend', createTourCardHtml(item)));
+    }
+}
+
+function appendCustomStays(items) {
+    const staysPageGrid = document.getElementById('staysGrid');
+    const indexHotelsGrid = document.querySelector('.hotels-resorts .hotels-grid');
+
+    if (staysPageGrid) {
+        items.forEach(item => staysPageGrid.insertAdjacentHTML('beforeend', createStayTourCardHtml(item)));
+    }
+    if (indexHotelsGrid) {
+        items.slice(0, 6).forEach(item => indexHotelsGrid.insertAdjacentHTML('beforeend', createHomeHotelCardHtml(item)));
+    }
+}
+
+function createDestinationCardHtml(item) {
+    const type = item.type === 'international' ? 'international' : 'domestic';
+    const typeClass = type === 'international' ? 'intl' : '';
+    const typeLabel = type === 'international' ? 'International' : 'Domestic';
+    const name = escapeHtml(item.name);
+    const location = escapeHtml(item.location || 'Top Destination');
+    const image = escapeHtml(item.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop');
+    const badge = escapeHtml(item.badge || 'Popular');
+    const price = parseInt(item.price || '0', 10) || 0;
+    const originalPrice = parseInt(item.originalPrice || String(Math.round(price * 1.2)), 10) || price;
+    const discount = Math.max(0, Math.round(((originalPrice - price) / Math.max(originalPrice, 1)) * 100));
+    const rating = Number(item.rating || 4.7).toFixed(1);
+
+    return `
+        <div class="destination-card" data-name="${name}" data-price="${price}" data-type="${type}">
+            <div class="destination-image">
+                <img src="${image}" alt="${name}">
+                <div class="destination-badge">${badge}</div>
+                <div class="destination-type ${typeClass}">${typeLabel}</div>
+                <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+            </div>
+            <div class="destination-info">
+                <div class="destination-rating"><i class="fas fa-star"></i><span>${rating}</span></div>
+                <h3>${name}</h3>
+                <p><i class="fas fa-map-marker-alt"></i> ${location}</p>
+                <div class="destination-price">
+                    <div class="price-info">
+                        <span class="original-price">&#8377;${originalPrice.toLocaleString('en-IN')}</span>
+                        <span class="price">&#8377;${price.toLocaleString('en-IN')}</span>
+                        <span class="offer-tag">${discount}% OFF</span>
+                    </div>
+                    <button class="btn btn-small btn-book" onclick="startBooking(this)">Book Now</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function createTourCardHtml(item) {
+    const name = escapeHtml(item.name);
+    const image = escapeHtml(item.image || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop');
+    const route = escapeHtml(item.route || 'Custom Route');
+    const category = escapeHtml(item.category || 'adventure');
+    const includes = escapeHtml(item.includes || 'Hotels,Meals,Transport');
+    const includesList = includes.split(',').map(s => s.trim()).filter(Boolean);
+    const durationText = escapeHtml(item.durationText || '4 Days / 3 Nights');
+    const durationDays = parseInt(item.durationDays || '4', 10) || 4;
+    const price = parseInt(item.price || '0', 10) || 0;
+    const originalPrice = parseInt(item.originalPrice || String(Math.round(price * 1.25)), 10) || price;
+    const discount = Math.max(0, Math.round(((originalPrice - price) / Math.max(originalPrice, 1)) * 100));
+    const rating = Number(item.rating || 4.7).toFixed(1);
+    const reviews = escapeHtml(item.reviews || '120');
+    const badge = escapeHtml(item.badge || 'Custom');
+
+    return `
+        <div class="tour-card" data-name="${name}" data-price="${price}" data-duration="${durationDays}" data-category="${category}" data-type="tour"
+             data-image="${image}" data-route="${route}" data-duration-text="${durationText}"
+             data-original-price="${originalPrice}" data-discount="${discount}" data-rating="${rating}" data-reviews="${reviews}"
+             data-includes="${includes}">
+            <div class="tour-image">
+                <img src="${image}" alt="${name}">
+                <div class="tour-badge">${badge}</div>
+                <div class="tour-duration"><i class="fas fa-clock"></i> ${durationText}</div>
+                <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+            </div>
+            <div class="tour-info">
+                <div class="tour-rating"><i class="fas fa-star"></i><span>${rating}</span> <small>(${reviews} reviews)</small></div>
+                <h3>${name}</h3>
+                <p><i class="fas fa-route"></i> ${route}</p>
+                <div class="tour-highlights">
+                    ${includesList.slice(0, 4).map(inc => `<span><i class="fas fa-check-circle"></i> ${escapeHtml(inc)}</span>`).join('')}
+                </div>
+                <div class="tour-price">
+                    <div class="price-info">
+                        <span class="original-price">&#8377;${originalPrice.toLocaleString('en-IN')}</span>
+                        <span class="price">&#8377;${price.toLocaleString('en-IN')}</span>
+                        <span class="offer-tag">${discount}% OFF</span>
+                    </div>
+                    <button class="btn btn-small btn-book" onclick="openTourBooking(this)">Book Now</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function createStayTourCardHtml(item) {
+    const name = escapeHtml(item.name);
+    const image = escapeHtml(item.image || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop');
+    const route = escapeHtml(item.route || 'Top Location');
+    const category = escapeHtml(item.category || 'luxury');
+    const stayType = item.stayType === 'resort' ? 'resort' : 'hotel';
+    const includes = escapeHtml(item.includes || 'Free WiFi,Breakfast,Pool');
+    const includesList = includes.split(',').map(s => s.trim()).filter(Boolean);
+    const price = parseInt(item.price || '0', 10) || 0;
+    const originalPrice = parseInt(item.originalPrice || String(Math.round(price * 1.2)), 10) || price;
+    const discount = Math.max(0, Math.round(((originalPrice - price) / Math.max(originalPrice, 1)) * 100));
+    const rating = Number(item.rating || 4.6).toFixed(1);
+    const reviews = escapeHtml(item.reviews || '100');
+    const badge = escapeHtml(item.badge || (stayType === 'resort' ? 'Resort' : 'Hotel'));
+
+    return `
+        <div class="tour-card" data-name="${name}" data-price="${price}" data-duration="1" data-category="${category}" data-type="stay" data-stay-type="${stayType}"
+             data-image="${image}" data-route="${route}" data-duration-text="Per Night"
+             data-original-price="${originalPrice}" data-discount="${discount}" data-rating="${rating}" data-reviews="${reviews}"
+             data-includes="${includes}">
+            <div class="tour-image">
+                <img src="${image}" alt="${name}">
+                <div class="tour-badge">${badge}</div>
+                <div class="tour-duration"><i class="fas fa-clock"></i> Per Night</div>
+                <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+            </div>
+            <div class="tour-info">
+                <div class="tour-rating"><i class="fas fa-star"></i><span>${rating}</span> <small>(${reviews} reviews)</small></div>
+                <h3>${name}</h3>
+                <p><i class="fas fa-map-marker-alt"></i> ${route}</p>
+                <div class="tour-highlights">
+                    ${includesList.slice(0, 4).map(inc => `<span><i class="fas fa-check-circle"></i> ${escapeHtml(inc)}</span>`).join('')}
+                </div>
+                <div class="tour-price">
+                    <div class="price-info">
+                        <span class="original-price">&#8377;${originalPrice.toLocaleString('en-IN')}</span>
+                        <span class="price">&#8377;${price.toLocaleString('en-IN')}/night</span>
+                        <span class="offer-tag">${discount}% OFF</span>
+                    </div>
+                    <button class="btn btn-small btn-book" onclick="openStayBooking(this)">Book Now</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function createHomeHotelCardHtml(item) {
+    const name = escapeHtml(item.name);
+    const image = escapeHtml(item.image || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=250&fit=crop');
+    const route = escapeHtml(item.route || 'Top Location');
+    const stayType = item.stayType === 'resort' ? 'resort' : 'hotel';
+    const price = parseInt(item.price || '0', 10) || 0;
+    const originalPrice = parseInt(item.originalPrice || String(Math.round(price * 1.2)), 10) || price;
+    const discount = Math.max(0, Math.round(((originalPrice - price) / Math.max(originalPrice, 1)) * 100));
+    const includes = escapeHtml(item.includes || 'Breakfast,Free WiFi,Pool');
+    const rating = Number(item.rating || 4.6).toFixed(1);
+    const reviews = escapeHtml(item.reviews || '100');
+    const badge = escapeHtml(item.badge || (stayType === 'resort' ? 'Resort' : 'Hotel'));
+
+    return `
+        <div class="hotel-card" data-name="${name}" data-price="${price}" data-original-price="${originalPrice}" data-discount="${discount}" data-duration-text="1 Night Stay" data-route="${route}" data-image="${image}" data-rating="${rating}" data-reviews="${reviews}" data-includes="${includes}" data-category="${stayType}">
+            <div class="hotel-image">
+                <img src="${image}" alt="${name}">
+                <div class="hotel-badge ${stayType === 'resort' ? 'resort' : ''}">${badge}</div>
+                <button class="btn-favourite" onclick="toggleFavourite(this)" title="Add to Favourites"><i class="far fa-heart"></i></button>
+            </div>
+            <div class="hotel-info">
+                <h3>${name}</h3>
+                <p><i class="fas fa-map-marker-alt"></i> ${route}</p>
+                <div class="hotel-price">
+                    <span class="price">&#8377;${price.toLocaleString('en-IN')}/night</span>
+                    <button class="btn btn-small btn-book" onclick="openStayBooking(this)">Book Now</button>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // ========================================
