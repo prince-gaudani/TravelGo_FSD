@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadMyBookings();
     initHeroSlider();
     loadCustomContentOnPage();
+    applyCardOverridesOnPage();
     initAdminSiteControls();
     initReviewCarousel();
 });
@@ -1744,7 +1745,8 @@ function initAdminSiteControls() {
     customizeAdminProfileMenu();
     injectAdminDeleteStyles();
     applyHiddenCardState();
-    attachAdminDeleteButtons();
+    hideBookingButtonsForAdmin();
+    attachAdminActionButtons();
 }
 
 function customizeAdminProfileMenu() {
@@ -1788,6 +1790,21 @@ function injectAdminDeleteStyles() {
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
         }
         .admin-delete-btn:hover { transform: scale(1.08); }
+        .admin-edit-btn {
+            position: absolute;
+            top: 10px;
+            left: 52px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(15, 23, 42, 0.92);
+            color: #fff;
+            cursor: pointer;
+            z-index: 8;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.35);
+        }
+        .admin-edit-btn:hover { transform: scale(1.08); }
         [data-admin-hidden="1"] { display: none !important; }
     `;
     document.head.appendChild(style);
@@ -1816,14 +1833,21 @@ function getCardType(card) {
 }
 
 function getCardIdentity(card) {
+    if (card.dataset.cardKey) return card.dataset.cardKey;
     const type = getCardType(card);
     const customId = card.dataset.customId;
-    if (customId) return `${type}:custom:${customId}`;
+    if (customId) {
+        const key = `${type}:custom:${customId}`;
+        card.dataset.cardKey = key;
+        return key;
+    }
 
     const name = (card.dataset.name || card.querySelector('h3')?.textContent || '').toLowerCase().trim();
     const route = (card.dataset.route || card.querySelector('p')?.textContent || '').toLowerCase().trim();
     const price = card.dataset.price || '';
-    return `${type}:base:${name}|${route}|${price}`;
+    const key = `${type}:base:${name}|${route}|${price}`;
+    card.dataset.cardKey = key;
+    return key;
 }
 
 function applyHiddenCardState() {
@@ -1837,7 +1861,13 @@ function applyHiddenCardState() {
     });
 }
 
-function attachAdminDeleteButtons() {
+function hideBookingButtonsForAdmin() {
+    document.querySelectorAll('.destination-card .btn-book, .tour-card .btn-book, .hotel-card .btn-book').forEach(btn => {
+        btn.style.display = 'none';
+    });
+}
+
+function attachAdminActionButtons() {
     const cardSelector = '.destination-card, .tour-card, .hotel-card';
     document.querySelectorAll(cardSelector).forEach(card => {
         if (card.dataset.adminDeleteReady === '1') return;
@@ -1857,10 +1887,25 @@ function attachAdminDeleteButtons() {
             deleteCardFromSite(card);
         });
         imageWrap.appendChild(btn);
+
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.className = 'admin-edit-btn';
+        editBtn.title = 'Edit this card';
+        editBtn.innerHTML = '<i class="fas fa-pen"></i>';
+        editBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openAdminCardEditor(card);
+        });
+        imageWrap.appendChild(editBtn);
     });
 }
 
 function deleteCardFromSite(card) {
+    const ok = window.confirm('Delete this card from site view?');
+    if (!ok) return;
+
     const key = getCardIdentity(card);
     const hidden = getHiddenCardKeys();
     if (!hidden.includes(key)) {
@@ -1883,6 +1928,256 @@ function deleteCardFromSite(card) {
     if (typeof filterAndSort === 'function') filterAndSort();
     if (typeof stayFilterAndSort === 'function') stayFilterAndSort();
     showNotification('Card deleted from site view.', 'success');
+}
+
+function getCardOverrides() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem('travelgo_card_overrides') || '{}');
+        return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function setCardOverrides(map) {
+    localStorage.setItem('travelgo_card_overrides', JSON.stringify(map));
+}
+
+function applyCardOverridesOnPage() {
+    const overrides = getCardOverrides();
+    document.querySelectorAll('.destination-card, .tour-card, .hotel-card').forEach(card => {
+        const key = getCardIdentity(card);
+        const data = overrides[key];
+        if (data) applyCardDataToDom(card, data);
+    });
+}
+
+function getCardCurrentData(card) {
+    const type = getCardType(card);
+    const title = card.querySelector('h3')?.textContent?.trim() || '';
+    const subText = card.querySelector('p')?.textContent?.replace(/\s+/g, ' ').trim() || '';
+    const location = subText.replace(/^.*?\)\s*/, '').replace(/^[^A-Za-z0-9]*\s*/, '');
+    const badgeEl = card.querySelector('.destination-badge, .tour-badge, .hotel-badge');
+    const ratingEl = card.querySelector('.destination-rating span, .tour-rating span');
+
+    return {
+        type,
+        name: card.dataset.name || title,
+        location: card.dataset.route || location,
+        price: parseInt(card.dataset.price || '0', 10) || 0,
+        originalPrice: parseInt(card.dataset.originalPrice || '0', 10) || 0,
+        rating: parseFloat(card.dataset.rating || (ratingEl ? ratingEl.textContent : '0')) || 0,
+        badge: badgeEl ? badgeEl.textContent.trim() : '',
+        image: card.dataset.image || card.querySelector('img')?.src || '',
+        includes: card.dataset.includes || '',
+        durationText: card.dataset.durationText || ''
+    };
+}
+
+function openAdminCardEditor(card) {
+    let modal = document.getElementById('adminCardEditModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'modal active';
+        modal.id = 'adminCardEditModal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width:680px;">
+                <span class="modal-close" id="closeAdminCardEdit">&times;</span>
+                <div style="padding: 20px;">
+                    <h2 style="margin-bottom: 14px;">Edit Card</h2>
+                    <form id="adminCardEditForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="aceName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Location / Route</label>
+                                <input type="text" id="aceLocation" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Price</label>
+                                <input type="number" id="acePrice" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Original Price</label>
+                                <input type="number" id="aceOriginalPrice" min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Rating</label>
+                                <input type="number" id="aceRating" min="1" max="5" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>Badge</label>
+                                <input type="text" id="aceBadge">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="url" id="aceImage" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Highlights / Includes (comma separated)</label>
+                            <input type="text" id="aceIncludes">
+                        </div>
+                        <div style="display:flex; gap:10px; margin-top: 10px;">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-outline" id="cancelAdminCardEdit">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const closeEditor = function () {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            modal.dataset.cardKey = '';
+        };
+        modal.querySelector('#closeAdminCardEdit').addEventListener('click', closeEditor);
+        modal.querySelector('#cancelAdminCardEdit').addEventListener('click', closeEditor);
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) closeEditor();
+        });
+
+        modal.querySelector('#adminCardEditForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const key = modal.dataset.cardKey;
+            if (!key) return;
+            const targetCard = Array.from(document.querySelectorAll('.destination-card, .tour-card, .hotel-card'))
+                .find(c => c.dataset.cardKey === key);
+            if (!targetCard) return;
+
+            const updated = {
+                name: document.getElementById('aceName').value.trim(),
+                location: document.getElementById('aceLocation').value.trim(),
+                price: parseInt(document.getElementById('acePrice').value || '0', 10),
+                originalPrice: parseInt(document.getElementById('aceOriginalPrice').value || '0', 10),
+                rating: parseFloat(document.getElementById('aceRating').value || '0'),
+                badge: document.getElementById('aceBadge').value.trim(),
+                image: document.getElementById('aceImage').value.trim(),
+                includes: document.getElementById('aceIncludes').value.trim()
+            };
+
+            applyCardDataToDom(targetCard, updated);
+            persistCardUpdate(targetCard, updated);
+            if (typeof applyDestinationFilters === 'function') applyDestinationFilters();
+            if (typeof filterAndSort === 'function') filterAndSort();
+            if (typeof stayFilterAndSort === 'function') stayFilterAndSort();
+            showNotification('Card updated successfully.', 'success');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+
+    const data = getCardCurrentData(card);
+    modal.dataset.cardKey = getCardIdentity(card);
+    document.getElementById('aceName').value = data.name;
+    document.getElementById('aceLocation').value = data.location;
+    document.getElementById('acePrice').value = data.price || '';
+    document.getElementById('aceOriginalPrice').value = data.originalPrice || data.price || '';
+    document.getElementById('aceRating').value = data.rating || '';
+    document.getElementById('aceBadge').value = data.badge || '';
+    document.getElementById('aceImage').value = data.image || '';
+    document.getElementById('aceIncludes').value = data.includes || '';
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function applyCardDataToDom(card, data) {
+    const type = getCardType(card);
+    const name = data.name || '';
+    const location = data.location || '';
+    const price = parseInt(data.price || '0', 10) || 0;
+    const originalPrice = parseInt(data.originalPrice || String(Math.round(price * 1.2)), 10) || price;
+    const rating = Number(data.rating || 0).toFixed(1);
+    const badge = data.badge || '';
+    const image = data.image || '';
+    const includes = data.includes || '';
+    const discount = Math.max(0, Math.round(((originalPrice - price) / Math.max(originalPrice, 1)) * 100));
+
+    card.dataset.name = name;
+    card.dataset.price = String(price);
+    if (originalPrice) card.dataset.originalPrice = String(originalPrice);
+    if (location) card.dataset.route = location;
+    if (rating && !Number.isNaN(parseFloat(rating))) card.dataset.rating = String(rating);
+    if (image) card.dataset.image = image;
+    if (includes) card.dataset.includes = includes;
+
+    const titleEl = card.querySelector('h3');
+    if (titleEl) titleEl.textContent = name;
+    const imgEl = card.querySelector('img');
+    if (imgEl && image) imgEl.src = image;
+    const badgeEl = card.querySelector('.destination-badge, .tour-badge, .hotel-badge');
+    if (badgeEl && badge) badgeEl.textContent = badge;
+    const ratingEl = card.querySelector('.destination-rating span, .tour-rating span');
+    if (ratingEl && parseFloat(rating) > 0) ratingEl.textContent = rating;
+
+    if (type === 'destination') {
+        const p = card.querySelector('.destination-info p');
+        if (p) p.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(location)}`;
+        const priceEl = card.querySelector('.destination-price .price');
+        if (priceEl) priceEl.innerHTML = '&#8377;' + price.toLocaleString('en-IN');
+        const origEl = card.querySelector('.destination-price .original-price');
+        if (origEl) origEl.innerHTML = '&#8377;' + originalPrice.toLocaleString('en-IN');
+        const offEl = card.querySelector('.destination-price .offer-tag');
+        if (offEl) offEl.textContent = `${discount}% OFF`;
+        return;
+    }
+
+    if (type === 'tour' || (type === 'stay' && card.classList.contains('tour-card'))) {
+        const p = card.querySelector('.tour-info p');
+        if (p) {
+            const icon = type === 'tour' ? 'route' : 'map-marker-alt';
+            p.innerHTML = `<i class="fas fa-${icon}"></i> ${escapeHtml(location)}`;
+        }
+        const priceEl = card.querySelector('.tour-price .price');
+        if (priceEl) priceEl.innerHTML = type === 'stay' ? `&#8377;${price.toLocaleString('en-IN')}/night` : `&#8377;${price.toLocaleString('en-IN')}`;
+        const origEl = card.querySelector('.tour-price .original-price');
+        if (origEl) origEl.innerHTML = '&#8377;' + originalPrice.toLocaleString('en-IN');
+        const offEl = card.querySelector('.tour-price .offer-tag');
+        if (offEl) offEl.textContent = `${discount}% OFF`;
+        if (includes) {
+            const high = card.querySelector('.tour-highlights');
+            if (high) {
+                high.innerHTML = includes.split(',').map(i => i.trim()).filter(Boolean).slice(0, 4).map(i => `<span><i class="fas fa-check-circle"></i> ${escapeHtml(i)}</span>`).join('');
+            }
+        }
+        return;
+    }
+
+    if (type === 'stay' && card.classList.contains('hotel-card')) {
+        const p = card.querySelector('.hotel-info p');
+        if (p) p.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(location)}`;
+        const priceEl = card.querySelector('.hotel-price .price');
+        if (priceEl) priceEl.innerHTML = '&#8377;' + price.toLocaleString('en-IN') + '/night';
+    }
+}
+
+function persistCardUpdate(card, data) {
+    const key = getCardIdentity(card);
+    const overrides = getCardOverrides();
+    overrides[key] = data;
+    setCardOverrides(overrides);
+
+    const customId = card.dataset.customId;
+    if (!customId) return;
+
+    const store = getCustomContentStore();
+    const type = getCardType(card);
+    if (type === 'destination') {
+        store.destinations = store.destinations.map(i => i.id === customId ? { ...i, ...data, updatedAt: new Date().toISOString() } : i);
+    } else if (type === 'tour') {
+        store.tours = store.tours.map(i => i.id === customId ? { ...i, ...data, updatedAt: new Date().toISOString() } : i);
+    } else if (type === 'stay') {
+        store.stays = store.stays.map(i => i.id === customId ? { ...i, ...data, updatedAt: new Date().toISOString() } : i);
+    }
+    saveCustomContentStore(store);
 }
 
 function showAdminBookingHistory() {
