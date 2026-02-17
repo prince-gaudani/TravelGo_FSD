@@ -21,6 +21,7 @@
 
     if (!form || !list) return;
     let editingId = '';
+    form.noValidate = true;
     const submitBtn = form.querySelector('button[type="submit"]');
     const defaultSubmitText = submitBtn ? submitBtn.textContent.trim() : 'Save';
     const cancelEditBtn = document.createElement('button');
@@ -135,6 +136,8 @@
         if (!entity.name || !entity.image || !entity.price || !entity.originalPrice) {
             return 'Please fill all required fields.';
         }
+        if (entity.price <= 0 || entity.originalPrice <= 0) return 'Price values must be greater than 0.';
+        if (entity.originalPrice < entity.price) return 'Original price should be greater than or equal to price.';
         if (mode === 'destination' && (!entity.location || !entity.type)) return 'Destination type and location are required.';
         if (mode === 'tour' && (!entity.route || !entity.durationText || !entity.includes)) return 'Route, duration and includes are required.';
         if ((mode === 'hotel' || mode === 'resort') && (!entity.route || !entity.includes)) return 'Location and amenities are required.';
@@ -240,6 +243,11 @@
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            notify('Please complete all required fields.', 'error');
+            return;
+        }
         const entity = buildEntityFromForm();
         const error = validateEntity(entity);
         if (error) {
@@ -251,11 +259,19 @@
         const collection = collectionMap[mode];
         const wasEditing = Boolean(editingId);
         if (editingId) {
+            let didUpdate = false;
             store[collection] = (store[collection] || []).map(item => {
                 if (item.id !== editingId) return item;
+                didUpdate = true;
                 const createdAt = item.createdAt || entity.createdAt;
                 return { ...item, ...entity, createdAt };
             });
+            if (!didUpdate) {
+                notify('Could not find item to update. Please try editing again.', 'error');
+                editingId = '';
+                setEditingState(false);
+                return;
+            }
         } else {
             store[collection].push(entity);
         }
