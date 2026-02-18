@@ -928,13 +928,13 @@
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" id="tbEmail" placeholder="your@email.com" required>
+                                <input type="email" id="tbEmail" placeholder="your@gmail.com" required pattern="[a-zA-Z0-9._%+-]+@gmail\.com" title="Enter a valid Gmail address (example@gmail.com)">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Phone Number</label>
-                                <input type="tel" id="tbPhone" placeholder="+91 98765 43210" required>
+                                <input type="tel" id="tbPhone" placeholder="9876543210" required pattern="[6-9][0-9]{9}" maxlength="10" inputmode="numeric" title="Enter a valid 10-digit phone number">
                             </div>
                             <div class="form-group">
                                 <label>Travel Date</label>

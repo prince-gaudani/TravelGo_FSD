@@ -3152,8 +3152,23 @@ function populateBookingModal(data) {
 
     const tbName = document.getElementById('tbName');
     const tbEmail = document.getElementById('tbEmail');
+    const tbPhone = document.getElementById('tbPhone');
+    const tbDate = document.getElementById('tbDate');
     if (tbName && localStorage.getItem('userFullName')) tbName.value = localStorage.getItem('userFullName');
     if (tbEmail && localStorage.getItem('userEmail')) tbEmail.value = localStorage.getItem('userEmail');
+    if (tbEmail) {
+        tbEmail.pattern = '[a-zA-Z0-9._%+-]+@gmail\\.com';
+        tbEmail.title = 'Enter a valid Gmail address (example@gmail.com)';
+    }
+    if (tbPhone) {
+        tbPhone.pattern = '[6-9][0-9]{9}';
+        tbPhone.maxLength = 10;
+        tbPhone.setAttribute('inputmode', 'numeric');
+        tbPhone.title = 'Enter a valid 10-digit phone number';
+    }
+    if (tbDate) {
+        tbDate.min = new Date().toISOString().split('T')[0];
+    }
 
     updateTourPrice();
 
@@ -3183,6 +3198,23 @@ function updateTourPrice() {
     document.getElementById('tbTotal').textContent = '₹' + total.toLocaleString('en-IN');
 }
 
+function isValidGmail(email) {
+    return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(email);
+}
+
+function isValidPhoneNumber(phone) {
+    const digitsOnly = phone.replace(/\D/g, '');
+    return /^[6-9]\d{9}$/.test(digitsOnly);
+}
+
+function isValidBookingDate(dateValue) {
+    if (!dateValue) return false;
+    const selectedDate = new Date(dateValue + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return selectedDate >= today;
+}
+
 function submitTourBooking(e) {
     e.preventDefault();
 
@@ -3195,6 +3227,18 @@ function submitTourBooking(e) {
 
     if (!name || !email || !phone || !date) {
         showNotification('Please fill all required fields!', 'error');
+        return;
+    }
+    if (!isValidGmail(email)) {
+        showNotification('Please enter a valid Gmail address only.', 'error');
+        return;
+    }
+    if (!isValidPhoneNumber(phone)) {
+        showNotification('Please enter a valid 10-digit phone number.', 'error');
+        return;
+    }
+    if (!isValidBookingDate(date)) {
+        showNotification('Please select today or a future date.', 'error');
         return;
     }
 
